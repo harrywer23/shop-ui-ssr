@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3';
 import {API_CONSTANTS} from "~/utils/constants"
-import { createHash } from 'node:crypto';
+// import { createHash } from 'node:crypto';
 
 import { LRUCache } from 'lru-cache';
 const cache =new LRUCache<string, any>({
