@@ -1,4 +1,4 @@
-import {API_CONSTANTS} from "~/utils/constants"
+import {API_CONSTANTS, fnv1a} from "~/utils/constants";
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();

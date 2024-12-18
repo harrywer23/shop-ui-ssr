@@ -1,6 +1,5 @@
 import { defineEventHandler, getQuery } from 'h3';
-import { API_CONSTANTS } from "~/utils/constants";
-import { createHash } from 'node:crypto';
+import {API_CONSTANTS, fnv1a} from "~/utils/constants";
 import { LRUCache } from 'lru-cache';
 
 const cache = new LRUCache<string, any>({
@@ -16,7 +15,7 @@ export default defineEventHandler(async (event) => {
   // console.log('language:', language)
 
   const stringToHash = query ? JSON.stringify(query) : "list";
-  const hash = createHash('md5').update(stringToHash).digest('hex');
+   const hash = fnv1a(stringToHash);
 //  console.log(hash);
   const cacheKey = `banner:list:${hash}`;
 
