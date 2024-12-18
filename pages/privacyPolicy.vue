@@ -117,7 +117,7 @@ March 15, 2021</span><span>。</span><span lang="EN-US"></span></p>
         href="mailto:privacy@51x.uk"><span>privacy@51x.uk</span></a> </span><span>联系我们。</span><span
         lang="EN-US"></span></p>
     <p align="left" class="MsoNormal"><span>您有权随时访问和更正或删除您的个人信息和隐私首选项。单击</span><span
-        lang="EN-US"><a href="https://www.51x.uk/account/profile"><span>“</span><span lang="EN-US"><span lang="EN-US">我的帐户</span></span><span>”</span></a></span><span>链接即可完成此操作，在</span><span
+        lang="EN-US"><a href="https://www.cmall.uk/account/profile"><span>“</span><span lang="EN-US"><span lang="EN-US">我的帐户</span></span><span>”</span></a></span><span>链接即可完成此操作，在</span><span
         lang="EN-US">“</span><span>我的帐户</span><span lang="EN-US">”</span><span>中，您可以立即查看并更改您的大部分个人信息。如果您希望删除自己的帐户，或要求我们不再使用您的信息为您提供服务，请访问网站上的</span><span
         lang="EN-US"><a href="/privacyPolicy/privacy"><span>“</span><span lang="EN-US"><span
         lang="EN-US">我的帐户首选项</span></span><span>”</span></a></span><span>链接，然后按照</span><span
@@ -264,7 +264,7 @@ Cookie</span><span>、日志文件、透明图片和</span><span
     <p align="left" class="MsoNormal"><span lang="EN-US">黑白伞 </span><span>只会将您的个人信息用于本隐私声明中所描述的目的，而不会在未经您明确授权下用于没有实质性差异的目的中。</span><span
         lang="EN-US"></span></p>
     <p align="left" class="MsoNormal"><span>您可以通过点击网站上的</span><span lang="EN-US"><a
-        href="https://www.51x.uk/account/profile"><span>“</span><span lang="EN-US"><span lang="EN-US">我的帐户</span></span><span>”</span></a></span><span>链接并进行相应选择，</span><span
+        href="https://www.cmall.uk/account/profile"><span>“</span><span lang="EN-US"><span lang="EN-US">我的帐户</span></span><span>”</span></a></span><span>链接并进行相应选择，</span><span
         lang="EN-US">“</span><span>拒绝</span><span lang="EN-US">”</span><span>接收</span><span lang="EN-US">
 黑白伞 </span><span>的电子邮件更新、简报和</span><span lang="EN-US">/</span><span>或合作伙伴电子邮件。拒绝接收此类邮件的选项一般也在注册过程中提供。如果适用，当服务条款或提供者服务条款发生变更时，</span><span
         lang="EN-US">黑白伞 </span><span>仍会与您联系。此外，我们仍会向您发送与服务相关的公告，包括但不限于注册邮件、优惠通知邮件、由您在网站中执行的操作自动触发的邮件以及与账单相关的通知。一般来说，您不能拒绝接收这些非宣传性质的通讯内容。如果您确实不想接收这些邮件，您可以选择停用您的帐户</span><span
@@ -339,7 +339,7 @@ Cookie</span><span>、日志文件、透明图片和</span><span
           lang="EN-US"></span></li>
     </ul>
     <p align="left" class="MsoNormal"><span>您可以在我们的</span><span lang="EN-US"><a
-        href="https://www.51x.uk/cookies"><span> Cookie </span><span lang="EN-US"><span
+        href="https://www.cmall.uk/cookies"><span> Cookie </span><span lang="EN-US"><span
         lang="EN-US">声明</span></span></a></span><span>中找到有关</span><span lang="EN-US">
 Cookie </span><span>和第三方广告合作伙伴的更多信息</span><span lang="EN-US"></span></p>
     <p align="left" class="MsoNormal"><span>我们允许您创建个人资料用于访问博客或在线社区，以便分享消息、照片和视频等信息。请注意，对于您可能选择与之分享网页和信息的其他人，我们并不能控制他们的行为。您发布到公告板或聊天室（例如投稿人论坛</span><span
@@ -434,7 +434,7 @@ Facebook Connect </span><span>或开放</span><span lang="EN-US"> ID </span><spa
 黑白伞 </span><span>处理您的个人数据受《欧盟一般数据保护条例》约束，则</span><span
         lang="EN-US"> 黑白伞 </span><span>将根据其上述合法权益处理您的数据。在</span><span
         lang="EN-US"> 黑白伞 </span><span>出于自身直接营销目的处理某些个人数据时，您随时可以通过点击链接</span><span
-        lang="EN-US">“<a href="https://www.51x.uk/account/profile"><span lang="EN-US"><span
+        lang="EN-US">“<a href="https://www.cmall.uk/account/profile"><span lang="EN-US"><span
         lang="EN-US">我的帐户</span></span></a>”</span><span>和拒绝接收所有电子邮件来反对</span><span lang="EN-US">
 黑白伞 </span><span>将您的个人数据用于上述目的。如果您是投稿人，您可以在</span><span lang="EN-US"><a
         href="https://submit.黑白伞.com/forum/profile.php?mode=editprofile%27"><span lang="EN-US"><span

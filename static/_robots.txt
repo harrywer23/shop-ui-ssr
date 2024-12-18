@@ -6,4 +6,4 @@ Disallow: /login
 Disallow: /register
 
 # 站点地图
-Sitemap: https://www.51x.uk/sitemap_index.xml 
+Sitemap: https://www.cmall.uk/sitemap_index.xml

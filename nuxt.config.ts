@@ -22,7 +22,7 @@ export default defineNuxtConfig({
       categories: ['photography', 'art', 'social'],
       screenshots: [
         {
-          src: '/screenshots/home.jpg',
+          src: '/favicon.ico',
           sizes: '1280x720',
           type: 'image/jpeg',
           label: '首页展示'
@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     workbox: {
       runtimeCaching: [
         {
-          urlPattern: 'https://your-cdn-url/.*\\.(?:png|jpg|jpeg|svg|gif)', // 替换为你的图片路径
+          urlPattern: 'https://image.51x.uk/.*\\.(?:png|jpg|jpeg|svg|gif)', // 替换为你的图片路径
           handler: 'CacheFirst',
           options: {
             cacheName: 'images-cache',
@@ -67,7 +67,7 @@ export default defineNuxtConfig({
   },
 
   site: {
-    url: 'https://www.51x.uk',
+    url: 'https://www.cmall.uk',
     name: '次元集市',
     description: '动漫迷、游戏玩家、影视爱好者以及小说粉丝的终极购物目的地',
     defaultLocale: 'zh-CN'
@@ -181,11 +181,6 @@ export default defineNuxtConfig({
       }),
     ],
   },
-
-  serverMiddleware: [
-    '~/middleware/cache.js'
-  ],
-
   app: {
     head: {
       title: 'Dimension Bazaar',
@@ -236,8 +231,8 @@ export default defineNuxtConfig({
             {
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "图集网",
-              "url": "https://www.aiavr.uk",
+              "name": "次元集市",
+              "url": "https://www.cmall.uk",
               "potentialAction": {
                 "@type": "SearchAction",
                 "target": "https://www.aiavr.uk/search?q={search_term_string}",

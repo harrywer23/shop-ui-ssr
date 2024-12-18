@@ -34,7 +34,7 @@ useHead({
     { name: 'twitter:image', content: props.ogImage }
   ],
   link: [
-    { rel: 'canonical', href: `https://www.51x.uk${useRoute().fullPath}` }
+    { rel: 'canonical', href: `https://www.cmall.uk${useRoute().fullPath}` }
   ]
 })
 </script>
