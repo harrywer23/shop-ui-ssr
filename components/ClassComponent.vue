@@ -88,10 +88,11 @@ const selectedCategory = ref<Category | null>(null)
 // 获取分类列表
 const fetchCategories = async () => {
   try {
-    const res = await api.get('/category/list')
-    if (res.data.succ) {
+    const response = await fetch('/api/category/list')
+    const res =await response.json()
+    if ( res.code == 200 ) {
       // 处理返回的数据，解析国际化名称
-      const processedData = res.data.data.map((item: any) => ({
+      const processedData = res.data.map((item: any) => ({
         ...item,
         translations: item.translations ? JSON.parse(item.translations) : {
           zh: item.categoryName,

@@ -7,22 +7,17 @@ import type { Product, Category } from '~/types/sitemap'
 export default defineSitemapEventHandler(async (event) => {
   try {
     const urls: SitemapUrl[] = []
-    
+
     // 获取所有商品
-    const prodResponse = await serverApi.get('/prod/select', {
-      params: {
-        pageNum: 1,
-        pageSize: 1000,
-        status: 1
-      }
-    })
-    
+    const prodResponse = await serverApi.get('/urls')
+
     if (prodResponse.data.code === 200) {
-      const products: Product[] = prodResponse.data.data.records || []
-      
+      const products: Product[] = prodResponse.data.data || []
+
       products.forEach(product => {
         urls.push({
-          loc: `/product/detail?prodId=${product.prodId}`,
+          // loc: `/product/detail?prodId=${product.prodId}`,
+          loc: `${product}`,
           lastmod: product.updateTime || new Date().toISOString(),
           changefreq: 'daily',
           priority: 0.8,
@@ -31,12 +26,12 @@ export default defineSitemapEventHandler(async (event) => {
         })
       })
     }
-    
+
     // 获取所有分类
     const categoryResponse = await serverApi.get('/category/list')
     if (categoryResponse.data.code === 200) {
       const categories: Category[] = categoryResponse.data.data || []
-      
+
       categories.forEach(category => {
         if (category.status === 1) {
           urls.push({
@@ -50,7 +45,7 @@ export default defineSitemapEventHandler(async (event) => {
         }
       })
     }
-    
+
     // 添加静态页面
     const staticPages = [
       { path: '/', priority: 1.0 },
@@ -60,7 +55,7 @@ export default defineSitemapEventHandler(async (event) => {
       { path: '/terms', priority: 0.5 },
       { path: '/privacy', priority: 0.5 }
     ]
-    
+
     staticPages.forEach(page => {
       urls.push({
         loc: page.path,
@@ -74,7 +69,7 @@ export default defineSitemapEventHandler(async (event) => {
 
     console.log(`Generated ${urls.length} URLs for sitemap`)
     return urls
-    
+
   } catch (error) {
     console.error('Error generating sitemap:', error)
     throw createError({

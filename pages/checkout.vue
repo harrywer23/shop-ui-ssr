@@ -227,8 +227,8 @@ const {
 } = useAddress()
 
 // 优惠券相关状态
-const showCouponDialog = ref(false)
-const selectedCoupon = ref<Coupon | null>(null)
+// const showCouponDialog = ref(false)
+// const selectedCoupon = ref<Coupon | null>(null)
 // 根据来源获取结算商品
 const checkoutItems = computed(() => {
   if (route.query.from === 'cart') {
@@ -351,30 +351,28 @@ function handleAddressSelect(address: Address) {
   selectedAddressId.value = address.id
   calculateFreight()
 }
-
-
-function selectCoupon(coupon: Coupon) {
-  selectedCoupon.value = coupon
-}
-
-function confirmCoupon() {
-  if (selectedCoupon.value) {
-    orderAmount.value.couponDiscount = calculateCouponDiscount(selectedCoupon.value)
-  }
-  showCouponDialog.value = false
-}
+// function selectCoupon(coupon: Coupon) {
+//   selectedCoupon.value = coupon
+// }
+//
+// function confirmCoupon() {
+//   if (selectedCoupon.value) {
+//     orderAmount.value.couponDiscount = calculateCouponDiscount(selectedCoupon.value)
+//   }
+//   showCouponDialog.value = false
+// }
 
 // 计算优惠券折扣金额
-const calculateCouponDiscount = (coupon: Coupon): number => {
-  if (coupon.couponType === 1) {
-    // 减券
-    return coupon.discount
-  } else {
-    // 折扣券
-    const discount = Number(subtotal.value) * (1 - coupon.discount)
-    return Math.min(discount, coupon.maxDiscount || discount)
-  }
-}
+// const calculateCouponDiscount = (coupon: Coupon): number => {
+//   if (coupon.couponType === 1) {
+//     // 减券
+//     return coupon.discount
+//   } else {
+//     // 折扣券
+//     const discount = Number(subtotal.value) * (1 - coupon.discount)
+//     return Math.min(discount, coupon.maxDiscount || discount)
+//   }
+// }
 async function calculateFreight() {
   try {
     const OrderSubmitData = {
@@ -432,7 +430,6 @@ async function submitOrder() {
     })
     return
   }
-
   submitting.value = true
   try {
     const orderData: OrderSubmitData = {
@@ -545,9 +542,9 @@ onMounted(async () => {
 })
 
 // 结算来源
-const checkoutSource = computed(() =>
-  route.query.from as string || 'direct'
-)
+// const checkoutSource = computed(() =>
+//   route.query.from as string || 'direct'
+// )
 
 // 获取商品分类ID列表
 const categoryIds = computed(() =>

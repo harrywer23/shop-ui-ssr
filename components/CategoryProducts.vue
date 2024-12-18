@@ -46,8 +46,8 @@ const products = ref([])
 
 const loadProducts = async () => {
   try {
-    const response = await api.get(`/prod/listByCategoryId?categoryId=${props.categoryId}&pageSize=8`)
-    const data = await response.data
+    const response = await fetch(`/api/prod/listByCategoryId?categoryId=${props.categoryId}&pageSize=8`)
+    const data = await response.json();
     if(data.code === 200) {
       products.value = data.data
     }

@@ -175,13 +175,12 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, onMounted, watch} from 'vue'
+import {ref, computed, watch} from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import {useRoute} from "#vue-router";
 import ProductListCard from '~/components/product/ProductListCard.vue'
 import {getCurrentLanguageName,getImageUrl} from "~/utils/tools";
-import CachedImage from "~/components/common/CachedImage.vue";
 const route = useRoute()
 const parentId = ref(route.query.parentId || 1)
 const $q = useQuasar()
@@ -212,12 +211,10 @@ const loading = ref(false)
 const initialVisibleCount = 20 // 增加初始显示数量，使其能显示两行
 const isCollapsed = ref(true)
 
-
 // 展开/收起切换
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value
 }
-
 
 // 修改获取分类列表函数
 const loadCategories = async () => {
@@ -226,8 +223,8 @@ const loadCategories = async () => {
       categories.value = []
       return
     }
-    const response = await api.get(`/category/subTree?parentId=${parentId.value}`)
-    const data = await response.data
+    const response = await fetch(`/api/category/subTree?parentId=${parentId.value}`)
+    const data = await response.json();
     if(data.code === 200) {
       categories.value = data.data
     } else {
@@ -333,8 +330,8 @@ const loadProducts = async () => {
       queryParams.append('types', String(route.query.types))
     }
 
-    const response = await api.get(`/prod/listByCategoryId?${queryParams.toString()}`)
-    const data = await response.data
+    const response = await fetch(`/api/prod/listByCategoryId?${queryParams.toString()}`)
+    const data = await response.json();
     if (data.code === 200) {
       products.value = data.data
       totalCount.value = data.total

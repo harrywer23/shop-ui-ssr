@@ -12,7 +12,6 @@
             class="main-image"
             placeholder-src="/images/favicon.ico"
           />
-
           <!-- SKU 图片列表 -->
           <div v-if="hasSku" class="sku-images q-pa-md">
             <q-scroll-area horizontal style="height: 100px" :thumb-style="{ width: '4px' }">
@@ -429,7 +428,6 @@ import { ProductType } from '~/utils/constants'
 import type { ProductDetail, Sku } from '~/types/product'
 import { formatDateTime, getCurrentLanguageName, getImageUrl, getLanguageName } from "~/utils/tools";
 import { useI18n } from "vue-i18n";
-import CachedImage from '~/components/common/CachedImage.vue'
 import { useDebounceFn } from '@vueuse/core'
 const { locale, t } = useI18n()
 const lang = locale.value;
@@ -470,8 +468,8 @@ const deliveryMode = computed(() => {
 // 加载商品数据
 async function loadProductData() {
   try {
-    const response = await api.get(`/prod/detail/${prodId.value}`)
-    const result = await response.data
+    const response = await fetch(`/api/prod/detail?prodId=${prodId.value}`)
+    const result = await response.json();
     if (result.code === 200) {
       productInfo.value = result.data;
     }

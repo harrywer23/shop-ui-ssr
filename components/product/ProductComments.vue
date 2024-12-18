@@ -52,7 +52,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import CommentStats from './CommentStats.vue'
 import CommentList from './CommentList.vue'
-import {tansParams} from "~/utils/tools";
+import {tansParams,getImageUrl} from "~/utils/tools";
 
 interface Reply {
   id: number
@@ -118,8 +118,8 @@ const loadComments = async (page = 1) => {
       page,
       pageSize: 10
     };
-    const response = await api.get(`/prodComm/list?`+tansParams(params))
-    const data = response.data;
+    const response = await fetch(`/api/prod/comm/list?`+tansParams(params))
+    const data = await response.json();
     if (data.code === 200) {
       comments.value = data.data
       totalComments.value = data.total

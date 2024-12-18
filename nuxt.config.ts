@@ -122,14 +122,15 @@ export default defineNuxtConfig({
         // 静态路由
         urls: [
           { loc: '/', priority: 1.0 },
-          { loc: '/see', priority: 0.8 },
-          { loc: '/usersAlbum', priority: 0.8 },
-          { loc: '/users', priority: 0.8 },
+          { loc: '/product/sort?category=1', priority: 0.8 },
+          { loc: '/product/list?parentId=1', priority: 0.8 },
+          { loc: '/product/list?parentId=2', priority: 0.8 },
+          { loc: '/product/list?parentId=3', priority: 0.8 },
+          { loc: '/product/list?parentId=4', priority: 0.8 },
+          { loc: '/product/list?parentId=5', priority: 0.8 },
           { loc: '/about', priority: 0.5 },
           { loc: '/contact', priority: 0.5 },
-          { loc: '/help', priority: 0.5 },
-          { loc: '/privacy-policy', priority: 0.5 },
-          { loc: '/terms-of-use', priority: 0.5 }
+          { loc: '/help', priority: 0.5 }
         ]
       },
       // 动态页面站点地图
@@ -218,16 +219,15 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'canonical', href: 'https://www.51x.uk' },
-        { rel: 'alternate', hreflang: 'zh-CN', href: 'https://www.51x.uk/zh-CN' },
-        { rel: 'alternate', hreflang: 'zh-TW', href: 'https://www.51x.uk/zh-TW' },
-        { rel: 'alternate', hreflang: 'ja', href: 'https://www.51x.uk/ja' },
-        { rel: 'alternate', hreflang: 'ko', href: 'https://www.51x.uk/ko' },
-        { rel: 'alternate', hreflang: 'en', href: 'https://www.51x.uk/en' }
+        { rel: 'canonical', href: 'https://www.cmall.uk' },
+        { rel: 'alternate', hreflang: 'zh-CN', href: 'https://www.cmall.uk/zh-CN' },
+        { rel: 'alternate', hreflang: 'zh-TW', href: 'https://www.cmall.uk/zh-TW' },
+        { rel: 'alternate', hreflang: 'ja', href: 'https://www.cmall.uk/ja' },
+        { rel: 'alternate', hreflang: 'ko', href: 'https://www.cmall.uk/ko' },
+        { rel: 'alternate', hreflang: 'en', href: 'https://www.cmall.uk/en' }
       ]
     }
   },
-
   nitro: {
     hooks: {
       'render:html': (html: { head: string[] }) => {
@@ -249,6 +249,5 @@ export default defineNuxtConfig({
       }
     }
   },
-
   compatibilityDate: '2024-11-07'
 })

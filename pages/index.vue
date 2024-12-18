@@ -19,20 +19,22 @@ const CategoryProducts = defineAsyncComponent(() => import('~/components/Categor
 const loadAllData = async () => {
   try {
     const [bannersRes, hotRes, newRes, moreRes] = await Promise.all([
-      api.get(`/banner/list?position=home`),
-      api.get('/prod/listByTagId?pageNum=1&pageSize=8&tagId=2'),
-      api.get('/prod/listByTagId?page=1&pageSize=8&tagId=1'),
-      api.get('/prod/listByTagId?page=1&pageSize=8&tagId=3')
+      fetch(`/api/banner/list?position=home`),
+      fetch('/api/prod/listByTagId?pageNum=1&pageSize=8&tagId=2'),
+      fetch('/api/prod/listByTagId?page=1&pageSize=8&tagId=1'),
+      fetch('/api/prod/listByTagId?page=1&pageSize=8&tagId=3')
     ])
-    
-    if (bannersRes.data.code === 200) {
-      banners.value = bannersRes.data.data
+    const bannersReponse = await bannersRes.json();
+    if (bannersReponse.code === 200) {
+      banners.value = bannersReponse.data
     }
-    
-    hotProdList.value = hotRes.data.data
-    newProdList.value = newRes.data.data
-    moreProdList.value = moreRes.data.data
-    
+    const hotReponse = await hotRes.json();
+    hotProdList.value = hotReponse.data
+    const newReponse = await newRes.json();
+    newProdList.value = newReponse.data
+    const moreReponse = await moreRes.json();
+    moreProdList.value = moreReponse.data
+
   } catch (error) {
     console.error('加载数据失败:', error)
   }

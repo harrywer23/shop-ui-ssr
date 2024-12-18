@@ -38,7 +38,7 @@ export function useAddress() {
   // 添加地址
   async function addAddress(addressData: AddressSubmitData) {
     try {
-      console.log('添加地址前的数据:', addressData) // 添加调试日志
+      // console.log('添加地址前的数据:', addressData) // 添加调试日志
 
       // 确保所有必要的字段都存在
       const submitData = {
@@ -56,7 +56,7 @@ export function useAddress() {
         isDefault: addressData.isDefault || 0
       }
 
-      console.log('准备提交的地址数据:', submitData) // 添加调试日志
+      // console.log('准备提交的地址数据:', submitData) // 添加调试日志
 
       const response = await api.post('/admin/userAddr/add', submitData)
       const { code, msg, data } = response.data
@@ -77,7 +77,7 @@ export function useAddress() {
   // 更新地址
   async function updateAddress(addressData: AddressSubmitData) {
     try {
-      console.log('更新地址前的数据:', addressData) // 添加调试日志
+      // console.log('更新地址前的数据:', addressData) // 添加调试日志
 
       // 确保所有必要的字段都存在
       const submitData = {

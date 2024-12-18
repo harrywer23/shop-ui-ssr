@@ -1,13 +1,15 @@
-import {API_CONSTANTS} from "~/utils/constants"
 import { defineEventHandler } from 'h3';
-import { LRUCache } from 'lru-cache';
+import {API_CONSTANTS} from "~/utils/constants"
 import { createHash } from 'node:crypto';
+
+import { LRUCache } from 'lru-cache';
 const cache =new LRUCache<string, any>({
   max: 1000,
   ttl: 1000 * 60 * 60 * 24,
 })
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
+  // const config = useRuntimeConfig();
   // 获取请求头
   const headers = event.req.headers;
   const language= headers["accept-language"] ;
@@ -19,8 +21,7 @@ export default defineEventHandler(async (event) => {
   const hash = createHash('md5').update(stringToHash).digest('hex');
 // 输出结果
 //   console.log(hash);
-  const cacheKey = `areas:list:${hash}`;
-
+  const cacheKey = `sku:list:${hash}`;
   // //console.log('Album info request params:', query);
   //
   const cachedData = cache.get(cacheKey);
@@ -31,13 +32,13 @@ export default defineEventHandler(async (event) => {
 
   try {
     // 构建完整的 URL
-    const fullUrl = `${API_CONSTANTS.BASE_URL}/transportAreas/list?`+tansParams(query);
+    const fullUrl = `${API_CONSTANTS.BASE_URL}/sku/listByProdId?`+tansParams(query);
     //console.log('Fetching from URL:', fullUrl);
     // 在处理函数内执行 fetch
     const response = await fetch(fullUrl, {
       headers: {
         'Content-Type': 'application/json',
-        'Accept-Language':  `${language}`
+         'Accept-Language':  `${language}`
       }
     });
 
