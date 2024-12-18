@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   const headers = event.req.headers;
   const language= headers["accept-language"] ;
 
-  console.log('language:', language)
+  console.log('category list language:', language)
   // const crypto = require('crypto');
 // 你需要计算 MD5 的字符串
   const stringToHash =query ? JSON.stringify(query):"list";
@@ -26,11 +26,11 @@ export default defineEventHandler(async (event) => {
 
   // //console.log('Album info request params:', query);
   //
-  // const cachedData = cache.get(key);
-  // if (cachedData) {
-  //   //console.log('Using cached data for:'+cacheKey);
-  //   return cachedData;
-  // }
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    //console.log('Using cached data for:'+cacheKey);
+    return cachedData;
+  }
 
   try {
     // 构建完整的 URL
@@ -47,12 +47,9 @@ export default defineEventHandler(async (event) => {
 
     // 解析响应
     const data = await response.json();
-
-
-    // if (data.code === 200) {
-    //    cache.set(key, data);
-    // }
-
+    if (data.code === 200) {
+       cache.set(cacheKey, data);
+    }
     return data;
 
   } catch (error) {

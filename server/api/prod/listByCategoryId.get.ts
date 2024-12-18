@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   const headers = event.req.headers;
   const language= headers["accept-language"] ;
 
-  // console.log('language:', language)
+  console.log('listByCategoryId language:', language)
 // 你需要计算 MD5 的字符串
   const stringToHash =query ? JSON.stringify(query):"listByCategoryId";
 // 创建一个 MD5 哈希实例

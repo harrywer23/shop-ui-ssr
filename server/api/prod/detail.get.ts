@@ -15,12 +15,12 @@ export default defineEventHandler(async (event) => {
     // console.log('language:', language)
     // console.log('query:', JSON.stringify(query))
 // 你需要计算 MD5 的字符串
-    const stringToHash =query ? JSON.stringify(query):"info";
+    const stringToHash =query ? JSON.stringify(query):"detail";
 // 创建一个 MD5 哈希实例
     const hash = createHash('md5').update(stringToHash).digest('hex');
 // 输出结果
 //     console.log(hash);
-    const cacheKey = `category:list:${hash}`;
+    const cacheKey = `prod:detail:${hash}`;
     const cachedData = cache.get(cacheKey);
     if (cachedData) {
         //console.log('Using cached data for:'+cacheKey);
