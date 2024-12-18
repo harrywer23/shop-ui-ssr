@@ -66,7 +66,7 @@
                   class="col-6 col-sm-4"
                 >
                   <q-img
-                    :src="design.url"
+                    :src="getImageUrl(design.url)"
                     @click="previewImage(design.url)"
                     class="design-image cursor-pointer"
                   />
@@ -147,7 +147,7 @@
           </q-card-section>
 
           <q-card-section>
-            <q-img :src="previewUrl" />
+            <q-img :src="getImageUrl(previewUrl)" />
           </q-card-section>
         </q-card>
       </q-dialog>
@@ -156,6 +156,8 @@
 </template>
 
 <script setup lang="ts">
+import CachedImage from "~/components/common/CachedImage.vue";
+
 definePageMeta({
   layout: 'users',
   middleware: 'auth'
@@ -166,6 +168,7 @@ import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import { useQuasar } from 'quasar'
 import { date } from 'quasar'
+import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
 const router = useRouter()

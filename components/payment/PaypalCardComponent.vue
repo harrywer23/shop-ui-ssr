@@ -48,15 +48,16 @@ const router = useRouter()
 const { t } = useI18n()
 
 const props = withDefaults(defineProps<{
-  description: string
+  description?: string
   returnUrl?: string
   cancelUrl?: string
   country?: string
-  amount: string
+  amount: number | string
   productName: string
   orderNumber: string
   items?: PaymentOrderIntroDto[]
 }>(), {
+  description: '支付订单',
   returnUrl: 'pc',
   cancelUrl: 'pc',
   country: 'CN'
@@ -66,8 +67,8 @@ const props = withDefaults(defineProps<{
 async function createOrderCallback() {
   try {
     const response = await api.post("/admin/paypal/create", {
-      returnUrl: props.returnUrl,
-      cancelUrl: props.cancelUrl,
+      returnUrl: `${window.location.origin}/order/success`,
+      cancelUrl: `${window.location.origin}/order/fail`,
       country: props.country,
       description: props.description,
       items: props.items
@@ -170,7 +171,7 @@ async function initializePayPal() {
     })
 
     if (cardFields.isEligible()) {
-      // 渲染各个字段
+      // 渲染各个字���
       await Promise.all([
         cardFields.NameField().render("#card-name-field-container"),
         cardFields.NumberField().render("#card-number-field-container"),

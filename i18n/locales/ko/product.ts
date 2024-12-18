@@ -102,5 +102,18 @@ export default {
     addToCart: '장바구니 담기',
     stock: '재고',
     sales: '판매량'
+  },
+  quality: {
+    s: '최상품',
+    a: '고급품',
+    b: '우수품',
+    c: '일반품',
+    d: '기본형'
+  },
+  type: {
+    NORMAL: '일반상품',
+    PRESELL: '사전판매',
+    GROUP: '공동구매',
+    SECKILL: '특가판매'
   }
 } 

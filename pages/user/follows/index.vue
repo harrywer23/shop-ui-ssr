@@ -62,7 +62,7 @@
             <!-- 用户基本信息 -->
             <div class="user-info row items-center">
               <q-avatar size="50px" class="q-mr-md">
-                <img :src="user.userAvatar">
+                <q-img :src="getImageUrl(user.userAvatar)"/>
               </q-avatar>
               <div>
                 <div class="text-h6">{{ user.userName }}</div>
@@ -281,4 +281,4 @@ onMounted(() => {
     }
   }
 }
-</style> 
+</style>

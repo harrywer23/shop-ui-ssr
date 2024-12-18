@@ -173,6 +173,8 @@
 </template>
 
 <script setup lang="ts">
+import CachedImage from "~/components/common/CachedImage.vue";
+
 definePageMeta({
   layout: 'users',
   middleware: 'auth'
@@ -183,6 +185,7 @@ import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import { useQuasar } from 'quasar'
 import { shanghaiToLocal } from '~/utils/format'
+import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
 const router = useRouter()

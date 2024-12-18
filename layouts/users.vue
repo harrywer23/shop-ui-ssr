@@ -197,7 +197,7 @@
         <div class="absolute-bottom bg-transparent">
           <q-avatar  class="q-mb-sm" size="56px">
             <q-img
-              :src="getImageUrl(user.imgUrl) || `/favicon.webp`" @error.once="e => { e.target.src = `/favicon.webp` }"
+              :src="getImageUrl(user.avatar) || `/favicon.webp`" @error.once="e => { e.target.src = `/favicon.webp` }"
             />
           </q-avatar>
           <div class="text-weight-bold">{{ user != null ? user.nickname : '待登录' }}</div>
@@ -226,6 +226,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AppHead from "~/components/AppHead.vue";
 import { useI18n } from 'vue-i18n'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const leftDrawerOpen = ref(false)

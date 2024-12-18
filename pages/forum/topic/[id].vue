@@ -28,7 +28,7 @@
           </h1>
           <div class="topic-meta text-grey">
             <q-avatar size="28px">
-              <img :src="topic.userAvatar">
+              <q-img :src="getImageUrl(topic.userAvatar)"/>
             </q-avatar>
             <span class="username q-ml-sm">{{ topic.userName }}</span>
             <span class="q-mx-sm">•</span>
@@ -149,7 +149,7 @@
               <!-- 评论头部 -->
               <div class="row items-center">
                 <q-avatar size="28px">
-                  <img :src="comment.userAvatar">
+                  <q-img :src="getImageUrl(comment.userAvatar)"/>
                 </q-avatar>
                 <div class="column q-ml-sm">
                   <div class="text-subtitle2">{{ comment.userName }}</div>

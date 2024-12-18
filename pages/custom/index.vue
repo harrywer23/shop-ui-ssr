@@ -12,7 +12,7 @@
           </p>
         </div>
       </div>
-  
+
       <!-- 定制方式对比 -->
       <div class="section comparison-section">
         <div class="row q-col-gutter-xl">
@@ -25,13 +25,13 @@
                   个人专属定制
                 </div>
                 <div class="text-subtitle1 q-mt-sm">一对一专属服务，打造独一无二的作品</div>
-  
+
                 <!-- 价格指示 -->
                 <div class="price-indicator q-mt-md">
                   <div class="text-h6">起价：¥3,000</div>
                   <div class="text-caption">定金比例：30%-50%</div>
                 </div>
-  
+
                 <!-- 适用场景 -->
                 <div class="section-block q-mt-lg">
                   <div class="block-title">
@@ -47,7 +47,7 @@
                     </ul>
                   </div>
                 </div>
-  
+
                 <!-- 服务流程 -->
                 <div class="section-block">
                   <div class="block-title">
@@ -65,7 +65,7 @@
                     </q-timeline-entry>
                   </q-timeline>
                 </div>
-  
+
                 <!-- 服务特权 -->
                 <div class="section-block">
                   <div class="block-title">
@@ -82,7 +82,7 @@
                     </div>
                   </div>
                 </div>
-  
+
                 <q-btn
                   color="primary"
                   class="full-width q-mt-lg"
@@ -93,7 +93,7 @@
               </q-card-section>
             </q-card>
           </div>
-  
+
           <!-- 众筹定制 -->
           <div class="col-12 col-md-6">
             <q-card flat bordered class="comparison-card">
@@ -103,13 +103,13 @@
                   众人请愿定制
                 </div>
                 <div class="text-subtitle1 q-mt-sm">集众人之力，共同实现梦想</div>
-  
+
                 <!-- 价格指示 -->
                 <div class="price-indicator q-mt-md">
                   <div class="text-h6">预估价：¥299-999</div>
                   <div class="text-caption">最低众筹数量：100份</div>
                 </div>
-  
+
                 <!-- 适用场景 -->
                 <div class="section-block q-mt-lg">
                   <div class="block-title">
@@ -125,7 +125,7 @@
                     </ul>
                   </div>
                 </div>
-  
+
                 <!-- 众筹流程 -->
                 <div class="section-block">
                   <div class="block-title">
@@ -143,7 +143,7 @@
                     </q-timeline-entry>
                   </q-timeline>
                 </div>
-  
+
                 <!-- 支持者权益 -->
                 <div class="section-block">
                   <div class="block-title">
@@ -160,7 +160,7 @@
                     </div>
                   </div>
                 </div>
-  
+
                 <q-btn
                   color="primary"
                   class="full-width q-mt-lg"
@@ -173,7 +173,7 @@
           </div>
         </div>
       </div>
-  
+
       <!-- 成功案例 -->
       <div class="section cases-section bg-grey-1">
         <h2 class="text-h4 text-center">成功案例</h2>
@@ -205,7 +205,7 @@
           </div>
         </div>
       </div>
-  
+
       <!-- 常见问题 -->
       <div class="section faq-section">
         <h2 class="text-h4 text-center">常见问题</h2>
@@ -231,13 +231,14 @@
       </div>
     </div>
   </template>
-  
+
   <script setup lang="ts">
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  
+  import CachedImage from "~/components/common/CachedImage.vue";
+
   const router = useRouter()
-  
+
   // 个人定制流程
   const personalSteps = [
     {
@@ -271,7 +272,7 @@
       content: '确认成品并支付尾款后发货'
     }
   ]
-  
+
   // 众筹定制流程
   const crowdfundingSteps = [
     {
@@ -305,7 +306,7 @@
       content: '完成生产后分批发货给支持者'
     }
   ]
-  
+
   // 个人定制特权
   const personalPrivileges = [
     {
@@ -329,7 +330,7 @@
       description: '专属客服全程跟进服务'
     }
   ]
-  
+
   // 众筹特权
   const crowdfundingPrivileges = [
     {
@@ -353,7 +354,7 @@
       description: '加入支持者社群，分享快乐'
     }
   ]
-  
+
   // 成功案例
   const successCases = [
     {
@@ -381,7 +382,7 @@
       description: '特殊场景还原，独家收藏版'
     }
   ]
-  
+
   // 常见问题
   const faqs = [
     {
@@ -401,15 +402,16 @@
       answer: '个人定制在确认方案前可以多次沟通修改；众筹定制因涉及多人，一旦方案确定后较难大幅修改，但可以在众筹前提出建议。'
     }
   ]
-  
+  import {API_CONSTANTS} from "~/utils/constants";
+
   // 获取图片URL
   const getImageUrl = (url: string) => {
     if (!url) return ''
     if (url.startsWith('http')) return url
-    return `${useRuntimeConfig().public.imageBaseUrl}${url}`
+    return `${API_CONSTANTS.BASE_URL}${url}`
   }
   </script>
-  
+
   <style lang="scss" scoped>
   .custom-page {
     .banner-section {
@@ -417,37 +419,37 @@
       color: white;
       padding: 80px 20px;
       text-align: center;
-  
+
       .banner-content {
         max-width: 800px;
         margin: 0 auto;
       }
     }
-  
+
     .section {
       padding: 80px 20px;
       max-width: 1200px;
       margin: 0 auto;
-  
+
       &.bg-grey-1 {
         background: #f5f7fa;
       }
     }
-  
+
     .comparison-card {
       height: 100%;
       transition: all 0.3s ease;
-  
+
       &:hover {
         transform: translateY(-5px);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       }
-  
+
       .section-block {
         margin-top: 24px;
         padding-top: 24px;
         border-top: 1px solid #eee;
-  
+
         .block-title {
           font-size: 1.1em;
           font-weight: 500;
@@ -457,12 +459,12 @@
           align-items: center;
           gap: 8px;
         }
-  
+
         .block-content {
           ul {
             margin: 0;
             padding-left: 20px;
-  
+
             li {
               margin-bottom: 8px;
               color: #666;
@@ -470,21 +472,21 @@
           }
         }
       }
-  
+
       .privilege-item {
         display: flex;
         align-items: flex-start;
         gap: 12px;
         margin-bottom: 16px;
-  
+
         .privilege-content {
           flex: 1;
-  
+
           .privilege-title {
             font-weight: 500;
             margin-bottom: 4px;
           }
-  
+
           .privilege-desc {
             font-size: 0.9em;
             color: #666;
@@ -492,33 +494,33 @@
         }
       }
     }
-  
+
     .case-card {
       transition: transform 0.3s ease;
-  
+
       &:hover {
         transform: translateY(-5px);
       }
     }
-  
+
     .faq-section {
       .q-expansion-item {
         margin-bottom: 8px;
       }
     }
   }
-  
+
   // 响应式调整
   @media (max-width: 599px) {
     .custom-page {
       .banner-section {
         padding: 40px 20px;
-  
+
         .text-h2 {
           font-size: 2em;
         }
       }
-  
+
       .section {
         padding: 40px 20px;
       }

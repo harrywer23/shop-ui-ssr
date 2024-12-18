@@ -58,7 +58,7 @@
               class="col-4 col-sm-3 col-md-2"
             >
               <q-img
-                :src="image.url"
+                :src="getImageUrl(image.url)"
                 :ratio="1"
                 class="rounded-borders"
               >
@@ -116,7 +116,7 @@
               <q-icon name="attach_file" />
             </template>
           </q-file>
-          
+
           <!-- 已上传文件列表 -->
           <div v-if="attachments.length" class="q-mt-md">
             <q-list bordered separator>
@@ -169,6 +169,8 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
 const router = useRouter()
@@ -198,7 +200,7 @@ const loadPostDetail = async () => {
         title: data.title,
         content: data.content
       }
-      
+
       // 加载已有图片
       if (data.images?.length) {
         images.value = data.images.map((url: string) => ({
@@ -206,7 +208,7 @@ const loadPostDetail = async () => {
           file: new File([], '') // 创建空文件对象
         }))
       }
-      
+
       // 加载已有附件
       if (data.attachments?.length) {
         attachments.value = data.attachments
@@ -406,4 +408,4 @@ onMounted(() => {
     }
   }
 }
-</style> 
+</style>

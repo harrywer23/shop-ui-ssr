@@ -3,33 +3,33 @@
     <div class="upload-container">
       <!-- 图片预览区域 -->
       <div v-if="imageUrl" class="image-preview">
-        <img :src="imageUrl" alt="预览图" />
+        <q-img :src="getImageUrl(imageUrl)" alt="预览图" />
         <div class="image-actions">
           <q-btn
-              flat
-              round
-              color="negative"
-              icon="delete"
-              size="sm"
-              @click="handleRemove"
+            flat
+            round
+            color="negative"
+            icon="delete"
+            size="sm"
+            @click="handleRemove"
           />
         </div>
       </div>
 
       <!-- 上传按钮 -->
       <q-btn
-          v-else
-          class="upload-btn"
-          flat
-          :loading="uploading"
+        v-else
+        class="upload-btn"
+        flat
+        :loading="uploading"
       >
         <q-icon name="add_photo_alternate" size="2rem" />
         <div class="upload-text">点击上传</div>
         <input
-            type="file"
-            class="file-input"
-            accept="image/*"
-            @change="handleFileChange"
+          type="file"
+          class="file-input"
+          accept="image/*"
+          @change="handleFileChange"
         />
       </q-btn>
     </div>
@@ -46,10 +46,10 @@ import { ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { api } from '~/utils/axios'
 import { useRuntimeConfig } from '#app'
+import {getImageUrl} from "~/utils/tools";
 
 const config = useRuntimeConfig()
 // 从配置中获取图片基础URL
-const IMAGE_BASE_URL = config.public.imageBaseUrl || 'https://image.aiavr.uk/xinshijie'
 
 const props = defineProps({
   modelValue: {
@@ -70,7 +70,7 @@ const uploading = ref(false)
 
 // 监听 modelValue 变化，使用配置的基础URL
 watch(() => props.modelValue, (newVal) => {
-  imageUrl.value = newVal ? `${IMAGE_BASE_URL}${newVal}` : ''
+  imageUrl.value = newVal ? newVal: ''
 })
 
 // 处理文件选择
@@ -81,7 +81,7 @@ const handleFileChange = async (event: Event) => {
   if (!file) return
 
   // 验证文件类型
-  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+  if (!['image/jpeg', 'image/png'].includes(file.type)) {
     $q.notify({
       type: 'negative',
       message: '只支持 jpg、png 格式的图片',

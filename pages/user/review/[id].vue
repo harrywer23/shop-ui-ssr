@@ -73,7 +73,7 @@
         </q-card-section>
 
         <q-card-section>
-          <q-img :src="previewUrl" />
+          <q-img :src="getImageUrl(previewUrl)" />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -86,6 +86,8 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import { formatDate } from '@/utils/format'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {API_CONSTANTS} from "~/utils/constants";
 
 const route = useRoute()
 const { t } = useI18n()
@@ -120,7 +122,7 @@ const previewImage = (url: string) => {
 const getImageUrl = (url: string) => {
   if (!url) return ''
   if (url.startsWith('http')) return url
-  return `${useRuntimeConfig().public.imageBaseUrl}/${url}`
+  return `${API_CONSTANTS.BASE_URL}/${url}`
 }
 
 onMounted(() => {

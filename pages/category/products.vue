@@ -109,7 +109,7 @@
            class="product-card"
            @click="navigateToProduct(product.prodId)">
         <q-img
-          :src="product.pic"
+          :src="getImageUrl(product.pic)"
           :ratio="1"
           class="product-image"
         >
@@ -154,6 +154,8 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
 const router = useRouter()

@@ -6,6 +6,13 @@ export default {
   login: "Login",
   regis: "Register",
   sumbit: "Submit",
-  welcome: "Welcome to Dimension Market.",
-  refreshCode: "Click image to refresh verification code"
+  welcome: "Welcome Back",
+  refreshCode: "Click image to refresh verification code",
+  hasAccount: "Already have an account?",
+  noAccount: "Don't have an account?",
+  forgotPassword: "Forgot Password?",
+  loginSuccess: "Login Successful",
+  loginFailed: "Login Failed",
+  registerSuccess: "Registration Successful",
+  registerFailed: "Registration Failed"
 } 

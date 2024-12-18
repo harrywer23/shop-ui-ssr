@@ -24,7 +24,7 @@
                   :key="index"
                   :name="index"
                 >
-                  <q-img :src="pic" style="height: 100%" />
+                  <q-img :src="getImageUrl(pic)" style="height: 100%" />
                 </q-carousel-slide>
               </q-carousel>
             </div>
@@ -230,7 +230,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import { useQuasar } from 'quasar'
-import { date } from 'quasar'
+import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
 const router = useRouter()
@@ -402,4 +402,4 @@ onMounted(() => {
     border-radius: 8px;
   }
 }
-</style> 
+</style>

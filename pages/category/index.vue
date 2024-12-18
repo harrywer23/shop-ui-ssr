@@ -76,7 +76,7 @@
             @click="goToProduct(product.prodId)"
           >
             <q-img
-              :src="product.pic"
+              :src="getImageUrl(product.pic)"
               :ratio="1"
               style="height: 200px"
             />
@@ -112,6 +112,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 

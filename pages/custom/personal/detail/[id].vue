@@ -61,7 +61,7 @@
               class="col-6 col-sm-4 col-md-3"
             >
               <q-img
-                :src="image"
+                :src="getImageUrl(image)"
                 :ratio="1"
                 class="rounded-borders cursor-pointer"
                 @click="openImagePreview(index)"
@@ -145,7 +145,7 @@
               :name="index"
               class="column no-wrap flex-center"
             >
-              <q-img :src="image" style="max-height: 100%; max-width: 100%" />
+              <q-img :src="getImageUrl(image)" style="max-height: 100%; max-width: 100%" />
             </q-carousel-slide>
           </q-carousel>
         </q-card-section>
@@ -160,6 +160,8 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { date } from 'quasar'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
 const { t } = useI18n()
@@ -273,4 +275,4 @@ onMounted(() => {
     line-height: 1.6;
   }
 }
-</style> 
+</style>

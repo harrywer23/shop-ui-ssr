@@ -112,9 +112,9 @@ export const PAYMENT_METHOD_OPTIONS = [
 
 // API 相关常量
 export const API_CONSTANTS = {
-  BASE_URL: 'http://127.0.0.1:8098',
-  // BASE_URL: 'https://admin.51x.uk',
-  IMAGE_BASE_URL: 'https://image.aiavr.uk/xinshijie',
+  // BASE_URL: 'http://127.0.0.1:8098',
+  BASE_URL: 'https://admin.51x.uk',
+  IMAGE_BASE_URL: 'https://image.51x.uk/xinshijie',
   TIMEOUT: 30000,
   MAX_RETRIES: 3
 }

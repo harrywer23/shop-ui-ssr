@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import {getImageUrl} from "~/utils/tools";
+
 definePageMeta({
   layout: 'users',
   middleware: 'auth'
@@ -9,6 +11,7 @@ import {useRouter} from "vue-router";
 import {api} from "~/utils/axios";
 
 import PayaplCard from "~/components/payment/PaypalCardComponent.vue";
+
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const token = useCookie('token');

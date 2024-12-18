@@ -61,5 +61,17 @@ export default {
   },
   orders: {
     title: '맞춤 주문 목록'
+  },
+  apply: {
+    error: {
+      tooManyFiles: '최대 6개의 파일만 업로드할 수 있습니다',
+      fileTooLarge: '파일 크기는 50MB를 초과할 수 없습니다',
+      imageUploadFailed: '이미지 업로드 실패',
+      attachmentUploadFailed: '첨부 파일 업로드 실패',
+      invalidAttachmentType: '지원되지 않는 파일 형식입니다. PDF, Word, Excel 및 압축 파일만 지원됩니다'
+    },
+    imageNote: 'jpg, png, gif 형식 지원, 이미지당 최대 5MB',
+    attachmentNote: 'PDF, Word, Excel 및 압축 파일(zip/rar/7z) 지원',
+    fileLimitNote: '최대 {maxFiles}개 파일, 파일당 최대 {maxSize}'
   }
 } 

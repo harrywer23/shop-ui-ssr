@@ -52,8 +52,29 @@ export default {
         rewardTitle: 'Reward Title',
         rewardAmount: 'Reward Amount',
         rewardDescription: 'Reward Description',
-        addReward: 'Add Reward'
+        addReward: 'Add Reward',
+        title: 'Application Title',
+        titleRequired: 'Please enter application title'
+      },
+      name: 'Applicant Name',
+      contact: 'Contact Phone',
+      email: 'Email Address',
+      error: {
+        nameRequired: 'Please enter applicant name',
+        contactRequired: 'Please enter contact information',
+        emailRequired: 'Please enter email address',
+        invalidEmail: 'Please enter a valid email address'
       }
-    }
+    },
+    error: {
+      tooManyFiles: 'Maximum 6 files allowed',
+      fileTooLarge: 'File size cannot exceed 50MB',
+      imageUploadFailed: 'Image upload failed',
+      attachmentUploadFailed: 'Attachment upload failed',
+      invalidAttachmentType: 'Unsupported file format. Only PDF, Word, Excel and compressed files are supported'
+    },
+    imageNote: 'Supports jpg, png, gif formats, maximum 5MB per image',
+    attachmentNote: 'Supports PDF, Word, Excel and compressed files (zip/rar/7z)',
+    fileLimitNote: 'Maximum {maxFiles} files, up to {maxSize} per file'
   }
 } 

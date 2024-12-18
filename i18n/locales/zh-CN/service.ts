@@ -28,6 +28,7 @@ export default {
     success: '提交成功',
     error: '提交失败',
     titleRequired: '请输入标题',
-    contentRequired: '请输入内容'
+    contentRequired: '请输入内容',
+    emailError: '发送邮件失败，请重试'
   }
-} 
+}

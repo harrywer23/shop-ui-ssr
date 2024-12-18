@@ -54,6 +54,8 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import type { CheckoutItem } from '~/types/checkout'
 import PriceDisplay from './PriceDisplay.vue'
+import {getImageUrl} from "~/utils/tools";
+
 
 const route = useRoute()
 const { t } = useI18n()

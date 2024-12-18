@@ -7,7 +7,7 @@
           class="my-card col-3"
       >
         <q-card-section class="text-center">
-        <q-img :src="item.image" class="card-image"  style="height: 160px;width: 160px"/>
+        <q-img :src="getImageUrl(item.image)" class="card-image"  style="height: 160px;width: 160px"/>
         </q-card-section>
       <q-card-section class="text-center">
         <div class="text-h6">{{item.title}}</div>
@@ -21,6 +21,8 @@
 
 <script setup>
 import { ref } from 'vue';
+import {getImageUrl} from "~/utils/tools.js";
+
 
 const items = ref([
   { id: 1, title: '卡片 1', image: '//cdn.cnbj1.fds.api.mi-img.com/nr-pub/202409251507_d9b4ae236e3ee8b78cc5faaf706c71a3.png?thumb=1&w=400&h=400&f=webp&q=90',intro:"前置6000万超广角人像｜静谧通话 2.0｜超高清高分辨率临境双屏",},

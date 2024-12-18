@@ -94,22 +94,6 @@
       <q-card-section>
         <div class="text-subtitle2 q-mb-sm">{{ t('presell.payment.paymentMethod') }}</div>
         <div class="payment-methods">
-          <!-- 支付宝支付 -->
-          <q-item tag="label" v-ripple>
-            <q-item-section avatar>
-              <q-radio v-model="selectedPaymentMethod" val="alipay" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ t('presell.payment.methods.alipay') }}</q-item-label>
-              <q-item-label caption>
-                {{ t('presell.payment.methods.alipayDesc') }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section avatar>
-              <q-img src="/payment/alipay.png" width="40px" />
-            </q-item-section>
-          </q-item>
-
           <!-- PayPal支付 -->
           <q-item tag="label" v-ripple>
             <q-item-section avatar>
@@ -123,22 +107,6 @@
             </q-item-section>
             <q-item-section avatar>
               <q-img src="/payment/paypal.png" width="40px" />
-            </q-item-section>
-          </q-item>
-
-          <!-- 微信支付 -->
-          <q-item tag="label" v-ripple>
-            <q-item-section avatar>
-              <q-radio v-model="selectedPaymentMethod" val="wechat" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ t('presell.payment.methods.wechat') }}</q-item-label>
-              <q-item-label caption>
-                {{ t('presell.payment.methods.wechatDesc') }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section avatar>
-              <q-img src="/payment/wechat.png" width="40px" />
             </q-item-section>
           </q-item>
 
@@ -185,7 +153,7 @@
           kind: 4
         }]"
         :intro="order.presellOrder.orderNumber"
-        product-name="预售��单尾款支付"
+        product-name="预售单尾款支付"
         :url="'/presell/order/success'"
         @payment-success="handlePaypalSuccess"
         @payment-cancel="handlePaypalCancel"
@@ -203,6 +171,8 @@ import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import AlipayComponent from '~/components/payment/AlipayComponent.vue'
 import PayaplCard from "~/components/payment/PaypalCardComponent.vue";
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const { t } = useI18n()
 const $q = useQuasar()
@@ -211,7 +181,6 @@ const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
 const paypalDialog = ref(false)
-const checkOrder = ref({})
 // 定义接口类型
 interface PresellProduct {
   deliveryTemplateId:number,
@@ -515,13 +484,13 @@ const handlePayment = async () => {
 
   loading.value = true
   try {
-    const paymentData = {
-      orderId: order.value.presellOrder.orderId,
-      orderNumber: order.value.presellOrder.orderNumber,
-      amount: getFinalPaymentAmount(),
-      freightAmount: order.value.freightAmount,
-      paymentMethod: selectedPaymentMethod.value
-    }
+    // const paymentData = {
+    //   orderId: order.value.presellOrder.orderId,
+    //   orderNumber: order.value.presellOrder.orderNumber,
+    //   amount: getFinalPaymentAmount(),
+    //   freightAmount: order.value.freightAmount,
+    //   paymentMethod: selectedPaymentMethod.value
+    // }
 
     const response = await api.post('/admin/paypal/pay', {
       amount:  getFinalPaymentAmount(),

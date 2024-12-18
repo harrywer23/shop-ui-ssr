@@ -10,10 +10,10 @@ export default {
     other: '기타'
   },
   status: {
-    waiting: '처리 대기',
-    processed: '처리 완료',
-    rejected: '거절됨',
-    pending: '처리 대기'
+    waiting: '대기 중',
+    processed: '처리됨',
+    rejected: '거부됨',
+    pending: '보류 중'
   },
   form: {
     title: '제목',
@@ -28,6 +28,7 @@ export default {
     success: '제출 성공',
     error: '제출 실패',
     titleRequired: '제목을 입력해주세요',
-    contentRequired: '내용을 입력해주세요'
+    contentRequired: '내용을 입력해주세요',
+    emailError: '이메일 전송에 실패했습니다. 다시 시도해주세요'
   }
-} 
+}

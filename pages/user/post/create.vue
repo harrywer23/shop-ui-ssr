@@ -58,7 +58,7 @@
               class="col-4 col-sm-3 col-md-2"
             >
               <q-img
-                :src="image.url"
+                :src="getImageUrl(image.url)"
                 :ratio="1"
                 class="rounded-borders"
               >
@@ -116,7 +116,7 @@
               <q-icon name="attach_file" />
             </template>
           </q-file>
-          
+
           <!-- 已上传文件列表 -->
           <div v-if="attachments.length" class="q-mt-md">
             <q-list bordered separator>
@@ -169,6 +169,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const $q = useQuasar()
@@ -360,4 +362,4 @@ const handleSubmit = async () => {
     }
   }
 }
-</style> 
+</style>

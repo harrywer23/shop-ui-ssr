@@ -1,66 +1,36 @@
 <template>
-  <q-img
-    :src="imageUrl"
-    :ratio="ratio"
-    :spinner-color="spinnerColor"
-    :spinner-size="spinnerSize"
-    :no-spinner="noSpinner"
-    :alt="alt"
-    :width="width"
-    :height="height"
-    :fit="fit"
-  >
-    <slot></slot>
-  </q-img>
+  <q-img :src="getImageUrl(imageUrl)"
+         :alt="props.title"
+         @error="handleError"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-const config = useRuntimeConfig()
+import { ref, onMounted, defineProps } from 'vue';
+const props = withDefaults(defineProps<{
+  src: string;
+  title?: string;
+}>(), {
+  title: '次元集市 手办 周边 Dimensional market hand do around' // 设置默认值
+});
 
-const props = defineProps({
-  src: {
-    type: String,
-    required: true
-  },
-  ratio: {
-    type: [Number, String],
-    default: 1
-  },
-  spinnerColor: {
-    type: String,
-    default: 'primary'
-  },
-  spinnerSize: {
-    type: [Number, String],
-    default: 42
-  },
-  noSpinner: {
-    type: Boolean,
-    default: false
-  },
-  alt: {
-    type: String,
-    default: ''
-  },
-  width: {
-    type: String,
-    default: undefined
-  },
-  height: {
-    type: String,
-    default: undefined
-  },
-  fit: {
-    type: String,
-    default: 'cover'
+const imageUrl = ref(""); // 初始化 imageUrl
+function handleError() {
+  imageUrl.value = "/empty.png"; // 图片加载失败时设置为默认图片
+}
+
+onMounted(async () => {
+  const cachedUrl = localStorage.getItem(props.src); // 从 localStorage 获取缓存的 URL
+  if (cachedUrl) {
+    imageUrl.value = cachedUrl; // 如果缓存存在，直接使用缓存的 URL
+  } else {
+    const imgUrl = getImageUrl(props.src);
+    imageUrl.value = imgUrl;
+    localStorage.setItem(props.src, imgUrl); // 将新加载的 URL 存入 localStorage
   }
-})
-
-// 处理图片URL
-const imageUrl = computed(() => {
-  if (!props.src) return ''
-  if (props.src.startsWith('http')) return props.src
-  return getImageUrl(props.src)
-})
+});
 </script>
+
+<style scoped>
+/* 添加样式以适应您的设计 */
+</style>

@@ -54,7 +54,7 @@
             <!-- 用户头像 -->
             <q-item-section avatar>
               <q-avatar>
-                <img :src="topic.userAvatar">
+                <q-img :src="getImageUrl(topic.userAvatar)"/>
               </q-avatar>
             </q-item-section>
 
@@ -123,6 +123,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useQuasar, date } from 'quasar'
 import { api } from '~/utils/axios'
 import { useI18n } from 'vue-i18n'
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const route = useRoute()
@@ -235,4 +236,4 @@ onMounted(() => {
   font-size: 1.1em;
   font-weight: 500;
 }
-</style> 
+</style>

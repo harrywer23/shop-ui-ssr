@@ -188,7 +188,7 @@
 
         <q-card-section class="text-center">
           <q-img
-            :src="previewDialog.url"
+            :src="getImageUrl(previewDialog.url)"
             style="max-width: 100%; max-height: 80vh"
           />
         </q-card-section>
@@ -202,6 +202,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar, date } from 'quasar'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const $q = useQuasar()

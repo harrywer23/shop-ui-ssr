@@ -141,7 +141,7 @@
         </q-card-section>
 
         <q-card-section class="text-center">
-          <q-img :src="qrCodeUrl" style="width: 200px; height: 200px" />
+          <q-img :src="getImageUrl(qrCodeUrl)" style="width: 200px; height: 200px" />
           <div class="text-subtitle1 q-mt-md">
             充值金额: ¥{{ selectedAmount }}
           </div>
@@ -159,6 +159,8 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const $q = useQuasar()
@@ -324,4 +326,4 @@ onBeforeUnmount(() => {
     }
   }
 }
-</style> 
+</style>

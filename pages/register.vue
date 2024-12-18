@@ -1,34 +1,52 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Notify } from 'quasar'
+import { useI18n } from 'vue-i18n'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue"
 
+const { t } = useI18n()
 const router = useRouter()
 const inviteCode = useCookie('invite')
-const name = ref('')
-const email = ref('')
-const password = ref('')
-const uuid = ref('')
-const captcha = ref('')
+
+// 表单数据
+const formData = ref({
+  name: '',
+  email: '',
+  password: '',
+  uuid: '',
+})
 const accept = ref(false)
 const showPassword = ref(false)
+const submitting = ref(false)
 
-// 用户名和密码的验证规则
+// 验证规则
 const usernameRules = [
-  (val: string) => /^[a-zA-Z0-9]+$/.test(val) || 'Username must contain only letters and numbers',
-  (val: string) => val.length >= 5 && val.length <= 20 || 'Username must be between 5 and 20 characters'
+  (val: string) => !!val || t('validation.nameRequired'),
+  (val: string) => /^[a-zA-Z0-9]+$/.test(val) || t('validation.nameFormat'),
+  (val: string) => val.length >= 5 && val.length <= 20 || t('validation.nameLength')
 ]
 
 const passwordRules = [
-  (val: string) => val.length >= 5 && val.length <= 20 || 'Password must be between 5 and 20 characters'
+  (val: string) => !!val || t('validation.passwordRequired'),
+  (val: string) => val.length >= 5 && val.length <= 20 || t('validation.passwordLength')
+]
+
+const emailRules = [
+  (val: string) => !!val || t('validation.emailRequired'),
+  (val: string) => val.length >= 5 && val.length <= 30 || t('validation.emailLength'),
+  (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || t('validation.emailFormat')
 ]
 
 // 重置表单
 function onReset() {
-  name.value = ''
-  email.value = ''
-  password.value = ''
+  formData.value = {
+    name: '',
+    email: '',
+    password: '',
+    uuid: ''
+  }
   accept.value = false
 }
 
@@ -36,35 +54,29 @@ function onReset() {
 async function onSubmit() {
   if (!accept.value) {
     Notify.create({
-      color: 'red-5',
+      color: 'negative',
       textColor: 'white',
       icon: 'warning',
-      message: 'You need to accept the license and terms first'
+      message: t('validation.acceptTerms')
     })
     return
   }
 
   try {
-    // 构建注册数据
+    submitting.value = true
     const registerData = {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-      uuid: uuid.value,
+      ...formData.value,
       inviteCode: inviteCode.value
     }
 
-    //console.log('注册数据:', registerData)
+    const { data } = await api.post('/register', registerData)
 
-    const response = await api.post('/register', registerData)
-    const data = response.data
-
-    if (data && data.code === 200) {
+    if (data.code === 200) {
       Notify.create({
-        color: 'green-4',
+        color: 'positive',
         textColor: 'white',
-        icon: 'cloud_done',
-        message: 'Registration successful'
+        icon: 'check_circle',
+        message: t('login.registerSuccess')
       })
 
       // 延迟跳转
@@ -72,16 +84,18 @@ async function onSubmit() {
         router.push('/login')
       }, 1500)
     } else {
-      throw new Error(data.msg || 'Registration failed')
+      throw new Error(data.msg || t('login.registerFailed'))
     }
   } catch (error: any) {
     console.error('注册失败:', error)
     Notify.create({
-      color: 'red-5',
+      color: 'negative',
       textColor: 'white',
       icon: 'error',
-      message: error.message || 'An error occurred'
+      message: error.message || t('common.error')
     })
+  } finally {
+    submitting.value = false
   }
 }
 
@@ -92,98 +106,147 @@ function togglePasswordVisibility() {
 </script>
 
 <template>
-  <div class="center-container">
-    <div class="q-pa-md" style="max-width: 600px">
-      <q-card class="my-card">
-        <q-card-section>
-          <div class="text-h6">{{ $t('login.regis') }}</div>
-          <div class="text-subtitle2">{{ $t('login.welcome') }}</div>
-        </q-card-section>
+  <div class="register-container">
+    <div class="register-content">
+      <!-- Logo区域 -->
+      <div class="logo-section text-center q-mb-xl">
+        <q-img
+          src="/favicon.ico"
+          alt="Logo"
+          class="logo-image"
+          :ratio="1"
+        />
+        <h1 class="text-h4 q-mt-md text-weight-bold text-primary">{{ t('login.regis') }}</h1>
+        <p class="text-subtitle1 text-grey-7">{{ t('login.welcome') }}</p>
+      </div>
 
-        <q-card-section class="q-pt-none">
-          <q-form
-            class="q-gutter-md"
-            @reset="onReset"
-            @submit.prevent="onSubmit"
+      <!-- 注册表单卡片 -->
+      <q-card class="register-card q-pa-lg">
+        <q-form
+          class="q-gutter-md"
+          @reset="onReset"
+          @submit.prevent="onSubmit"
+        >
+          <!-- 用户名输入 -->
+          <q-input
+            v-model="formData.name"
+            :label="t('login.name')"
+            :rules="usernameRules"
+            outlined
+            class="input-field"
           >
-            <!-- 用户名输入 -->
-            <q-input
-              v-model="name"
-              :label="$t('login.name') + ' *'"
-              :rules="usernameRules"
-              filled
-              lazy-rules
+            <template v-slot:prepend>
+              <q-icon name="person" />
+            </template>
+          </q-input>
+
+          <!-- 邮箱输入 -->
+          <q-input
+            v-model="formData.email"
+            :label="t('login.email')"
+            :rules="emailRules"
+            outlined
+            class="input-field"
+          >
+            <template v-slot:prepend>
+              <q-icon name="email" />
+            </template>
+          </q-input>
+
+          <!-- 密码输入 -->
+          <q-input
+            v-model="formData.password"
+            :label="t('login.password')"
+            :rules="passwordRules"
+            :type="showPassword ? 'text' : 'password'"
+            outlined
+            class="input-field"
+          >
+            <template v-slot:prepend>
+              <q-icon name="lock" />
+            </template>
+            <template v-slot:append>
+              <q-icon
+                :name="showPassword ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="togglePasswordVisibility"
+              />
+            </template>
+          </q-input>
+
+          <!-- 条款同意 -->
+          <div class="terms-section q-mt-md">
+            <q-checkbox
+              v-model="accept"
+              :label="t('introTerms')"
+              color="primary"
             />
-
-            <!-- 邮箱输入 -->
-            <q-input
-              v-model="email"
-              :label="$t('login.email') + ' *'"
-              :rules="[
-                val => !!val || 'Email is required',
-                val => val.length >= 5 && val.length <= 30 || 'Email must be between 5 and 30 characters',
-                val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Invalid email format'
-              ]"
-              filled
-              type="email"
-              lazy-rules
-            />
-
-            <!-- 密码输入 -->
-            <q-input
-              v-model="password"
-              :label="$t('login.password') + ' *'"
-              :rules="passwordRules"
-              :type="showPassword ? 'text' : 'password'"
-              filled
-              lazy-rules
-            >
-              <template #append>
-                <q-icon
-                  :name="showPassword ? 'visibility_off' : 'visibility'"
-                  class="cursor-pointer"
-                  @click="togglePasswordVisibility"
-                />
-              </template>
-            </q-input>
-
-            <!-- 条款同意 -->
-            <div class="terms-section">
-              <q-toggle v-model="accept" :label="$t('introTerms')" />
-              <div class="terms-links">
-                <a href="/privacyPolicy">{{ $t('useTerms') }}</a>
-                <a href="/use">{{ $t('privateTerms') }}</a>
-              </div>
+            <div class="terms-links q-mt-sm">
+              <a href="/privacyPolicy" class="text-primary">{{ t('useTerms') }}</a>
+              <span class="text-grey-6">|</span>
+              <a href="/use" class="text-primary">{{ t('privateTerms') }}</a>
             </div>
+          </div>
 
-            <!-- 提交按钮 -->
+          <!-- 按钮区域 -->
+          <div class="actions-section q-mt-lg">
             <q-btn
-              :label="$t('login.regis')"
+              :label="t('login.regis')"
               color="primary"
               class="full-width"
+              size="large"
               type="submit"
+              :loading="submitting"
             />
 
-            <!-- 登录链接 -->
-            <div class="extra-links">
-              <router-link to="/login" class="login-link">
-                {{ $t('login.login') }}
+            <div class="text-center q-mt-md">
+              <span class="text-grey-7">{{ t('login.hasAccount') }}</span>
+              <router-link to="/login" class="login-link q-ml-sm">
+                {{ t('login.login') }}
               </router-link>
             </div>
-          </q-form>
-        </q-card-section>
+          </div>
+        </q-form>
       </q-card>
     </div>
   </div>
 </template>
 
 <style scoped>
-.center-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.register-container {
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 20px;
+}
+
+.register-content {
+  width: 100%;
+  max-width: 480px;
+}
+
+.logo-section {
+  margin-bottom: 2rem;
+}
+
+.logo-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.register-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.input-field {
+  margin-bottom: 1rem;
 }
 
 .terms-section {
@@ -194,26 +257,52 @@ function togglePasswordVisibility() {
 
 .terms-links {
   display: flex;
-  gap: 16px;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
 }
 
 .terms-links a {
-  color: var(--q-primary);
   text-decoration: none;
+  transition: color 0.3s;
 }
 
-.extra-links {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+.terms-links a:hover {
+  color: var(--q-primary);
+  text-decoration: underline;
+}
+
+.actions-section {
+  margin-top: 2rem;
 }
 
 .login-link {
   color: var(--q-primary);
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
 }
 
 .login-link:hover {
   text-decoration: underline;
+}
+
+/* 响应式调整 */
+@media (max-width: 599px) {
+  .register-container {
+    padding: 16px;
+    background: white;
+  }
+
+  .register-card {
+    box-shadow: none;
+    background: white;
+    backdrop-filter: none;
+  }
+
+  .logo-section {
+    margin-bottom: 1.5rem;
+  }
 }
 </style>

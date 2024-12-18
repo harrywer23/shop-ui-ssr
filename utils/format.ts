@@ -23,24 +23,6 @@ export function formatDate(date: string | Date, format: string = 'YYYY-MM-DD HH:
     .replace('mm', minutes)
     .replace('ss', seconds)
 }
-// 添加日期格式化函数
-export function formatToDateTime(date: string | null): string {
-  if (!date) return ''
-
-  const d = new Date(date)
-
-  // 格式化年月日
-  const year = d.getFullYear()
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-
-  // 格式化时分秒
-  const hours = String(d.getHours()).padStart(2, '0')
-  const minutes = String(d.getMinutes()).padStart(2, '0')
-  const seconds = String(d.getSeconds()).padStart(2, '0')
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-}
 
 /**
  * 格式化金额
@@ -88,15 +70,15 @@ export function formatCouponCondition(coupon: { minAmount: number }): string {
  */
 export function shanghaiToLocal(shanghaiTime: string): string {
   if (!shanghaiTime) return ''
-  
+
   // 解析上海时间字符串
   const [datePart, timePart] = shanghaiTime.split(' ')
   const [year, month, day] = datePart.split('-').map(Number)
   const [hour, minute, second] = timePart.split(':').map(Number)
-  
+
   // 创建上海时间的Date对象 (UTC+8)
   const shanghaiDate = new Date(Date.UTC(year, month - 1, day, hour - 8, minute, second))
-  
+
   // 转换为本地时间
   const localYear = shanghaiDate.getFullYear()
   const localMonth = String(shanghaiDate.getMonth() + 1).padStart(2, '0')
@@ -104,7 +86,7 @@ export function shanghaiToLocal(shanghaiTime: string): string {
   const localHour = String(shanghaiDate.getHours()).padStart(2, '0')
   const localMinute = String(shanghaiDate.getMinutes()).padStart(2, '0')
   const localSecond = String(shanghaiDate.getSeconds()).padStart(2, '0')
-  
+
   return `${localYear}-${localMonth}-${localDay} ${localHour}:${localMinute}:${localSecond}`
 }
 
@@ -115,21 +97,21 @@ export function shanghaiToLocal(shanghaiTime: string): string {
  */
 export function localToShanghai(localTime: string): string {
   if (!localTime) return ''
-  
+
   // 解析本地时间字符串
   const [datePart, timePart] = localTime.split(' ')
   const [year, month, day] = datePart.split('-').map(Number)
   const [hour, minute, second] = timePart.split(':').map(Number)
-  
+
   // 创建本地时间的Date对象
   const localDate = new Date(year, month - 1, day, hour, minute, second)
-  
+
   // 获取与UTC的时差（分钟）
   const timezoneOffset = localDate.getTimezoneOffset()
-  
+
   // 调整到上海时间 (UTC+8)
   const shanghaiDate = new Date(localDate.getTime() + (timezoneOffset + 480) * 60000)
-  
+
   // 格式化上海时间
   const shanghaiYear = shanghaiDate.getFullYear()
   const shanghaiMonth = String(shanghaiDate.getMonth() + 1).padStart(2, '0')
@@ -137,6 +119,6 @@ export function localToShanghai(localTime: string): string {
   const shanghaiHour = String(shanghaiDate.getHours()).padStart(2, '0')
   const shanghaiMinute = String(shanghaiDate.getMinutes()).padStart(2, '0')
   const shanghaiSecond = String(shanghaiDate.getSeconds()).padStart(2, '0')
-  
+
   return `${shanghaiYear}-${shanghaiMonth}-${shanghaiDay} ${shanghaiHour}:${shanghaiMinute}:${shanghaiSecond}`
 }

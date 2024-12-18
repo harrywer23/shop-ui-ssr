@@ -10,17 +10,20 @@
             :src="currentImage || getImageUrl(productInfo?.pic)"
             :ratio="1"
             class="main-image"
+            placeholder-src="/images/favicon.ico"
           />
 
           <!-- SKU 图片列表 -->
           <div v-if="hasSku" class="sku-images q-pa-md">
-            <q-scroll-area horizontal style="height: 100px">
+            <q-scroll-area horizontal style="height: 100px" :thumb-style="{ width: '4px' }">
               <div class="row no-wrap q-gutter-sm">
                 <q-img
-                  v-for="sku in productInfo?.skuList"
+                  v-for="sku in visibleSkus"
                   :key="sku.skuId"
                   :src="getImageUrl(sku.pic || productInfo?.pic)"
                   :ratio="1"
+                  loading="lazy"
+                  placeholder-src="/images/favicon.ico"
                   class="thumb-image cursor-pointer"
                   :class="{ 'active': isSkuSelected && currentSku?.skuId === sku.skuId }"
                   style="width: 80px"
@@ -55,14 +58,10 @@
       <div class="col-12 col-md-7">
         <q-card flat bordered class="product-info">
           <q-card-section>
-            <!-- 商品名称 -->
+            <!-- 商品名 -->
             <div class="text-h6">{{ getCurrentLanguageName(productInfo?.translations, productInfo?.prodName)  }}</div>
             <div class="text-subtitle2 text-grey">编码: {{ productInfo?.prodCode || '暂无' }}</div>
-
-            <!-- 商品简介 -->
-<!--            <div class="brief q-mt-md">{{ productInfo?.brief }}</div>-->
-
-            <!-- 价格信息 -->
+           <!-- 价格信息 -->
             <div class="price-info q-mt-lg">
               <div class="row items-center q-gutter-x-md">
                 <div class="text-h5 text-negative">
@@ -422,16 +421,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue'
 import { useHead } from '#imports'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { ProductType } from '~/utils/constants'
-import type {ProductDetail, Sku} from '~/types/product'
-import ProductComments from '~/components/product/ProductComments.vue'
-import {formatDateTime, getCurrentLanguageName, getImageUrl, getLanguageName} from "~/utils/tools";
-import {useI18n} from "vue-i18n";
-import { shanghaiToLocal } from '~/utils/format'
+import type { ProductDetail, Sku } from '~/types/product'
+import { formatDateTime, getCurrentLanguageName, getImageUrl, getLanguageName } from "~/utils/tools";
+import { useI18n } from "vue-i18n";
+import CachedImage from '~/components/common/CachedImage.vue'
+import { useDebounceFn } from '@vueuse/core'
 const { locale, t } = useI18n()
 const lang = locale.value;
 const route = useRoute()
@@ -451,9 +450,12 @@ const currentImage = ref('')
 
 // 计算宣传图片列表
 const imgList = computed(() => {
-  if (!productInfo.value?.imgs) return []
-  return productInfo.value.imgs.split(',')
-})
+  if (!productInfo.value?.imgs) return [];
+  // 分割字符串为数组��限制最大长度为3
+  const imgsArray = productInfo.value.imgs.split(',');
+  return imgsArray.slice(0, 3);
+});
+
 
 // 计算配送方式
 const deliveryMode = computed(() => {
@@ -465,26 +467,9 @@ const deliveryMode = computed(() => {
   }
 })
 
-function isProdProp(value1:string,value2:string){
-  //console.log("判断是否等",value1,value2,(value1 === value2));
-  if(value1 === value2){
-    return true;
-  }
-  return false;
-}
-
-// 更新评论的处理函数
-const updateComments = (comments: any) => {
-  // 处理评论更新逻辑
-}
 // 加载商品数据
 async function loadProductData() {
   try {
-    // const response = await fetch(`/prod/detail/${prodId.value}&lang=${lang}`, {
-    //       headers: {
-    //         'Accept-Language': lang // 添加语言请求头
-    //       }
-    //     })
     const response = await api.get(`/prod/detail/${prodId.value}`)
     const result = await response.data
     if (result.code === 200) {
@@ -514,7 +499,7 @@ const isSkuValueAvailable = (propId: string | number, valueId: string | number):
       return false
     }
 
-    // 构建新的选择状态
+    // 构造新的选择状态
     const newSelected = { ...selectedSkuValues.value }
 
     // 如果当前属性已选择其他值，先移除
@@ -555,7 +540,7 @@ const isSkuValueAvailable = (propId: string | number, valueId: string | number):
   }
 }
 
-// 修改选择 SKU 值的方法
+// 修改���择 SKU 值的方法
 function selectSkuValue(propId: string | number, valueId: string | number) {
   try {
     if (!isSkuValueAvailable(propId, valueId)) {
@@ -631,7 +616,7 @@ function previewImage(url: string) {
 
 
 
-// ��算是否已选择完所有SKU
+// 算是否已选择完所有SKU
 const isSkuSelected = computed(() => {
   if (!productInfo.value?.propList?.length) return true
   return productInfo.value.propList.every(prop =>
@@ -662,10 +647,11 @@ const canBuy = computed(() => {
 
 // 获取当前价格
 const getCurrentPrice = computed(() => {
+  if (!productInfo.value) return 0
   if (hasSku.value && currentSku.value) {
     return currentSku.value.price || currentSku.value.oriPrice
   }
-  return productInfo.value?.price || productInfo.value?.oriPrice
+  return productInfo.value.price || productInfo.value.oriPrice
 })
 
 // 修改立即购买方法
@@ -802,7 +788,7 @@ async function handleAddToCart() {
     })
   }
 }
-// 修改更新数量方法
+// 修改更新量方法
 function updateQuantity(delta: number) {
   const newQuantity = quantity.value + delta
   const maxStock = getMaxStock()
@@ -813,24 +799,23 @@ function updateQuantity(delta: number) {
 
 // 监听SKU选择变化
 watch(selectedSkuValues, (newValues) => {
-  try {
-    // 查找匹配的 SKU
-    const matchingSku = findMatchingSku(newValues)
+  if(!productInfo.value) return
 
-    if (matchingSku) {
-      currentSku.value = matchingSku
-      currentImage.value = getImageUrl(matchingSku.pic || productInfo.value?.pic)
-    } else {
-      currentSku.value = null
-      currentImage.value = getImageUrl(productInfo.value?.pic)
+  nextTick(() => {
+    try {
+      const matchingSku = findMatchingSku(newValues)
+      if (matchingSku) {
+        currentSku.value = matchingSku
+        currentImage.value = getImageUrl(matchingSku.pic || productInfo.value?.pic)
+      } else {
+        currentSku.value = null
+        currentImage.value = getImageUrl(productInfo.value?.pic)
+      }
+      quantity.value = 1
+    } catch (error) {
+      console.error('处理SKU值变化失败:', error)
     }
-
-    // 重置数量
-    quantity.value = 1
-
-  } catch (error) {
-    console.error('处理SKU值变化失败:', error)
-  }
+  })
 }, { deep: true })
 
 // 监听 SKU 变化，更新显示图片
@@ -1006,7 +991,7 @@ useHead({
     { property: 'og:image', content: productInfo.value?.pic },
     { property: 'og:type', content: 'product' },
     { property: 'og:price:amount', content: String(productInfo.value?.price) },
-    { property: 'og:price:currency', content: 'CNY' },
+    { property: 'og:price:currency', content: 'USA' },
     // Twitter Card tags
     { name: 'twitter:card', content: 'product' },
     { name: 'twitter:title', content: metaTitle },
@@ -1026,21 +1011,85 @@ useHead({
   ]
 })
 
-// 加载商品详情
-// const loadProductDetail = async () => {
-//   try {
-//     const response = await api.get(`/product/detail/${route.params.id}`)
-//     if (response.data.code === 200) {
-//       product.value = response.data.data
-//     }
-//   } catch (error) {
-//     console.error('加载商品详情失败:', error)
-//   }
-// }
-//
-// onMounted(() => {
-//   loadProductDetail()
-// })
+// 2. 组件分割
+const ProductComments = defineAsyncComponent(() =>
+  import('~/components/product/ProductComments.vue')
+)
+
+// 3. 计算属性优化
+const visibleSkus = computed(() => {
+  return productInfo.value?.skuList?.slice(0, 10) || []
+})
+
+// 4. 数据预加载优化
+const { data: productData } = await useFetch(`/api/prod/detail/${prodId.value}`, {
+  key: `product-${prodId.value}`,
+  default: () => null
+})
+
+if(productData.value?.code === 200) {
+  productInfo.value = productData.value.data
+}
+
+// 5. 防抖处理
+const debouncedUpdateQuantity = useDebounceFn((delta: number) => {
+  const newQuantity = quantity.value + delta
+  const maxStock = getMaxStock()
+  if (newQuantity >= 1 && newQuantity <= maxStock) {
+    quantity.value = newQuantity
+  }
+}, 300)
+
+// 6. 优化监听器
+watch(() => selectedSkuValues.value, (newValues) => {
+  if(!productInfo.value) return
+
+  nextTick(() => {
+    try {
+      const matchingSku = findMatchingSku(newValues)
+      if (matchingSku) {
+        currentSku.value = matchingSku
+        currentImage.value = getImageUrl(matchingSku.pic || productInfo.value?.pic)
+      } else {
+        currentSku.value = null
+        currentImage.value = getImageUrl(productInfo.value?.pic)
+      }
+      quantity.value = 1
+    } catch (error) {
+      console.error('处理SKU值变化失败:', error)
+    }
+  })
+}, { deep: true })
+
+// 7. 添加错误边界处理
+onErrorCaptured((err, instance, info) => {
+  console.error('组件错误:', err)
+  return false
+})
+
+// 获取品质对应的颜色
+const getQualityColor = (quality: string) => {
+  const colorMap: Record<string, string> = {
+    'S': 'purple-10', // 臻品
+    'A': 'purple',    // 精品
+    'B': 'teal',     // 良品
+    'C': 'blue-grey', // 普品
+    'D': 'grey-7'    // 基础款
+  }
+  return colorMap[quality.toUpperCase()] || 'grey'
+}
+
+// 商品类型映射
+const getTypeKey = (type: number) => {
+  const typeMap: Record<number, string> = {
+    1: 'NORMAL',      // 普通商品
+    2: 'PRESELL',     // 预售商品
+    3: 'GROUP',       // 团购商品
+    4: 'SECKILL'      // 秒杀商品
+  }
+  return typeMap[type] || 'NORMAL'
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -1263,6 +1312,11 @@ useHead({
         border-radius: 4px;
       }
     }
+  }
+
+  // 品质标签样式
+  .q-chip {
+    font-weight: 500;
   }
 }
 

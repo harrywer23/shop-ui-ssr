@@ -5,7 +5,7 @@
           <q-avatar>
             <q-img src="/favicon.webp"/>
           </q-avatar>
-          {{ $t('common.title') }}ADMIN
+          {{ $t('common.title') }}
         </q-toolbar-title>
         <q-space />
         <q-select
@@ -144,9 +144,9 @@
 <q-route-tab to="/forum" :label="t('nav.community')" />
         <q-route-tab to="/user" :label="$t('nav.user')" />
       </q-tabs>
-      <q-banner inline-actions class="text-white bg-red">
-        {{ t('common.maintenance') }}
-      </q-banner>
+<!--      <q-banner inline-actions class="text-white bg-red">-->
+<!--        {{ t('common.maintenance') }}-->
+<!--      </q-banner>-->
     </q-header>
 
 
@@ -156,6 +156,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n';
+
 
 const { t, locale } = useI18n();
 const router = useRouter()

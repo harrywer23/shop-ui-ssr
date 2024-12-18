@@ -1,207 +1,347 @@
-<script lang="ts" setup>
-import {onMounted, ref} from 'vue';
-import { Dialog, Notify } from 'quasar';
-import {useRouter} from "vue-router";
-import {api} from "~/utils/axios";
-import {API_CONSTANTS} from "~/utils/constants";
-const router = useRouter(); // 使用 Vue Router 的 useRouter 函数
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import {  Notify } from 'quasar'
+import { useI18n } from 'vue-i18n'
+import { api } from '~/utils/axios'
+import { API_CONSTANTS } from '~/utils/constants'
 
-const username = ref('');
-const password = ref('');
-const uuid = ref('');
-const captcha = ref('');
-const accept = ref(false);
+const { t } = useI18n()
+const router = useRouter()
 
+// 表单数据
+const formData = ref({
+  username: '',
+  password: '',
+  uuid: '',
+  captcha: ''
+})
+const accept = ref(false)
+const showPassword = ref(false)
+const submitting = ref(false)
+
+// 验证规则
+const usernameRules = [
+  (val: string) => !!val || t('validation.nameRequired'),
+  (val: string) => val.length >= 5 && val.length <= 20 || t('validation.nameLength')
+]
+
+const passwordRules = [
+  (val: string) => !!val || t('validation.passwordRequired'),
+  (val: string) => val.length >= 5 && val.length <= 20 || t('validation.passwordLength')
+]
+
+// 登录处理
 async function onSubmit() {
   if (!accept.value) {
     Notify.create({
-      color: 'red-5',
+      color: 'negative',
       textColor: 'white',
       icon: 'warning',
-      message: 'You need to accept the license and terms first'
+      message: t('validation.acceptTerms')
     })
-    return;
+    return
   }
 
   try {
-    const response = await api.post("/login", {
-      username: username.value,
-      password: password.value,
-      uuid: uuid.value,
-      code: captcha.value,
-      captcha: captcha.value,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    submitting.value = true
+    const response = await api.post('/login', {
+      username: formData.value.username,
+      password: formData.value.password,
+      uuid: formData.value.uuid,
+      code: formData.value.captcha,
+      captcha: formData.value.captcha
+    })
 
-    const data = response.data;
-    if (data.code == 200) {
+    const { data } = response
+
+    if (data.code === 200) {
+      // 设置 cookies
       const token = useCookie('token', {
-        maxAge: 60 * 60 * 24 * 7, // 7天过期
-        path: '/',  // 添加路径
-        secure: process.env.NODE_ENV === 'production', // 在生产环境中使用 HTTPS
-        sameSite: 'strict'  // 增加安全性
-      });
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      })
+      const userInfo = useCookie('userInfo', { maxAge: 60 * 60 * 24 * 7, path: '/' })
+      const accessToken = useCookie('accessToken', { maxAge: 60 * 60 * 24 * 7, path: '/' })
+      const refreshToken = useCookie('refreshToken', { maxAge: 60 * 60 * 24 * 7, path: '/' })
+      const userId = useCookie('id', { maxAge: 60 * 60 * 24 * 7, path: '/' })
 
-      const userInfo = useCookie('userInfo', { maxAge: 60 * 60 * 24 * 7, path: '/' });
-      const accessToken = useCookie('accessToken', { maxAge: 60 * 60 * 24 * 7, path: '/' });
-      const refreshToken = useCookie('refreshToken', { maxAge: 60 * 60 * 24 * 7, path: '/' });
-      const userId = useCookie('id', { maxAge: 60 * 60 * 24 * 7, path: '/' });
+      token.value = data.token
+      userInfo.value = JSON.stringify(data.user)
+      accessToken.value = data.accessToken
+      refreshToken.value = data.refreshToken
+      userId.value = data.user.id.toString()
 
-      token.value = data.token;
-      userInfo.value = JSON.stringify(data.user);
-      accessToken.value = data.accessToken;
-      refreshToken.value = data.refreshToken;
-      userId.value = data.user.id.toString();
-
-      Dialog.create({
+      Notify.create({
         color: 'positive',
-        message: '登录成功'
-      });
+        textColor: 'white',
+        icon: 'check_circle',
+        message: t('login.loginSuccess')
+      })
 
       setTimeout(() => {
-        router.push('/user');
-      }, 500);
+        router.push('/user')
+      }, 500)
     } else {
-      // await refreshCaptcha();
-      Dialog.create({
-        color: 'red-5',
-        message: data.msg
-      });
+      throw new Error(data.msg || t('login.loginFailed'))
     }
-  } catch (error) {
-    // await refreshCaptcha();
-    Dialog.create({
-      color: 'red-5',
-      message: '登录失败，请重试'
-    });
+  } catch (error: any) {
+    console.error('登录失败:', error)
+    Notify.create({
+      color: 'negative',
+      textColor: 'white',
+      icon: 'error',
+      message: error.message || t('common.error')
+    })
+  } finally {
+    submitting.value = false
   }
 }
 
-function login(){
+// 验证码配置
+function initCaptcha() {
   if (!accept.value) {
     Notify.create({
-      color: 'red-5',
+      color: 'negative',
       textColor: 'white',
       icon: 'warning',
-      message: 'You need to accept the license and terms first'
+      message: t('validation.acceptTerms')
     })
-    return;
+    return
   }
+
   const captchaConfig = {
-    // 请求验证码接口
-    // 验证验证码接口
-    requestCaptchaDataUrl: API_CONSTANTS.BASE_URL+"/gen",
-    validCaptchaUrl: API_CONSTANTS.BASE_URL+"/check",
-    // requestCaptchaDataUrl: "https://admin.51x.uk/gen",
-    // validCaptchaUrl: "https://admin.51x.uk/check",
-    // 绑定的div
-    bindEl: "#captcha-box",
-    // 验证成功回调函数
-    validSuccess: (res, c, t) => {
-      //console.log("验证码验证成功回调...")
-      //console.log(res.data.id)
-      // 销毁验证码
-      t.destroyWindow();
-      uuid.value=res.data.id;
-      onSubmit();
-      // alert("验证成功: token:" + res.data.token)
-      //console.log(res)
-      // todo 携带token调用登录接口
+    requestCaptchaDataUrl: `${API_CONSTANTS.BASE_URL}/gen`,
+    validCaptchaUrl: `${API_CONSTANTS.BASE_URL}/check`,
+    bindEl: '#captcha-box',
+    validSuccess: (res: any, c: any, t: any) => {
+      t.destroyWindow()
+      formData.value.uuid = res.data.id
+      onSubmit()
     }
   }
-  // 这里分享一些作者自己调的样式供参考
-const style = {
-    // 按钮样式
-    btnUrl: "btn3.png",
-    // 背景样式
-    bgUrl: "btn3-bg.jpg",
-    // logo地址
-    logoUrl: "favicon.ico",
-    // 滑动边框样式
-    moveTrackMaskBgColor: "#f7b645",
-    moveTrackMaskBorderColor: "#ef9c0d"
-}
+
+  const style = {
+    btnUrl: 'btn3.png',
+    bgUrl: 'btn3-bg.jpg',
+    logoUrl: 'favicon.ico',
+    moveTrackMaskBgColor: '#f7b645',
+    moveTrackMaskBorderColor: '#ef9c0d'
+  }
+
   if (process.client) {
-    window.initTAC("tac", captchaConfig, style).then(tac => {
-      tac.init();
+    window.initTAC('tac', captchaConfig, style).then(tac => {
+      tac.init()
     })
   }
 }
+
+// 切换密码显示
+function togglePasswordVisibility() {
+  showPassword.value = !showPassword.value
+}
+
 onMounted(() => {
-    if (process.client) {
-      import("~/utils/load.min").then(module => {
-        module.default();
-      });
-    }
-});
-  // isLogin();
-  // 当组件挂载时，刷新验证码
-  // refreshCaptcha();
+  if (process.client) {
+    import('~/utils/load.min')
+  }
+})
 </script>
 
 <template>
-  <div class="center-container">
-    <div class="q-pa-md" style="max-width: 600px">
-      <q-card class="my-card">
-        <q-card-section>
-          <div class="text-h6">{{$t(`login.login`)}}</div>
-          <div class="text-subtitle2">{{ $t('login.welcome') }}</div>
-        </q-card-section>
+  <div class="login-container">
+    <div class="login-content">
+      <!-- Logo区域 -->
+      <div class="logo-section text-center q-mb-xl">
+        <q-img
+          src="/favicon.ico"
+          alt="Logo"
+          class="logo-image"
+          :ratio="1"
+        />
+        <h1 class="text-h4 q-mt-md text-weight-bold text-primary">{{ t('login.login') }}</h1>
+        <p class="text-subtitle1 text-grey-7">{{ t('login.welcome') }}</p>
+      </div>
 
-        <q-card-section class="q-pt-none">
-          <q-form class="q-gutter-md"
+      <!-- 登录表单卡片 -->
+      <q-card class="login-card q-pa-lg">
+        <q-form class="q-gutter-md">
+          <!-- 用户名输入 -->
+          <q-input
+            v-model="formData.username"
+            :label="t('login.name')"
+            :rules="usernameRules"
+            outlined
+            class="input-field"
           >
-            <!-- 账号输入框 -->
-            <q-input
-                v-model="username"
-                :rules="[val => val && val.length > 0 || 'Please enter your account']"
-                filled
-                :label="$t('login.name')+' *'"
-                lazy-rules
+            <template v-slot:prepend>
+              <q-icon name="person" />
+            </template>
+          </q-input>
+
+          <!-- 密码输入 -->
+          <q-input
+            v-model="formData.password"
+            :label="t('login.password')"
+            :rules="passwordRules"
+            :type="showPassword ? 'text' : 'password'"
+            outlined
+            class="input-field"
+          >
+            <template v-slot:prepend>
+              <q-icon name="lock" />
+            </template>
+            <template v-slot:append>
+              <q-icon
+                :name="showPassword ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="togglePasswordVisibility"
+              />
+            </template>
+          </q-input>
+
+          <!-- 条款同意 -->
+          <div class="terms-section q-mt-md">
+            <q-checkbox
+              v-model="accept"
+              :label="t('introTerms')"
+              color="primary"
+            />
+            <div class="terms-links q-mt-sm">
+              <a href="/privacyPolicy" class="text-primary">{{ t('useTerms') }}</a>
+              <span class="text-grey-6">|</span>
+              <a href="/use" class="text-primary">{{ t('privateTerms') }}</a>
+            </div>
+          </div>
+
+          <!-- 验证码区域 -->
+          <div id="captcha-box" class="q-mt-md"></div>
+
+          <!-- 按钮区域 -->
+          <div class="actions-section q-mt-lg">
+            <q-btn
+              :label="t('login.login')"
+              color="primary"
+              class="full-width"
+              size="large"
+              :loading="submitting"
+              @click="initCaptcha"
             />
 
-            <!-- 密码输入框 -->
-            <q-input
-                v-model="password"
-                :rules="[val => val && val.length > 0 || 'Please enter your password']"
-                filled
-                :label="$t('login.password')+' *'"
-                type="password"
-            />
-
-            <!-- 接受条款切换 -->
-            <q-toggle v-model="accept" :label="$t(`introTerms`)"></q-toggle>
-            <a href="/privacyPolicy">{{ $t(`useTerms`) }}</a><a href="/use">{{ $t(`privateTerms`) }}</a>
-            <div>
-              <q-btn color="primary" @click="login" :label="$t(`login.login`) " style="width: 100%;"/>
+            <div class="text-center q-mt-md">
+              <span class="text-grey-7">{{ t('login.noAccount') }}</span>
+              <router-link to="/register" class="register-link q-ml-sm">
+                {{ t('login.regis') }}
+              </router-link>
             </div>
-            <div id="captcha-box"></div>
 
-            <!-- 注册与忘记密码链接 -->
-            <div class="extra-links">
-              <router-link to="/register">{{ $t(`login.regis`) }}</router-link>
-              <router-link to="/forgotPassword">忘记密码?</router-link>
+            <div class="text-center q-mt-sm">
+              <router-link to="/forgotPassword" class="forgot-password-link">
+                {{ t('login.forgotPassword') }}
+              </router-link>
             </div>
-          </q-form>
-        </q-card-section>
+          </div>
+        </q-form>
       </q-card>
     </div>
   </div>
 </template>
+
 <style scoped>
-.center-container {
+.login-container {
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh; /* 使容器至少与视口一样高 */
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
 }
 
-.extra-links {
+.login-content {
+  width: 100%;
+  max-width: 480px;
+}
+
+.logo-section {
+  margin-bottom: 2rem;
+}
+
+.logo-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.input-field {
+  margin-bottom: 1rem;
+}
+
+.terms-section {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.terms-links {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.terms-links a {
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.terms-links a:hover {
+  color: var(--q-primary);
+  text-decoration: underline;
+}
+
+.actions-section {
+  margin-top: 2rem;
+}
+
+.register-link,
+.forgot-password-link {
+  color: var(--q-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.register-link:hover,
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
+/* 响应式调整 */
+@media (max-width: 599px) {
+  .login-container {
+    padding: 16px;
+    background: white;
+  }
+
+  .login-card {
+    box-shadow: none;
+    background: white;
+    backdrop-filter: none;
+  }
+
+  .logo-section {
+    margin-bottom: 1.5rem;
+  }
 }
 </style>

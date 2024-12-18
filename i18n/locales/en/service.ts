@@ -4,13 +4,13 @@ export default {
   list: 'Service List',
   pendingReply: 'Pending Reply',
   type: {
-    bug: 'Bug',
+    bug: 'BUG',
     complaint: 'Complaint',
     suggestion: 'Suggestion',
     other: 'Other'
   },
   status: {
-    waiting: 'Pending',
+    waiting: 'Waiting',
     processed: 'Processed',
     rejected: 'Rejected',
     pending: 'Pending'
@@ -26,8 +26,9 @@ export default {
   },
   notification: {
     success: 'Submitted successfully',
-    error: 'Submission failed',
-    titleRequired: 'Please enter title',
-    contentRequired: 'Please enter content'
+    error: 'Submit failed',
+    titleRequired: 'Title is required',
+    contentRequired: 'Content is required',
+    emailError: 'Failed to send email, please try again'
   }
-} 
+}

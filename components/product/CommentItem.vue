@@ -2,12 +2,12 @@
   <div class="comment-item">
     <div class="comment-header">
       <q-avatar>
-        <img :src="comment.user_avatar || defaultAvatar">
+        <q-img :src="getImageUrl(comment.userAvatar) || defaultAvatar"/>
       </q-avatar>
       <div class="user-info">
         <div class="username">
           {{ comment.userName }}
-          <q-badge v-if="comment.is_anonymous" color="grey" label="匿名" />
+          <q-badge v-if="comment.isAnonymous" color="grey" label="匿名" />
         </div>
         <div class="rating">
           <q-rating
@@ -17,7 +17,7 @@
             color="amber"
             readonly
           />
-          <span class="time">{{ formatDate(comment.create_time) }}</span>
+          <span class="time">{{ formatDate(comment.createTime) }}</span>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@
       <q-img
         v-for="(img, index) in comment.images"
         :key="index"
-        :src="img"
+        :src="getImageUrl(img)"
         class="cursor-pointer"
         @click="openImageViewer(comment.images, index)"
       />
@@ -41,7 +41,7 @@
         <q-tooltip>{{ comment.likes }}人觉得有用</q-tooltip>
       </q-btn>
       <q-btn flat round size="sm" icon="chat_bubble" @click="handleReply">
-        <q-tooltip>{{ comment.reply_count }}条回复</q-tooltip>
+        <q-tooltip>{{ comment.replyCount }}条回复</q-tooltip>
       </q-btn>
     </div>
 
@@ -50,7 +50,7 @@
       <div v-for="reply in comment.replies" :key="reply.id" class="reply-item">
         <span class="reply-user">{{ reply.userName }}</span>
         <span class="reply-content">{{ reply.content }}</span>
-        <span class="reply-time">{{ formatDate(reply.create_time) }}</span>
+        <span class="reply-time">{{ formatDate(reply.createTime) }}</span>
       </div>
     </div>
   </div>
@@ -58,26 +58,28 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import {getImageUrl} from "~/utils/tools";
+
 
 interface Reply {
   id: number
   userName: string
   content: string
-  create_time: string
+  createTime: string
 }
 
 interface Comment {
-  comment_id: number
-  user_id: string
+  commentId: number
+  userId: string
   userName: string
-  user_avatar?: string
+  userAvatar?: string
   content: string
   score: number
   images?: string[]
   likes: number
-  reply_count: number
-  create_time: string
-  is_anonymous: boolean
+  replyCount: number
+  createTime: string
+  isAnonymous: boolean
   replies?: Reply[]
 }
 
@@ -104,11 +106,11 @@ const formatDate = (date: string) => {
 }
 
 const handleLike = () => {
-  emit('like', props.comment.comment_id)
+  emit('like', props.comment.commentId)
 }
 
 const handleReply = () => {
-  emit('reply', props.comment.comment_id)
+  emit('reply', props.comment.commentId)
 }
 
 const openImageViewer = (images: string[], index: number) => {

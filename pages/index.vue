@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineAsyncComponent } from 'vue'
+import {getImageUrl} from "~/utils/tools";
 
 const slide = ref(0)
 
@@ -8,62 +9,37 @@ const banners = ref([])
 const hotProdList = ref([])
 const newProdList = ref([])
 const moreProdList = ref([])
-// 加载Banner列表
-const loadBanners = async () => {
-  try {
-    const response = await api.get(`/banner/list?position=home`)
-    const { code, data, total } = response.data
 
-    if (code === 200) {
-      banners.value = data
-    } else {
-      banners.value = []
-      throw new Error('加载Banner列表失败')
+// 异步加载组件
+const ClassComponent = defineAsyncComponent(() => import('~/components/ClassComponent.vue'))
+const Section4Component = defineAsyncComponent(() => import('~/components/Section4Component.vue'))
+const CategoryProducts = defineAsyncComponent(() => import('~/components/CategoryProducts.vue'))
+
+// 使用 Promise.all 并行加载数据
+const loadAllData = async () => {
+  try {
+    const [bannersRes, hotRes, newRes, moreRes] = await Promise.all([
+      api.get(`/banner/list?position=home`),
+      api.get('/prod/listByTagId?pageNum=1&pageSize=8&tagId=2'),
+      api.get('/prod/listByTagId?page=1&pageSize=8&tagId=1'),
+      api.get('/prod/listByTagId?page=1&pageSize=8&tagId=3')
+    ])
+    
+    if (bannersRes.data.code === 200) {
+      banners.value = bannersRes.data.data
     }
+    
+    hotProdList.value = hotRes.data.data
+    newProdList.value = newRes.data.data
+    moreProdList.value = moreRes.data.data
+    
   } catch (error) {
-    console.error('加载Banner列表失败:', error)
-
+    console.error('加载数据失败:', error)
   }
 }
 
-// 加载商品数据
-const loaHotProducts = async () => {
-  try {
-    const response = await api.get('/prod/listByTagId?pageNum=1&pageSize=8&tagId=2')
-    const data = await response.data;
-    hotProdList.value = data.data
-    //console.log('hotProdList', hotProdList.value)
-  } catch (error) {
-    console.error('获取商品数据失败:', error)
-  }
-}
-const loaNewProducts = async () => {
-  try {
-    const response = await api.get('/prod/listByTagId?page=1&pageSize=8&tagId=1')
-    const data = await response.data;
-    newProdList.value = data.data
-    //console.log('newProdList', newProdList.value)
-  } catch (error) {
-    console.error('获取商品数据失败:', error)
-  }
-}
-const loaMoreProducts = async () => {
-  try {
-    const response = await api.get('/prod/listByTagId?page=1&pageSize=8&tagId=3')
-    const data = await response.data;
-    moreProdList.value = data.data
-    //console.log('moreProdList', moreProdList.value)
-  } catch (error) {
-    console.error('获取商品数据失败:', error)
-  }
-}
 onMounted(() => {
-  loadBanners()
-  // fetchSystemRandom()
-  loaHotProducts()
-  loaNewProducts()
-  loaMoreProducts()
-
+  loadAllData()
 })
 </script>
 
@@ -72,7 +48,12 @@ onMounted(() => {
     <div class="main-content">
       <!-- 左侧分类导航 -->
       <div class="category-nav">
-        <ClassComponent />
+        <Suspense>
+          <ClassComponent />
+          <template #fallback>
+            <q-skeleton type="rect" height="400px" />
+          </template>
+        </Suspense>
       </div>
 
       <!-- 右侧轮播图区域 -->
@@ -94,6 +75,8 @@ onMounted(() => {
             <q-img
               :src="getImageUrl(banner.imgUrl)"
               :ratio="16/9"
+              loading="lazy"
+              placeholder-src="/images/favicon.ico"
               class="full-height full-width"
             >
               <div class="banner-content absolute-bottom">
@@ -108,61 +91,56 @@ onMounted(() => {
 
     <!-- 商品展示区域 -->
     <div class="products-section q-mt-lg">
-      <!-- 特色商品 -->
-      <section4-component
-        :title="$t('home.sections.newProducts')"
-        :products="newProdList"
-        more-link="/product/sort"
-      />
-
-      <!-- 新品上市 -->
-      <section4-component
-        :title="$t('home.sections.hotSales')"
-        :products="hotProdList"
-        more-link="/product/sort?sort=newest"
-      />
-      <section4-component
-          :title="$t('home.sections.moreItems')"
-          :products="moreProdList"
-          more-link="/product/sort?sort=newest"
-      />
+      <Suspense>
+        <template #default>
+          <div>
+            <section4-component
+              :title="$t('home.sections.newProducts')"
+              :products="newProdList"
+              more-link="/product/sort"
+            />
+            <section4-component
+              :title="$t('home.sections.hotSales')"
+              :products="hotProdList"
+              more-link="/product/sort?sort=newest"
+            />
+            <section4-component
+              :title="$t('home.sections.moreItems')"
+              :products="moreProdList"
+              more-link="/product/sort?sort=newest"
+            />
+          </div>
+        </template>
+        <template #fallback>
+          <q-skeleton type="rect" height="200px" class="q-mb-md" />
+        </template>
+      </Suspense>
     </div>
 
-    <!-- 添加分类产品展示 -->
+    <!-- 分类产品展示 -->
     <div class="category-sections">
-      <!-- 写真集 -->
-      <CategoryProducts
-        :title="$t('home.categories.anime')"
-        :category-id="1"
-        more-link="/product/list?parentId=1"
-      />
-
-      <!-- COS -->
-      <CategoryProducts
-        :title="$t('home.categories.game')"
-        :category-id="2"
-        more-link="/product/list?parentId=2"
-      />
-
-      <!-- 其他 -->
-      <CategoryProducts
-        :title="$t('home.categories.movie')"
-        :category-id="3"
-        more-link="/product/list?parentId=3"
-      />
-
-      <!-- 动漫轻娱 -->
-      <CategoryProducts
-        :title="$t('home.categories.novel')"
-        :category-id="4"
-        more-link="/product/list?parentId=4"
-      />
-      <!-- 动漫轻娱 -->
-      <CategoryProducts
-          :title="$t('home.categories.general')"
-          :category-id="5"
-          more-link="/product/list?parentId=5"
-      />
+      <Suspense>
+        <template #default>
+          <div>
+            <CategoryProducts
+              v-for="category in [
+                { id: 1, title: $t('home.categories.anime') },
+                { id: 2, title: $t('home.categories.game') },
+                { id: 3, title: $t('home.categories.movie') },
+                { id: 4, title: $t('home.categories.novel') },
+                { id: 5, title: $t('home.categories.general') }
+              ]"
+              :key="category.id"
+              :title="category.title"
+              :category-id="category.id"
+              :more-link="`/product/list?parentId=${category.id}`"
+            />
+          </div>
+        </template>
+        <template #fallback>
+          <q-skeleton type="rect" height="200px" class="q-mb-md" />
+        </template>
+      </Suspense>
     </div>
   </div>
 </template>
@@ -206,6 +184,8 @@ onMounted(() => {
   height: 100%;
   border-radius: 8px;
   overflow: hidden;
+  contain: content;
+  will-change: transform;
 }
 
 .banner-content {

@@ -17,7 +17,7 @@
         >
           <q-item-section avatar>
             <q-avatar>
-              <img :src="session.targetUserAvatar">
+              <q-img :src="getImageUrl(session.targetUserAvatar)"/>
             </q-avatar>
           </q-item-section>
 
@@ -137,7 +137,7 @@ const loadMessages = async (init = false) => {
 
     const response = await api.get('/user/messages', { params })
     const { code, data, total } = response.data
-    
+
     if (code === 200) {
       if (init) {
         messages.value = data.reverse()
@@ -147,7 +147,7 @@ const loadMessages = async (init = false) => {
       } else {
         messages.value = [...data.reverse(), ...messages.value]
       }
-      
+
       hasMore.value = messages.value.length < total
       if (!init) page.value++
     }
@@ -165,7 +165,7 @@ const selectSession = async (session: any) => {
   hasMore.value = true
   messages.value = []
   await loadMessages(true)
-  
+
   // 标记为已读
   if (session.unreadCount > 0) {
     try {
@@ -227,7 +227,7 @@ const formatTime = (time: string) => {
   if (!time) return ''
   const messageDate = new Date(time)
   const now = new Date()
-  
+
   if (messageDate.toDateString() === now.toDateString()) {
     return date.formatDate(time, 'HH:mm')
   } else if (messageDate.getFullYear() === now.getFullYear()) {
@@ -322,4 +322,4 @@ onMounted(() => {
     justify-content: center;
   }
 }
-</style> 
+</style>

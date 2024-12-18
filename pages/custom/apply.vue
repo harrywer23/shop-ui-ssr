@@ -8,6 +8,14 @@
         <q-card-section>
           <div class="text-h6 q-mb-md">{{ t('custom.apply.formTitle') }}</div>
           <q-form @submit="submitApplication" class="q-gutter-md">
+            <!-- 申请标题 -->
+            <q-input
+              v-model="formData.title"
+              :label="t('custom.apply.form.title')"
+              filled
+              :rules="[val => !!val || t('custom.apply.form.titleRequired')]"
+            />
+
             <!-- 基本信息 -->
             <div class="row q-col-gutter-md">
               <div class="col-12 col-md-6">
@@ -24,6 +32,18 @@
                   :label="t('custom.apply.contact')"
                   filled
                   :rules="[val => !!val || t('custom.apply.error.contactRequired')]"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <q-input
+                  v-model="formData.email"
+                  :label="t('custom.apply.email')"
+                  filled
+                  type="email"
+                  :rules="[
+                    val => !!val || t('custom.apply.error.emailRequired'),
+                    val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || t('custom.apply.error.invalidEmail')
+                  ]"
                 />
               </div>
             </div>
@@ -95,131 +115,41 @@
               </div>
             </div>
 
-            <!-- 期望完成时间 -->
-            <q-input
-              v-model="formData.expectedDeliveryDate"
-              :label="t('custom.apply.expectedDeliveryDate')"
-              filled
-              mask="date"
-              :rules="['date']"
-            >
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                    <q-date v-model="formData.expectedDeliveryDate" />
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
-
             <!-- 参考图片上传部分 -->
             <div class="q-mb-md">
               <div class="text-subtitle2 q-mb-sm">{{ t('custom.apply.referenceImages') }}</div>
-              
-              <!-- 图片上传区域 -->
-              <div class="upload-section q-mb-md">
-                <q-file
-                  v-model="formData.referenceImages"
-                  :label="t('custom.apply.uploadImages')"
-                  filled
-                  multiple
-                  accept="image/*"
-                  max-files="6"
-                  @rejected="onFileRejected"
-                  @update:model-value="handleFileSelect"
-                  style="max-width: 400px"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="add_photo_alternate" />
-                  </template>
-                  <template v-slot:append v-if="formData.referenceImages.length">
-                    <q-icon name="close" class="cursor-pointer" @click.stop="clearFiles" />
-                  </template>
-                </q-file>
-                
-                <div class="text-caption text-grey q-mt-sm">
-                  {{ t('custom.apply.imageNote') }}
-                </div>
+              <ImageUploader
+                v-model="formData.referenceImages"
+                :max-files="6"
+                :max-size="51200"
+                accept="image/*"
+                :label="t('custom.apply.uploadImages')"
+                :rules="[
+                  files => files.length <= 6 || t('custom.apply.error.tooManyFiles'),
+                  files => !files.some(file => file.size > 51200 * 1024) || t('custom.apply.error.fileTooLarge')
+                ]"
+                @upload-success="handleImageUploadSuccess"
+                @upload-error="handleImageUploadError"
+              />
+              <div class="text-caption text-grey q-mt-sm">
+                {{ t('custom.apply.imageNote') }} {{ t('custom.apply.fileLimitNote', { maxFiles: 6, maxSize: '50MB' }) }}
               </div>
+            </div>
 
-              <!-- 图片预览区域 -->
-              <div v-if="imagePreviewUrls.length" class="row q-col-gutter-md q-mb-lg">
-                <div
-                  v-for="(url, index) in imagePreviewUrls"
-                  :key="index"
-                  class="col-4 col-sm-3 col-md-2"
-                >
-                  <div class="image-preview-card">
-                    <q-img
-                      :src="url"
-                      :ratio="1"
-                      class="rounded-borders"
-                    >
-                      <div class="absolute-top-right q-pa-xs">
-                        <q-btn
-                          round
-                          flat
-                          dense
-                          color="negative"
-                          icon="close"
-                          size="sm"
-                          @click="removeImage(index)"
-                        >
-                          <q-tooltip>{{ t('common.delete') }}</q-tooltip>
-                        </q-btn>
-                      </div>
-                    </q-img>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 附件上传区域 -->
-              <div class="q-mb-md">
-                <div class="text-subtitle2 q-mb-sm">{{ t('custom.apply.attachments') }}</div>
-                <q-file
-                  v-model="formData.attachments"
-                  :label="t('custom.apply.uploadAttachment')"
-                  filled
-                  multiple
-                  accept=".pdf,.doc,.docx,.xls,.xlsx"
-                  max-files="5"
-                  @rejected="onFileRejected"
-                  style="max-width: 400px"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="attach_file" />
-                  </template>
-                  <template v-slot:append v-if="formData.attachments.length">
-                    <q-icon name="close" class="cursor-pointer" @click.stop="clearAttachments" />
-                  </template>
-                </q-file>
-
-                <!-- 附件列表 -->
-                <div v-if="formData.attachments.length" class="attachment-list q-mt-sm">
-                  <q-list bordered separator>
-                    <q-item v-for="(file, index) in formData.attachments" :key="index">
-                      <q-item-section avatar>
-                        <q-icon :name="getFileIcon(file.type)" color="primary" />
-                      </q-item-section>
-                      <q-item-section>
-                        <q-item-label>{{ file.name }}</q-item-label>
-                        <q-item-label caption>{{ formatFileSize(file.size) }}</q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                        <q-btn
-                          flat
-                          round
-                          dense
-                          color="negative"
-                          icon="delete"
-                          @click="removeAttachment(index)"
-                        >
-                          <q-tooltip>{{ t('common.delete') }}</q-tooltip>
-                        </q-btn>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </div>
+            <!-- 附件上传区域 -->
+            <div class="q-mb-md">
+              <div class="text-subtitle2 q-mb-sm">{{ t('custom.apply.attachments') }}</div>
+              <FileUploader
+                v-model="formData.attachments"
+                :max-files="6"
+                :max-size="51200"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar,.7z"
+                :label="t('custom.apply.uploadAttachment')"
+                @upload-success="handleAttachmentUploadSuccess"
+                @upload-error="handleAttachmentUploadError"
+              />
+              <div class="text-caption text-grey q-mt-sm">
+                {{ t('custom.apply.attachmentNote') }} {{ t('custom.apply.fileLimitNote', { maxFiles: 6, maxSize: '50MB' }) }}
               </div>
             </div>
 
@@ -425,8 +355,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import { useQuasar } from 'quasar'
-import { date } from 'quasar'
 import TinyMce from '~/components/tiny-mce/index.vue'
+import ImageUploader from '~/components/common/ImageUploader.vue'
+import FileUploader from '~/components/common/FileUploader.vue'
+import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
 const router = useRouter()
@@ -434,15 +366,16 @@ const { t } = useI18n()
 const $q = useQuasar()
 
 interface FormData {
+  title: string
   name: string
   contact: string
+  email: string
   type: string
   requirements: string
   budgetMin: number
   budgetMax: number
-  expectedDeliveryDate: string
-  referenceImages: File[]
-  attachments: File[]
+  referenceImages: string[]
+  attachments: string[]
   additionalRequirements: string
   applicationType: string
   targetAmount: number | null
@@ -464,13 +397,14 @@ interface Progress {
 }
 
 const formData = ref<FormData>({
+  title: '',
   name: '',
   contact: '',
+  email: '',
   type: '',
   requirements: '',
   budgetMin: 0,
   budgetMax: 0,
-  expectedDeliveryDate: '',
   referenceImages: [],
   attachments: [],
   additionalRequirements: '',
@@ -512,101 +446,51 @@ const onFileRejected = (rejectedEntries: any[]) => {
         return t('custom.apply.error.tooManyFiles')
       }
       if (entry.failedPropValidation === 'accept') {
-        return t('custom.apply.error.invalidFileType')
+        return t('custom.apply.error.invalidAttachmentType')
       }
       return entry.file.name + ': ' + entry.failedPropValidation
     })
     .join('\n')
 }
 
-// 新增图片预览URL数组
-const imagePreviewUrls = ref<string[]>([])
-
-// 处理文件选择
-const handleFileSelect = async (files: File[]) => {
-  // 清除旧的预览URL
-  imagePreviewUrls.value.forEach(url => URL.revokeObjectURL(url))
-  imagePreviewUrls.value = []
-
-  // 为每个文件创建预览URL
-  for (const file of files) {
-    if (file.type.startsWith('image/')) {
-      // 压缩图片
-      try {
-        const compressedFile = await compressImage(file)
-        const url = URL.createObjectURL(compressedFile)
-        imagePreviewUrls.value.push(url)
-      } catch (error) {
-        console.error('图片压缩失败:', error)
-        const url = URL.createObjectURL(file)
-        imagePreviewUrls.value.push(url)
-      }
-    }
-  }
+// 处理图片上传成功
+const handleImageUploadSuccess = (urls: string[]) => {
+  formData.value.referenceImages = [...formData.value.referenceImages, ...urls]
 }
 
-// 压缩图片
-const compressImage = async (file: File): Promise<Blob> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const img = new Image()
-      img.onload = () => {
-        const canvas = document.createElement('canvas')
-        let width = img.width
-        let height = img.height
-        
-        // 设置最大尺寸
-        const maxSize = 1200
-        if (width > maxSize || height > maxSize) {
-          if (width > height) {
-            height = Math.round((height * maxSize) / width)
-            width = maxSize
-          } else {
-            width = Math.round((width * maxSize) / height)
-            height = maxSize
-          }
-        }
-
-        canvas.width = width
-        canvas.height = height
-        const ctx = canvas.getContext('2d')
-        ctx?.drawImage(img, 0, 0, width, height)
-
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob)
-            } else {
-              reject(new Error('图片压缩失败'))
-            }
-          },
-          'image/jpeg',
-          0.8
-        )
-      }
-      img.onerror = reject
-      img.src = e.target?.result as string
-    }
-    reader.onerror = reject
-    reader.readAsDataURL(file)
+// 处理图片上传失败
+const handleImageUploadError = (error: any) => {
+  console.error('图片上传失败:', error)
+  let errorMessage = t('custom.apply.error.imageUploadFailed')
+  
+  // 处理特定错误类型
+  if (error.code === 'FILE_SIZE_LIMIT_EXCEEDED') {
+    errorMessage = t('custom.apply.error.fileTooLarge')
+  } else if (error.code === 'MAX_FILES_EXCEEDED') {
+    errorMessage = t('custom.apply.error.tooManyFiles')
+  }
+  
+  $q.notify({
+    type: 'negative',
+    message: errorMessage
   })
 }
 
-// 移除图片
-const removeImage = (index: number) => {
-  URL.revokeObjectURL(imagePreviewUrls.value[index])
-  imagePreviewUrls.value.splice(index, 1)
-  const files = [...formData.value.referenceImages]
-  files.splice(index, 1)
-  formData.value.referenceImages = files
+// 处理附件上传成功
+const handleAttachmentUploadSuccess = (urls: string[]) => {
+  $q.notify({
+    type: 'positive',
+    message: t('custom.apply.uploadSuccess')
+  })
 }
 
-// 清除所有图片
-const clearFiles = () => {
-  imagePreviewUrls.value.forEach(url => URL.revokeObjectURL(url))
-  imagePreviewUrls.value = []
-  formData.value.referenceImages = []
+// 处理附件上传失败
+const handleAttachmentUploadError = (error: any) => {
+  console.error('附件上传失败:', error)
+  $q.notify({
+    type: 'negative',
+    message: t('custom.apply.error.attachmentUploadFailed')
+  })
 }
 
 // 移除附件
@@ -628,7 +512,10 @@ const getFileIcon = (fileType: string) => {
     'application/msword': 'description',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'description',
     'application/vnd.ms-excel': 'table_chart',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'table_chart'
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'table_chart',
+    'application/zip': 'folder_zip',
+    'application/x-rar-compressed': 'folder_zip',
+    'application/x-7z-compressed': 'folder_zip'
   }
   return iconMap[fileType] || 'insert_drive_file'
 }
@@ -679,7 +566,7 @@ const formErrors = ref({
   // ... 其他错误字段
 })
 
-// 处理编辑器内容变化
+// 处理编辑内容变化
 const handleEditorChange = (content: string) => {
   formData.value.requirements = content
   // 清除错误提示
@@ -691,6 +578,15 @@ const handleEditorChange = (content: string) => {
 // 表单验证
 const validateForm = () => {
   let isValid = true
+
+  // 验证标题
+  if (!formData.value.title.trim()) {
+    isValid = false
+    $q.notify({
+      type: 'negative',
+      message: t('custom.apply.form.titleRequired')
+    })
+  }
 
   // 验证富文本内容
   if (!formData.value.requirements.trim()) {
@@ -711,7 +607,24 @@ const validateForm = () => {
     })
   }
 
-  // ... 其他验证逻辑保持不变 ...
+  // 验证文件数量和大小
+  if (formData.value.referenceImages.length > 6) {
+    $q.notify({
+      type: 'negative',
+      message: t('custom.apply.error.tooManyFiles')
+    })
+    isValid = false
+  }
+
+  if (formData.value.attachments.length > 6) {
+    $q.notify({
+      type: 'negative',
+      message: t('custom.apply.error.tooManyFiles')
+    })
+    isValid = false
+  }
+
+  // ... 其他验证逻辑 ...
 
   return isValid
 }
@@ -720,7 +633,7 @@ const validateForm = () => {
 const submitApplication = async () => {
   if (!validateForm()) {
     $q.notify({
-      type: 'negative',
+      type: 'warning',
       message: t('custom.apply.error.formInvalid')
     })
     return
@@ -728,25 +641,16 @@ const submitApplication = async () => {
 
   try {
     submitting.value = true
-    
-    // 上传图片
-    const imageUrls = []
-    if (formData.value.referenceImages.length > 0) {
-      const uploadFormData = new FormData()
-      for (const file of formData.value.referenceImages) {
-        uploadFormData.append('files', file)
-      }
-      const uploadResponse = await api.post('/upload/images', uploadFormData)
-      if (uploadResponse.data.code === 200) {
-        imageUrls.push(...uploadResponse.data.data)
-      }
+
+    // 准备提交数据
+    const submitData = {
+      ...formData.value,
+      attachments: formData.value.attachments.map((url: string) => url),
+      referenceImages: formData.value.referenceImages.map((url: string) => url)
     }
 
     // 提交申请
-    const response = await api.post('/custom/apply', {
-      ...formData.value,
-      referenceImages: imageUrls
-    })
+    const response = await api.post('/custom/apply', submitData)
 
     if (response.data.code === 200) {
       $q.notify({
@@ -754,12 +658,14 @@ const submitApplication = async () => {
         message: t('custom.apply.success')
       })
       router.push('/user/custom')
+    } else {
+      throw new Error(response.data.msg || t('custom.apply.error.submitFailed'))
     }
   } catch (error) {
     console.error('提交申请失败:', error)
     $q.notify({
       type: 'negative',
-      message: t('custom.apply.error.submitFailed')
+      message: error.message || t('custom.apply.error.submitFailed')
     })
   } finally {
     submitting.value = false
@@ -787,12 +693,12 @@ onMounted(() => {
   }
 })
 
-// 组件卸载时清理预览URL
+// 组件卸载清理预览URL
 onUnmounted(() => {
-  imagePreviewUrls.value.forEach(url => URL.revokeObjectURL(url))
+  formData.value.referenceImages.forEach(url => URL.revokeObjectURL(url))
 })
 
-// 清理编辑器实例
+// 清理编辑器实���
 onBeforeUnmount(() => {
   // TinyMCE 会自动清理实例
 })

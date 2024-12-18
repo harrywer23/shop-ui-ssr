@@ -67,7 +67,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import {getCurrentLanguageName, getImageUrl} from '~/utils/tools'
-import type { Translations } from '~/utils/constants'
+
 
 interface Category {
   categoryId: string

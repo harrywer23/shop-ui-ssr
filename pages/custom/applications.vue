@@ -115,7 +115,7 @@
                     class="col-4"
                   >
                     <q-img
-                      :src="image"
+                      :src="getImageUrl(image)"
                       @click="previewImage(image)"
                       class="rounded-borders cursor-pointer"
                       style="height: 80px"
@@ -134,7 +134,7 @@
               :label="t('custom.applications.viewDetails')"
               @click="viewDetails(application.id)"
             />
-            
+
             <!-- 取消申请按钮 -->
             <q-btn
               v-if="application.status === 'pending'"
@@ -167,7 +167,7 @@
           </q-card-section>
 
           <q-card-section>
-            <q-img :src="previewUrl" />
+            <q-img :src="getImageUrl(previewUrl)" />
           </q-card-section>
         </q-card>
       </q-dialog>
@@ -182,6 +182,8 @@ import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import { useQuasar } from 'quasar'
 import { date } from 'quasar'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const { t } = useI18n()
@@ -404,4 +406,4 @@ onMounted(() => {
     border-radius: 4px;
   }
 }
-</style> 
+</style>

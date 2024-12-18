@@ -52,7 +52,7 @@
             <!-- 用户信息 -->
             <div class="user-info row items-center">
               <q-avatar size="40px" class="q-mr-md">
-                <img :src="post.userAvatar">
+                <q-img :src="getImageUrl(topic.userAvatar)"/>
               </q-avatar>
               <div>
                 <div class="text-subtitle1">{{ post.userName }}</div>
@@ -138,7 +138,7 @@
 
         <q-card-section class="text-center">
           <q-img
-            :src="previewDialog.url"
+            :src="getImageUrl(previewDialog.url)"
             style="max-width: 100%; max-height: 80vh"
           />
         </q-card-section>
@@ -152,6 +152,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar, date } from 'quasar'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const $q = useQuasar()

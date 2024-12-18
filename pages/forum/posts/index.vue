@@ -62,7 +62,7 @@
             <!-- 用户信息 -->
             <div class="user-info row items-center">
               <q-avatar size="40px" class="q-mr-md">
-                <img :src="post.userAvatar">
+                <q-img :src="getImageUrl(post.userAvatar)"/>
               </q-avatar>
               <div>
                 <div class="text-subtitle1">{{ post.userName }}</div>
@@ -93,7 +93,7 @@
         <q-card-section>
           <div class="text-h6">{{ post.title }}</div>
           <div class="post-content" v-html="post.content"></div>
-          
+
           <!-- 图片预览 -->
           <div v-if="post.images?.length" class="row q-col-gutter-sm q-mt-sm">
             <div
@@ -188,6 +188,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar, date } from 'quasar'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const $q = useQuasar()
@@ -417,4 +419,4 @@ onMounted(() => {
     }
   }
 }
-</style> 
+</style>

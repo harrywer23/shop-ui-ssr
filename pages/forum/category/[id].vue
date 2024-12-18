@@ -115,7 +115,7 @@
             <!-- 用户头像 -->
             <q-item-section avatar>
               <q-avatar>
-                <img :src="topic.userAvatar">
+                <q-img :src="getImageUrl(topic.userAvatar)"/>
               </q-avatar>
             </q-item-section>
 
@@ -185,6 +185,7 @@ import { useQuasar, date } from 'quasar'
 import { api } from '~/utils/axios'
 import { useI18n } from 'vue-i18n'
 import { getImageUrl } from '~/utils/tools'
+import CachedImage from "~/components/common/CachedImage.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -215,7 +216,7 @@ const loadCategory = async () => {
     if (response.data.succ) {
       category.value = {
         ...response.data.data,
-        translations: response.data.data.translations ? 
+        translations: response.data.data.translations ?
           JSON.parse(response.data.data.translations) : {
             zh: response.data.data.name,
             en: '',
@@ -352,4 +353,4 @@ onMounted(() => {
   font-size: 1.1em;
   font-weight: 500;
 }
-</style> 
+</style>

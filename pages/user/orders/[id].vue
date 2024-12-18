@@ -223,6 +223,8 @@ import { useQuasar, date } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { OrderStatus } from '~/utils/constants'
 import { api } from '~/utils/axios'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const { t } = useI18n()
 

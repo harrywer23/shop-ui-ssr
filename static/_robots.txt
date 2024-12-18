@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /private/
-Sitemap: https://www.51x.uk/sitemap.xml
+Disallow: /user/
+Disallow: /login
+Disallow: /register
+
+# 站点地图
+Sitemap: https://www.51x.uk/sitemap_index.xml 

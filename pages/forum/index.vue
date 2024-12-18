@@ -18,9 +18,9 @@
         <q-card flat bordered>
           <q-card-section>
             <div class="text-h6 q-mb-md">{{ $t('forum.categories') }}</div>
-            
+
             <!-- 所有主题 -->
-            <div 
+            <div
               class="all-topics-card cursor-pointer q-mb-md"
               :class="{ 'category-active': currentCategory === 'all' }"
               @click="currentCategory = 'all'"
@@ -38,7 +38,7 @@
             <div class="categories-container">
               <div v-for="category in topCategories" :key="category.id" class="category-group q-mb-lg">
                 <!-- 一级分类 -->
-                <div 
+                <div
                   class="parent-category cursor-pointer q-pa-md"
                   :class="{ 'category-active': currentCategory === category.id }"
                   @click="currentCategory = category.id"
@@ -70,12 +70,12 @@
                 <!-- 子分类 -->
                 <div v-if="category.children?.length" class="sub-categories q-pl-lg">
                   <div class="row q-col-gutter-md">
-                    <div 
-                      v-for="subCategory in category.children" 
+                    <div
+                      v-for="subCategory in category.children"
                       :key="subCategory.id"
                       class="col-12 col-sm-4 col-md-2"
                     >
-                      <q-card 
+                      <q-card
                         class="sub-category-card cursor-pointer"
                         :class="{ 'category-active': currentCategory === subCategory.id }"
                         @click="goToCategoryTopics(subCategory)"
@@ -121,6 +121,7 @@ import { useQuasar, date } from 'quasar'
 import { api } from '~/utils/axios'
 import { useI18n } from 'vue-i18n'
 import { getImageUrl } from '~/utils/tools'
+import CachedImage from "~/components/common/CachedImage.vue";
 
 const router = useRouter()
 const $q = useQuasar()
@@ -323,7 +324,7 @@ const topCategories = computed(() => {
 const goToCategoryTopics = (category) => {
   router.push({
     path: '/forum/category/topics',
-    query: { 
+    query: {
       categoryId: category.id,
       categoryName: getCurrentLanguageName(category)
     }

@@ -41,7 +41,8 @@ export default {
     title: '定制申请',
     formTitle: '申请信息',
     name: '申请人姓名',
-    contact: '联系方式',
+    contact: '联系电话',
+    email: '电子邮箱',
     type: '定制类型',
     requirements: '需求描述',
     budgetMin: '最低预算',
@@ -53,18 +54,25 @@ export default {
     error: {
       nameRequired: '请输入申请人姓名',
       contactRequired: '请输入联系方式',
+      emailRequired: '请输入电子邮箱',
+      invalidEmail: '请输入有效的电子邮箱地址',
       typeRequired: '请选择定制类型',
       requirementsRequired: '请输入需求描述',
       invalidBudget: '请输入有效的预算金额',
       budgetRange: '最高预算不能小于最低预算',
       submitFailed: '提交申请失败',
-      uploadFailed: '上传失败，请重试'
+      uploadFailed: '上传失败，请重试',
+      tooManyFiles: '最多只能上传6个文件',
+      fileTooLarge: '单个文件大小不能超过50MB',
+      imageUploadFailed: '图片上传失败',
+      attachmentUploadFailed: '附件上传失败',
+      invalidAttachmentType: '不支持的附件格式，仅支持 PDF、Word、Excel 和压缩文件'
     },
     form: {
       title: '申请标题',
       titleRequired: '请输入申请标题',
       category: '定制类型',
-      categoryRequired: '请选择定制类型',
+      categoryRequired: '请选择定制类��',
       description: '需求描述',
       descriptionRequired: '请描述您的定制需求',
       descriptionPlaceholder: '请详细描述您的定制需求，包括尺寸、材质、风格等具体要求',
@@ -117,7 +125,9 @@ export default {
       cancel: '取消',
       uploadAttachment: '上传附件',
       deleteAttachment: '删除附件'
-    }
+    },
+    fileLimitNote: '最多可上传{maxFiles}个文件，每个文件大小不超过{maxSize}',
+    attachmentNote: '支持 PDF、Word、Excel 和压缩文件(zip/rar/7z)'
   },
   type: {
     clothing: '服装定制',

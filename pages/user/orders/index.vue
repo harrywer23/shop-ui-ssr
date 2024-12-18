@@ -250,17 +250,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import OrderReview from '~/components/order/OrderReview.vue'
-import { tansParams } from "~/utils/tools"
+import {getImageUrl, tansParams} from "~/utils/tools"
 import { OrderStatus } from "~/utils/constants"
 import { api } from '~/utils/axios'
-import { CancelReasonType } from '~/types/order'
 import { shanghaiToLocal } from '~/utils/format'
 
+
+// 取消原因类型
+enum CancelReasonType {
+  OUT_OF_STOCK = 'out_of_stock',     // 商品缺货
+  PRICE_CHANGE = 'price_change',      // 价格变动
+  DUPLICATE_ORDER = 'duplicate_order',// 重复下单
+  OTHER = 'other'                     // 其他原因
+}
 definePageMeta({
   layout: 'users',
   middleware: 'auth'
@@ -296,7 +303,6 @@ const statusOptions = [
   { label: '已完成', value: OrderStatus.COMPLETED },
   { label: '已取消', value: OrderStatus.CANCELLED },
   { label: '已评论', value: OrderStatus.CANCELLED }
-
 ]
 
 // 格式化日期时间

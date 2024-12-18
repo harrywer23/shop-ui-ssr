@@ -102,7 +102,7 @@
               <q-item>
                 <q-item-section avatar>
                   <q-avatar size="48px">
-                    <img :src="user.avatar">
+                    <q-img :src="getImageUrl(user.avatar)"/>
                   </q-avatar>
                 </q-item-section>
 
@@ -315,4 +315,4 @@ onMounted(() => {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }
-</style> 
+</style>

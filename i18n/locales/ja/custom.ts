@@ -52,7 +52,17 @@ export default {
       rewardAmount: 'リワード金額',
       rewardDescription: 'リワード説明',
       addReward: 'リワード追加'
-    }
+    },
+    error: {
+      tooManyFiles: 'ファイルは最大6個まで添付可能です',
+      fileTooLarge: 'ファイルサイズは50MBを超えることはできません',
+      imageUploadFailed: '画像のアップロードに失敗しました',
+      attachmentUploadFailed: '添付ファイルのアップロードに失敗しました',
+      invalidAttachmentType: '対応していないファイル形式です。PDF、Word、Excel、圧縮ファイルのみ対応しています'
+    },
+    imageNote: 'jpg、png、gif形式対応、1枚あたり最大5MB',
+    attachmentNote: 'PDF、Word、Excel、圧縮ファイル(zip/rar/7z)対応',
+    fileLimitNote: '最大{maxFiles}個のファイル、1個あたり最大{maxSize}まで'
   },
   orders: {
     title: 'カスタムオーダー一覧',

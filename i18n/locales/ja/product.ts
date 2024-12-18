@@ -99,5 +99,18 @@ export default {
     search: {
       placeholder: '商品を検索...'
     }
+  },
+  quality: {
+    s: '極上品',
+    a: '高級品',
+    b: '上質品',
+    c: '標準品',
+    d: 'スタンダード'
+  },
+  type: {
+    NORMAL: '通常商品',
+    PRESELL: '予約販売',
+    GROUP: 'グループ購入',
+    SECKILL: 'タイムセール'
   }
 }

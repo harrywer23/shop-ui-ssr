@@ -39,7 +39,7 @@ export default {
   },
   apply: {
     form: {
-      applicationType: '申���類型',
+      applicationType: '申請類型',
       personalApplication: '個人申請',
       crowdfundingApplication: '眾籌申請',
       targetAmount: '目標金額',
@@ -51,7 +51,17 @@ export default {
       rewardAmount: '回報金額',
       rewardDescription: '回報描述',
       addReward: '添加回報'
-    }
+    },
+    error: {
+      tooManyFiles: '最多只能上傳6個文件',
+      fileTooLarge: '單個文件大小不能超過50MB',
+      imageUploadFailed: '圖片上傳失敗',
+      attachmentUploadFailed: '附件上傳失敗',
+      invalidAttachmentType: '不支持的附件格式，僅支持 PDF、Word、Excel 和壓縮文件'
+    },
+    imageNote: '支持 jpg、png、gif 格式，單張圖片不超過 5MB',
+    attachmentNote: '支持 PDF、Word、Excel 和壓縮文件(zip/rar/7z)',
+    fileLimitNote: '最多可上傳{maxFiles}個文件，每個文件大小不超過{maxSize}'
   },
   orders: {
     title: '定製訂單列表',

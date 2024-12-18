@@ -17,6 +17,7 @@ import meta from './meta'
 import model from './model'
 import nav from './nav'
 import order from './order'
+import password from './password'
 import payment from './payment'
 import presell from './presell'
 import privacy from './privacy'
@@ -48,6 +49,7 @@ export default {
   model,
   nav,
   order,
+  password,
   payment,
   presell,
   privacy,

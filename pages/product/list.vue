@@ -181,6 +181,7 @@ import { useI18n } from 'vue-i18n'
 import {useRoute} from "#vue-router";
 import ProductListCard from '~/components/product/ProductListCard.vue'
 import {getCurrentLanguageName,getImageUrl} from "~/utils/tools";
+import CachedImage from "~/components/common/CachedImage.vue";
 const route = useRoute()
 const parentId = ref(route.query.parentId || 1)
 const $q = useQuasar()
@@ -306,37 +307,43 @@ const loadProducts = async () => {
   try {
     const queryParams = new URLSearchParams({
       pageNum: currentPage.value.toString(),
-      pageSize: pageSize,
+      pageSize: pageSize.toString(),
       sort: sortType.value
     })
 
-    // 优化分类ID的处理
+    // 添加分类ID
     const categoryId = selectedCategory.value || parentId.value
     if (categoryId) {
       queryParams.append('categoryId', categoryId.toString())
     }
 
+    // 添加搜索关键词
     const searchText = searchQuery.value?.trim()
     if (searchText) {
       queryParams.append('search', searchText)
     }
 
+    // 添加品质筛选
+    if (route.query.qualities) {
+      queryParams.append('qualities', String(route.query.qualities))
+    }
+
+    // 添加类型筛选
+    if (route.query.types) {
+      queryParams.append('types', String(route.query.types))
+    }
+
     const response = await api.get(`/prod/listByCategoryId?${queryParams.toString()}`)
     const data = await response.data
-    if(data.code === 200) {
+    if (data.code === 200) {
       products.value = data.data
       totalCount.value = data.total
-      // 使用更安全的滚动方式
-      if (typeof window !== 'undefined') {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        })
-      } else if (document.documentElement) {
-        document.documentElement.scrollTop = 0
-      } else if (document.body) {
-        document.body.scrollTop = 0
-      }
+
+      // 平滑滚动到顶部
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
     } else {
       products.value = []
       totalCount.value = 0
@@ -393,6 +400,15 @@ watch(
     loadProducts()
   },
   { immediate: true }
+)
+
+// 添加 watch 以监听品质和类型筛选的变化
+watch(
+  () => [route.query.qualities, route.query.types],
+  () => {
+    currentPage.value = 1
+    loadProducts()
+  }
 )
 </script>
 

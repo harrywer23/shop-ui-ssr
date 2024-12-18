@@ -40,7 +40,7 @@
           v-for="(img, index) in currentImages"
           :key="index"
           :name="index"
-          :img-src="img"
+          :img-src="getImageUrl(img)"
         />
       </q-carousel>
     </q-dialog>

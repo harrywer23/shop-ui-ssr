@@ -109,5 +109,18 @@ export default {
     imagePreview: 'Image Preview',
     quantityMin: 'Quantity must be greater than 0',
     quantityMax: 'Exceeds stock quantity',
+  },
+  quality: {
+    s: 'Premium',
+    a: 'Deluxe',
+    b: 'Standard Plus',
+    c: 'Standard',
+    d: 'Basic'
+  },
+  type: {
+    NORMAL: 'Regular',
+    PRESELL: 'Pre-sale',
+    GROUP: 'Group Buy',
+    SECKILL: 'Flash Sale'
   }
 }

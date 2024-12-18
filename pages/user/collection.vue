@@ -206,6 +206,8 @@
 </template>
 
 <script setup lang="ts">
+import CachedImage from "~/components/common/CachedImage.vue";
+
 definePageMeta({
   layout: 'users',
   middleware: 'auth'
@@ -215,6 +217,7 @@ import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { date } from 'quasar'
+import {getImageUrl} from "~/utils/tools";
 
 // 定义收藏项的接口
 interface CollectionItem {

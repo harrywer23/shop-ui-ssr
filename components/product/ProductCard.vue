@@ -3,45 +3,49 @@
     <q-img
       :src="getImageUrl(product.pic)"
       :ratio="1"
+      loading="lazy"
       class="product-image"
     >
       <template v-slot:loading>
-        <q-spinner-dots color="white" />
+        <q-spinner-dots color="yellow" />
       </template>
 
       <!-- 标签展示 -->
       <div class="product-tags absolute-top-right q-pa-sm">
+        <!-- 品质标签 -->
         <q-chip
-          v-if="product.status"
+          v-if="product.quality"
           dense
-          color="purple"
+          :color="getQualityColor(product.quality)"
           text-color="white"
           size="sm"
+          class="q-mb-xs"
         >
-          {{ $t('product.presell') }}
+          {{ t(`product.quality.${product.quality.toLowerCase()}`) }}
         </q-chip>
+
+        <!-- 商品类型标签 -->
         <q-chip
-          v-if="isNew"
+          v-if="product.prodType && product.prodType !== 1"
           dense
-          color="green"
+          :color="getTypeColor(product.prodType)"
           text-color="white"
           size="sm"
         >
-          {{ $t('common.new') }}
+          {{ t(`product.type.${getTypeKey(product.prodType)}`) }}
         </q-chip>
       </div>
     </q-img>
 
     <div class="product-info">
-      <div class="product-name">{{ product.prodName }}</div>
-<!--      <div class="product-brief">{{ product.brief }}</div>-->
+      <div class="product-name">{{  getCurrentLanguageName(product.translations, product.prodName)  }}</div>
       <div class="product-price">
         <span class="current-price">¥{{ product.price }}</span>
         <span class="original-price">¥{{ product.oriPrice }}</span>
       </div>
       <div class="product-footer">
         <span class="product-sales">
-          {{ $t('product.soldCount', { count: product.soldNum }) }}
+          {{ t('product.soldCount', { count: product.soldNum }) }}
         </span>
         <q-btn
           flat
@@ -60,7 +64,8 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n'
+import {getCurrentLanguageName, getImageUrl} from "~/utils/tools";
 
 const props = defineProps({
   product: {
@@ -91,8 +96,41 @@ const addToCart = () => {
   // TODO: 实现添加到购物车的逻辑
   $q.notify({
     type: 'positive',
-    message: $t('product.addCartSuccess')
+    message: t('product.addCartSuccess')
   })
+}
+
+// 品质颜色映射
+const getQualityColor = (quality: string) => {
+  const colorMap: Record<string, string> = {
+    'S': 'purple-10', // 臻品
+    'A': 'purple',    // 精品
+    'B': 'teal',     // 良品
+    'C': 'blue-grey', // 普品
+    'D': 'grey-7'    // 基础款
+  }
+  return colorMap[quality.toUpperCase()] || 'grey'
+}
+
+// 商品类型映射
+const getTypeKey = (type: number) => {
+  const typeMap: Record<number, string> = {
+    1: 'NORMAL',      // 普通商品
+    2: 'PRESELL',     // 预售商品
+    3: 'GROUP',       // 团购商品
+    4: 'SECKILL'      // 秒杀商品
+  }
+  return typeMap[type] || 'NORMAL'
+}
+
+// 商品类型颜色映射
+const getTypeColor = (type: number) => {
+  const colorMap: Record<number, string> = {
+    2: 'orange',      // 预售商品
+    3: 'green',       // 团购商品
+    4: 'red'          // 秒杀商品
+  }
+  return colorMap[type] || 'grey'
 }
 </script>
 
@@ -114,10 +152,13 @@ const addToCart = () => {
 .product-image {
   aspect-ratio: 1;
   object-fit: cover;
+  width: 100%;
 }
 
 .product-tags {
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 4px;
 }
 
@@ -177,5 +218,29 @@ const addToCart = () => {
 .product-sales {
   font-size: 12px;
   color: #666;
+}
+
+.q-chip {
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  opacity: 0.95;
+  backdrop-filter: blur(4px);
+}
+
+/* 品质标签特殊样式 */
+.q-chip.quality-s {
+  background: linear-gradient(45deg, #7b1fa2, #9c27b0);
+}
+
+.q-chip.quality-a {
+  background: linear-gradient(45deg, #512da8, #673ab7);
+}
+
+/* 响应式调整 */
+@media (max-width: 599px) {
+  .q-chip {
+    font-size: 0.75rem;
+    padding: 1px 4px;
+  }
 }
 </style>

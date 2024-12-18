@@ -1,6 +1,6 @@
 export default {
   title: 'カスタマーサービス',
-  add: 'サービスチケット追加',
+  add: 'サービスチケットを追加',
   list: 'サービス一覧',
   pendingReply: '返信待ち',
   type: {
@@ -13,7 +13,7 @@ export default {
     waiting: '処理待ち',
     processed: '処理済み',
     rejected: '却下',
-    pending: '処理待ち'
+    pending: '保留中'
   },
   form: {
     title: 'タイトル',
@@ -25,9 +25,10 @@ export default {
     cancel: 'キャンセル'
   },
   notification: {
-    success: '送信成功',
+    success: '送信完了',
     error: '送信失敗',
     titleRequired: 'タイトルを入力してください',
-    contentRequired: '内容を入力してください'
+    contentRequired: '内容を入力してください',
+    emailError: 'メール送信に失敗しました。もう一度お試しください'
   }
-} 
+}

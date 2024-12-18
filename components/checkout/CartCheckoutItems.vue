@@ -94,17 +94,13 @@ import { useI18n } from 'vue-i18n'
 import { ProductType } from '~/utils/constants'
 import type { CheckoutItem } from '~/types/checkout'
 
+
 const { t } = useI18n()
 const props = defineProps<{
   items: CheckoutItem[]
 }>()
 
 // 获取图片URL
-const getImageUrl = (url: string) => {
-  if (!url) return ''
-  if (url.startsWith('http')) return url
-  return `${useRuntimeConfig().public.imageBaseUrl}/${url}`
-}
 
 // 计算单个商品总价
 const calculateItemTotal = (item: CheckoutItem) => {

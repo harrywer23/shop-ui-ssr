@@ -1,6 +1,6 @@
 export default {
   title: '客服服務',
-  add: '新增服務工單',
+  add: '添加服務工單',
   list: '服務列表',
   pendingReply: '待回覆',
   type: {
@@ -28,6 +28,7 @@ export default {
     success: '提交成功',
     error: '提交失敗',
     titleRequired: '請輸入標題',
-    contentRequired: '請輸入內容'
+    contentRequired: '請輸入內容',
+    emailError: '發送郵件失敗，請重試'
   }
-} 
+}

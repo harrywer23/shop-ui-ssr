@@ -1,5 +1,5 @@
 <template>
-  <q-img :src="imageUrl"
+  <q-img :src="getImageUrl(imageUrl)"
          :alt="props.title"
          @error="handleError"
   />
@@ -7,6 +7,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, defineProps } from 'vue';
+import { getImageUrl} from "~/utils/tools"
 const props = withDefaults(defineProps<{
   src: string;
   title?: string;

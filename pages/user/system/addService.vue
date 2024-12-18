@@ -4,6 +4,7 @@ import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { api } from '~/utils/axios';
 import { getImageUrl } from '~/utils/tools';
+import CachedImage from "~/components/common/CachedImage.vue";
 
 definePageMeta({
   layout: 'users',

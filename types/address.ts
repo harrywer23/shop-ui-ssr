@@ -26,20 +26,6 @@ export interface Address {
   isDefault: number
 }
 
-// 地址表单数据接口
-export interface AddressFormData {
-  addrId: number
-  receiver: string
-  mobile: string
-  email: string
-  country: AreaSelectValue | null
-  province: AreaSelectValue | null
-  city: AreaSelectValue | null
-  postCode: string
-  addr: string
-  addr2?: string
-  isDefault: number
-}
 
 // 地址提交数据接口
 export interface AddressSubmitData {

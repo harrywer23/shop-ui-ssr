@@ -48,38 +48,6 @@
             </q-item-section>
           </q-item>
 
-          <!-- 支付宝支付 -->
-          <q-item tag="label" v-ripple>
-            <q-item-section avatar>
-              <q-radio v-model="selectedMethod" val="alipay" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ $t('payment.methods.alipay') }}</q-item-label>
-              <q-item-label caption>
-                {{ $t('payment.methods.alipayDesc') }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section avatar>
-              <q-img src="/payment/alipay.jpeg" width="40px" />
-            </q-item-section>
-          </q-item>
-
-          <!-- 微信支付 -->
-          <q-item tag="label" v-ripple>
-            <q-item-section avatar>
-              <q-radio v-model="selectedMethod" val="wechat" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ $t('payment.methods.wechat') }}</q-item-label>
-              <q-item-label caption>
-                {{ $t('payment.methods.wechatDesc') }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section avatar>
-              <q-img src="/payment/wechat.webp" width="40px" />
-            </q-item-section>
-          </q-item>
-
           <!-- PayPal支付 -->
           <q-item tag="label" v-ripple>
             <q-item-section avatar>
@@ -124,7 +92,7 @@
           </q-card-section>
 
           <q-card-section class="text-center">
-            <q-img :src="qrCodeUrl" style="width: 200px; height: 200px" />
+            <q-img :src="getImageUrl(qrCodeUrl)" style="width: 200px; height: 200px" />
             <div class="text-subtitle1 q-mt-md">
               {{ $t('payment.qrcode.amount') }}: ¥{{ orderInfo.amount }}
             </div>
@@ -144,7 +112,7 @@
           :items="checkOrder.items"
           :orderNumber="checkOrder.orderNumbers"
           product-name="支付订单"
-          url="/admin"
+          url="/user"
         />
       </q-card>
     </q-dialog>
@@ -157,8 +125,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { api } from '~/utils/axios'
 import PayaplCard from "~/components/payment/PaypalCardComponent.vue";
-import type {PayDto, PaymentOrderIntroDto} from '~/utils/payment'
+import type { PaymentOrderIntroDto} from '~/utils/payment'
 import {useI18n} from "vue-i18n";
+import {getImageUrl} from "~/utils/tools";
 const { t } = useI18n()
 
 const route = useRoute()
@@ -184,18 +153,20 @@ const checkTimer = ref<NodeJS.Timer>()
 
 // 计算属性
 const canPay = computed(() => {
-  //console.log("------1------")
-  //console.log(orderInfo)
-  if (!orderInfo.value || !userBalance.value) return false
-  //console.log("------2------")
+  if (!orderInfo.value) return false
+
   // 余额支付时检查余额是否足够
   if (selectedMethod.value === 'balance') {
-    //console.log("------3------",userBalance.value,orderInfo.value.actualTotal)
+    if (!userBalance.value) return false
     return Number(userBalance.value) >= Number(orderInfo.value.amount)
   }
 
-  // 其他支付方式直接返回true
-  return true
+  // PayPal 支付时直接允许点击
+  if (selectedMethod.value === 'paypal') {
+    return true
+  }
+
+  return false
 })
 const checkOrder=ref([])
 // 加载订单信息
@@ -234,7 +205,7 @@ const goToRecharge = () => {
 
 // 处理支付
 const handlePayment = async () => {
-  if (!canPay.value) {
+  if (selectedMethod.value === 'balance' && !canPay.value) {
     $q.notify({
       type: 'warning',
       message: t('payment.insufficientBalance')
@@ -244,6 +215,11 @@ const handlePayment = async () => {
 
   try {
     paying.value = true
+
+    if (selectedMethod.value === 'paypal') {
+      paypalDialog.value = true
+      return  // 直接返回，不执行后续代码
+    }
 
     if (selectedMethod.value === 'balance') {
       // 调用支付接口
@@ -286,14 +262,11 @@ const handlePayment = async () => {
       //   throw new Error(response.data.msg || t('payment.error.payFailed'))
       // }
     }
-    if (selectedMethod.value === 'paypal') {
-      paypalDialog.value=true;
-    }
   } catch (error) {
     console.error('支付失败:', error)
     $q.notify({
       type: 'negative',
-      message: error instanceof Error ? error.message : t('payment.error.payFailed')
+      message: error.message || t('payment.error.payFailed')
     })
   } finally {
     paying.value = false

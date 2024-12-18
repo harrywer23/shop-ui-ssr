@@ -2,11 +2,11 @@
   <div class="product-detail-container">
     <div class="product-gallery">
       <div class="main-image">
-        <img
-            :src="!currentImage?  product.pic:currentImage"
+        <q-img
+            :src="!currentImage?  getImageUrl(product.pic):currentImage"
             :alt="product.prodName"
             @error="currentImage = product.pic"
-        >
+        />
       </div>
       <div class="thumbnail-list" v-if="props.product.skus && props.product.skus.length > 0">
         <div
@@ -14,21 +14,21 @@
             :key="sku.skuId"
             class="thumbnail"
             :class="{
-        active: currentSku?.skuId === sku.skuId
+            active: currentSku?.skuId === sku.skuId
       }"
             @click="selectImage(index)"
         >
-          <img
-              :src="sku.pic || product.pic"
+          <q-img
+              :src="getImageUrl(sku.pic || product.pic)"
               :alt="sku.skuName"
               @error="handleImageError"
-          >
+          />
         </div>
       </div>
     </div>
 
     <div class="product-info">
-      <div class="product-title h1">{{ product.prodName }}</div>
+      <div class="product-title h1">{{  getCurrentLanguageName(product.translations, product.prodName) }}</div>
       <div class="presell-tag" v-if="isPresell">预售商品</div>
       <div class="price-section">
         <template v-if="priceDisplay.presell">
@@ -190,6 +190,7 @@ import {ref, computed, watch, onMounted} from 'vue'
 import {useQuasar} from 'quasar'
 import {useI18n} from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import {getCurrentLanguageName, getImageUrl} from "~/utils/tools";
 
 const quantity = ref(1)
 
@@ -238,6 +239,7 @@ const props = defineProps<{
     presellFinalStartTime: string
     presellFinalEndTime: string
     deliveryMode: string
+    translations: string
     skus?: Sku[]
   }
 }>()

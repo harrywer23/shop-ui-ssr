@@ -24,7 +24,7 @@
                   :key="index"
                   :name="index"
                 >
-                  <q-img :src="pic" style="height: 100%" />
+                  <q-img :src="getImageUrl(pic)" style="height: 100%" />
                 </q-carousel-slide>
               </q-carousel>
             </div>
@@ -98,7 +98,7 @@
         <q-card-section>
           <div class="text-h6 q-mb-md">{{ t('crowdfunding.detail.rewards') }}</div>
           <div class="row q-col-gutter-md">
-            <div 
+            <div
               v-for="reward in crowdfunding.rewards"
               :key="reward.id"
               class="col-12 col-sm-6 col-md-4"
@@ -112,7 +112,7 @@
                     {{ t('crowdfunding.detail.supportCount') }}: {{ reward.supportCount }}
                   </div>
                   <div class="text-caption">
-                    {{ t('crowdfunding.detail.limitCount') }}: 
+                    {{ t('crowdfunding.detail.limitCount') }}:
                     {{ reward.limitCount > 0 ? reward.limitCount : t('crowdfunding.detail.unlimited') }}
                   </div>
                 </q-card-section>
@@ -201,6 +201,8 @@ import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import { useQuasar } from 'quasar'
 import { date } from 'quasar'
+import CachedImage from "~/components/common/CachedImage.vue";
+import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
 const router = useRouter()
@@ -266,7 +268,7 @@ const canSupport = computed(() => {
 // 获取剩余时间
 const getRemainingTime = () => {
   if (!crowdfunding.value.endTime) return ''
-  
+
   const now = new Date().getTime()
   const end = new Date(crowdfunding.value.endTime).getTime()
   const diff = end - now
@@ -285,7 +287,7 @@ const getRemainingTime = () => {
 // 获取不可支持原因
 const getSupportDisabledReason = () => {
   if (!crowdfunding.value.startTime || !crowdfunding.value.endTime) return ''
-  
+
   const now = new Date().getTime()
   const start = new Date(crowdfunding.value.startTime).getTime()
   const end = new Date(crowdfunding.value.endTime).getTime()
@@ -407,4 +409,4 @@ onMounted(() => {
     color: #666;
   }
 }
-</style> 
+</style>

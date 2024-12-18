@@ -177,7 +177,23 @@ const props = defineProps({
   },
   initialTags: {
     type: String,
+    default: ''
+  },
+  initialQuality: {
+    type: String,
     default: null
+  },
+  initialProdType: {
+    type: Number,
+    default: null
+  },
+  products: {
+    type: Array,
+    default: () => []
+  },
+  loading: {
+    type: Boolean,
+    default: false
   },
   parentId: {
     type: Number,
@@ -193,12 +209,12 @@ const { t } = useI18n()
 const searchQuery = ref('')
 const selectedCategory = ref(props.initialCategory)
 const selectedTags = ref(props.initialTags)
+const selectedProdType = ref(props.initialProdType)
+const selectedQuality = ref(props.initialQuality)
 
-const products = ref([])
 const currentPage = ref(1)
 const pageSize = ref(12)
 const totalCount = ref(0)
-const loading = ref(false)
 const sortBy = ref('default')
 const priceOrder = ref('desc')
 const priceRange = ref({
@@ -263,7 +279,6 @@ const getCategoryName = (categoryId: number) => {
 
 // 加载商品列表
 const loadProducts = async () => {
-  loading.value = true
   try {
     const queryParams = new URLSearchParams({
       pageNum: currentPage.value.toString(),
@@ -276,6 +291,12 @@ const loadProducts = async () => {
     const categoryId = selectedCategory.value || props.parentId
     if (categoryId) {
       queryParams.append('categoryId', categoryId.toString())
+    }
+    if (selectedProdType.value) {
+      queryParams.append('prodType', selectedProdType.value.toString())
+    }
+    if (selectedQuality.value) {
+      queryParams.append('quality', selectedQuality.value.toString())
     }
     if (priceRange.value.min) {
       queryParams.append('minPrice',  priceRange.value.min)
@@ -312,8 +333,6 @@ const loadProducts = async () => {
       type: 'negative',
       message: t('error.loadProductsFailed')
     })
-  } finally {
-    loading.value = false
   }
 }
 
@@ -382,22 +401,64 @@ const handlePageChange = () => {
 const navigateToProduct = (productId: number) => {
   router.push(`/product/${productId}`)
 }
-// 监听标签变化
-watch(() => props.initialTags, (newTags) => {
-  if (newTags !== selectedTags.value) {
-    selectedTags.value = newTags
-    currentPage.value = 1
-    loadProducts()
-  }
-})
-// 监听初始分类变化
-watch(() => props.initialCategory, (newCategory) => {
-  if (newCategory !== selectedCategory.value) {
-    selectedCategory.value = newCategory
-    currentPage.value = 1
-    loadProducts()
-  }
-})
+
+// 定义事件
+const emit = defineEmits(['update:filter'])
+
+// 修改监听逻辑
+watch(
+  [
+    () => props.initialCategory,
+    () => props.initialTags,
+    () => props.initialQuality,
+    () => props.initialProdType,
+    () => props.products,
+    () => props.loading
+  ],
+  ([newCategory, newTags, newQuality, newProdType]) => {
+    if (newCategory !== selectedCategory.value) {
+      selectedCategory.value = newCategory
+    }
+    if (newTags !== selectedTags.value) {
+      selectedTags.value = newTags
+    }
+    if (newQuality !== selectedQuality.value) {
+      selectedQuality.value = newQuality
+    }
+    if (newProdType !== selectedProdType.value) {
+      selectedProdType.value = newProdType
+    }
+  },
+  { immediate: true }
+)
+
+// 修改筛选条件变化的处理函数
+const handleFilterChange = () => {
+  emit('update:filter', {
+    category: selectedCategory.value,
+    tags: selectedTags.value,
+    quality: selectedQuality.value,
+    prodType: selectedProdType.value,
+    priceRange: priceRange.value,
+    search: searchQuery.value
+  })
+}
+
+// 在所有筛选条件变化的地方调用 handleFilterChange
+watch(
+  [
+    selectedCategory,
+    selectedTags,
+    selectedQuality,
+    selectedProdType,
+    priceRange,
+    searchQuery
+  ],
+  () => {
+    handleFilterChange()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   loadProducts()

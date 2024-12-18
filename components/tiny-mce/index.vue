@@ -41,9 +41,9 @@ import Editor from '@tinymce/tinymce-vue'
 import { useQuasar } from 'quasar'
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { api } from '~/utils/axios'
+import {API_CONSTANTS} from "~/utils/constants";
 
-const config = useRuntimeConfig()
-const IMAGE_BASE_URL = config.public.imageBaseUrl
+const IMAGE_BASE_URL = API_CONSTANTS.BASE_URL
 const $q = useQuasar()
 const fileInput = ref(null)
 const toxFullscreen = ref(false)

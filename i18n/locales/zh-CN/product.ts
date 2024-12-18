@@ -99,5 +99,18 @@ export default {
     addToCart: '加入购物车',
     stock: '库存',
     sales: '销量'
+  },
+  quality: {
+    s: '臻品',
+    a: '精品',
+    b: '良品',
+    c: '普品',
+    d: '基础款'
+  },
+  type: {
+    NORMAL: '普通商品',
+    PRESELL: '预售商品',
+    GROUP: '团购商品',
+    SECKILL: '秒杀商品'
   }
 } 

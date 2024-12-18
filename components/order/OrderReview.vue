@@ -84,6 +84,8 @@ import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import ImageUploader from '~/components/common/ImageUploader.vue'
+import {getImageUrl} from "~/utils/tools";
+
 
 const { t } = useI18n()
 const $q = useQuasar()

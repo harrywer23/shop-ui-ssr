@@ -175,6 +175,7 @@ import { useQuasar } from 'quasar'
 import {setCache} from "~/utils/storage";
 import {getImageUrl} from "~/utils/tools";
 import { useI18n } from 'vue-i18n'
+import CachedImage from "~/components/common/CachedImage.vue";
 
 const router = useRouter()
 const $q = useQuasar()

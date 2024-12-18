@@ -98,5 +98,18 @@ export default {
     search: {
       placeholder: '搜尋商品...'
     }
+  },
+  quality: {
+    s: '臻品',
+    a: '精品',
+    b: '良品',
+    c: '普品',
+    d: '基礎款'
+  },
+  type: {
+    NORMAL: '普通商品',
+    PRESELL: '預售商品',
+    GROUP: '團購商品',
+    SECKILL: '秒殺商品'
   }
 }
