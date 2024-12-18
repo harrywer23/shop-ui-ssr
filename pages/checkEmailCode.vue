@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { onMounted, ref} from 'vue';
-import { Dialog, useQuasar } from 'quasar';
+import {onMounted, ref} from 'vue';
+import {  Dialog, useQuasar } from 'quasar';
 import {useRouter} from "vue-router";
 import {api} from "~/utils/axios";
 const router = useRouter(); // 使用 Vue Router 的 useRouter 函数
@@ -10,7 +10,7 @@ const code = ref('');
 
 async function onSubmit() {
   try {
-    const response = await api.get(`/admin/systemUser/?email=${email.value}&code=${code.value}`, {
+    const response = await api.get(`/user/sendCheckEmailCode?email=${email.value}&code=${code.value}`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -28,7 +28,7 @@ async function onSubmit() {
       });
     }
   } catch (error) {
-    //console.log(error)
+    // console.log(error)
   }
 }
 async  function sendEmailCode(){
@@ -40,7 +40,7 @@ async  function sendEmailCode(){
     });
     const data = response.data;
     if (data.code == 200) {
-    //  //console.log(data);
+    //  // console.log(data);
     } else {
       Dialog.create({
         color: 'red-5',
@@ -48,7 +48,7 @@ async  function sendEmailCode(){
       });
     }
   } catch (error) {
-    //console.log(error)
+    // console.log(error)
   }
 }
 

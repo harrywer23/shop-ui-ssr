@@ -1,93 +1,146 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from 'vue';
-import { Dialog } from 'quasar';
-import {useRouter} from "vue-router";
-import {api} from "~/utils/axios";
-const router = useRouter(); // 使用 Vue Router 的 useRouter 函数
+import { api } from '~/utils/axios';
+import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import {useRoute} from "#vue-router";
+
+const { t } = useI18n();
+const $q = useQuasar();
+const router = useRouter();
+const route = useRoute();
 
 const newPassword = ref('');
-const newPassword2 =ref('');
-const key =ref('');
-const check =ref('');
+const newPassword2 = ref('');
+const loading = ref(false);
+const isPwd1Visible = ref(false);
+const isPwd2Visible = ref(false);
+const key = ref(route.query.key);
+const check = ref(route.query.check);
 
-async function onSubmit() {
+async function onSubmit(e: Event) {
+  e.preventDefault();
+  if (loading.value) return;
+
+  if (!newPassword.value || !newPassword2.value) {
+    $q.notify({ type: 'warning', message: t('password.reset.pleaseComplete') });
+    return;
+  }
+
+  if (newPassword.value !== newPassword2.value) {
+    $q.notify({ type: 'warning', message: t('password.reset.passwordMismatch') });
+    return;
+  }
+
+  if (newPassword.value.length < 6) {
+    $q.notify({ type: 'warning', message: t('password.reset.passwordTooShort') });
+    return;
+  }
+
+  loading.value = true;
   try {
-    const response = await api.post("/restPasword", JSON.stringify({
-      newPassword: newPassword,
-      newPassword2: newPassword2,
-      key:key.value,
-      check:check.value,
-    }), {
+    // 构造请求数据对象
+    const requestData = {
+      newPassword1: newPassword.value,
+      newPassword2: newPassword2.value,
+      key: key.value,
+      check: check.value
+    };
+
+    console.log('Sending reset password request:', requestData);
+
+    const response = await api.post('/user/restPasswort', requestData, {
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     });
-    const data = response.data;
-    if (data.code == 200) {
-      router.push('/login'); // 或者其他页面
-    } else {
-      Dialog.create({
-        color: 'red-5',
-        message: data.msg
+
+    console.log('Reset password response:', response.data);
+
+    if (response.data.code === 200) {
+      $q.notify({
+        type: 'positive',
+        message: t('password.reset.success')
       });
+      router.push('/login');
+    } else {
+      throw new Error(response.data.msg || '重置密码失败');
     }
   } catch (error) {
-    //console.log(error)
+    console.error('Reset password error:', error);
+    $q.notify({
+      type: 'negative',
+      message: error.message || '重置密码失败'
+    });
+  } finally {
+    loading.value = false;
   }
 }
-
 </script>
 
-
 <template>
-  <div class="center-container">
-    <div class="q-pa-md" style="max-width: 600px">
-      <q-card class="my-card">
-        <q-card-section>
-          <div class="text-h6">找回密码</div>
-          <div class="text-subtitle2">发送邮箱验证码，只有验证过的邮箱才能用于找回</div>
-        </q-card-section>
+  <div class="reset-password-page q-pa-md">
+    <q-card class="reset-form" flat bordered>
+      <q-card-section>
+        <div class="text-h6">{{ t('password.reset.title') }}</div>
+      </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <q-form class="q-gutter-md" @submit.prevent="onSubmit">
-            <!-- 账号输入框 -->
-            <!-- 密码输入框 -->
-            <q-input
-              v-model="newPassword"
-              :rules="[val => val && val.length > 0 || 'Please enter your password']"
-              filled
-              :label="$t('login.password')+' *'"
-              type="password"
-            />
-            <!-- 密码输入框 -->
-            <q-input
-              v-model="newPassword2"
-              :rules="[val => val && val.length > 0 || 'Please enter your password']"
-              filled
-              :label="$t('login.password')+' *'"
-              type="password"
-            />
-            <div>
-              <q-btn color="primary" label="发送验证码" style="width: 100%;" type="submit"/>
-            </div>
+      <q-card-section>
+        <q-form @submit="onSubmit">
+          <q-input
+            v-model="newPassword"
+            :type="isPwd1Visible ? 'text' : 'password'"
+            :label="t('password.reset.newPassword')"
+            outlined
+            class="q-mb-md"
+          >
+            <template #append>
+              <q-icon
+                :name="isPwd1Visible ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd1Visible = !isPwd1Visible"
+              />
+            </template>
+          </q-input>
 
-          </q-form>
-        </q-card-section>
-      </q-card>
-    </div>
+          <q-input
+            v-model="newPassword2"
+            :type="isPwd2Visible ? 'text' : 'password'"
+            :label="t('password.reset.confirmPassword')"
+            outlined
+            class="q-mb-md"
+          >
+            <template #append>
+              <q-icon
+                :name="isPwd2Visible ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd2Visible = !isPwd2Visible"
+              />
+            </template>
+          </q-input>
+
+          <div class="row justify-center q-mt-lg">
+            <q-btn
+              type="submit"
+              color="primary"
+              :loading="loading"
+              :label="t('password.reset.submitButton')"
+            />
+          </div>
+        </q-form>
+      </q-card-section>
+    </q-card>
   </div>
 </template>
-<style scoped>
-.center-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* 使容器至少与视口一样高 */
-}
 
-.extra-links {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
+<style lang="sass" scoped>
+.reset-password-page
+  max-width: 400px
+  margin: 40px auto
+
+.reset-form
+  background: #fff
+  border-radius: 8px
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2)
 </style>

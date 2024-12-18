@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     static: 'static', // 新的静态文件夹名称
   },
 
-  modules: ['@nuxtjs/sitemap', '@nuxtjs/i18n', '@vite-pwa/nuxt', 'nuxt-quasar-ui', '@nuxtjs/seo', '@pinia/nuxt', '@ant-design-vue/nuxt', 'nuxt-schema-org', 'nuxt-site-config'],
+  modules: ['@nuxtjs/sitemap', '@nuxtjs/i18n', '@vite-pwa/nuxt', 'nuxt-quasar-ui', '@nuxtjs/seo', '@pinia/nuxt'],
 
   pwa: {
     manifest: {
@@ -49,8 +49,9 @@ export default defineNuxtConfig({
   i18n: {
     strategy: 'no_prefix',
     locales: [
+      // 定义地区对象，包括 code, file 和 name
       { code: 'en', name: 'English' },
-      { code: 'zh-CN', name: '简体中文' },
+      { code: 'zh-CN',  name: '简体中文' },
       { code: 'zh-TW', name: '繁體中文' },
       { code: 'ja', name: '日本語' },
       { code: 'ko', name: '한국어' }
@@ -75,11 +76,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Public keys that are exposed to the client
     public: {
-      // baseUrl:  process.env.BASE_URL || 'https://admin.51x.uk'
-      // baseUrl:"http://127.0.0.1:8098",
-      baseURL: 'https://admin.51x.uk',
-      imageBaseUrl: process.env.NUXT_PUBLIC_IMAGE_BASE_URL || 'https://image.aiavr.uk/xinshijie',
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://www.51x.uk',
+      // baseUrl:  process.env.BASE_URL || 'https://admin.aiavr.uk'
+      baseUrl:"https://admin.aiavr.uk"
+      // baseUrl:"http://127.0.0.1:8098"
     }
   },
 
@@ -117,38 +116,38 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    enabled: true,
-    urls: ['https://www.51x.uk'],
-    gzip: true,
-    exclude: [
-      '/user/**',
-      '/admin/**',
-      '/login',
-      '/register'
-    ],
     sitemaps: {
+      // 主站点地图
+      main: {
+        // 静态路由
+        urls: [
+          { loc: '/', priority: 1.0 },
+          { loc: '/see', priority: 0.8 },
+          { loc: '/usersAlbum', priority: 0.8 },
+          { loc: '/users', priority: 0.8 },
+          { loc: '/about', priority: 0.5 },
+          { loc: '/contact', priority: 0.5 },
+          { loc: '/help', priority: 0.5 },
+          { loc: '/privacy-policy', priority: 0.5 },
+          { loc: '/terms-of-use', priority: 0.5 }
+        ]
+      },
       // 动态页面站点地图
       posts: {
         // 从 API 端点获取动态 URL
         sources: [
           '/api/__sitemap__/urls'
         ]
-      },
-      general: {
-        include: ['/'],
-        defaults: {
-          changefreq: 'weekly',
-          priority: 0.5
-        }
       }
     },
+    // 全局配置
     defaultSitemapsChunkSize: 1000,
+    exclude: ['/admin/**'],
     defaults: {
       changefreq: 'daily',
       priority: 0.5,
       lastmod: new Date().toISOString()
-    },
-    cacheTtl: 1000 * 60 * 60
+    }
   },
 
   vite: {
@@ -181,11 +180,6 @@ export default defineNuxtConfig({
       }),
     ],
   },
-
-  plugins: [
-    { src: '~/plugins/matomo.js', mode: 'client' },
-    { src: '~/plugins/pinia.js', mode: 'client' }
-  ],
 
   serverMiddleware: [
     '~/middleware/cache.js'
@@ -234,55 +228,27 @@ export default defineNuxtConfig({
     }
   },
 
-  compatibilityDate: '2024-11-07',
-
-  css: [
-    '@/assets/styles/global.scss'
-  ],
-
-  pinia: {
-    imports: [
-      'defineStore',
-      'storeToRefs'
-    ]
+  nitro: {
+    hooks: {
+      'render:html': (html: { head: string[] }) => {
+        html.head.push(`
+          <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "图集网",
+              "url": "https://www.aiavr.uk",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.aiavr.uk/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            }
+          </script>
+        `)
+      }
+    }
   },
 
-  imports: {
-    dirs: ['stores']
-  },
-
-  build: {
-    transpile: ['pinia-plugin-persistedstate']
-  },
-
-  // Pinia 持久化配置
-  piniaPersistedstate: {
-    storage: 'localStorage',
-    debug: true,
-  },
-
-  // 路由配置
-  pages: true,
-  robots: {
-    userAgent: '*',
-    allow: '/',
-    disallow: ['/admin', '/user'],
-    sitemap: 'https://www.51x.uk/sitemap.xml'
-  },
-
-  schemaOrg: {
-    // 启用调试模式（可选）
-    debug: process.env.NODE_ENV === 'development',
-    // 网站基本信息
-    identity: {
-      type: 'Organization',
-      name: '次元集市',
-      url: 'https://www.51x.uk',
-      logo: 'https://www.51x.uk/logo.png'
-    },
-    // 网站默认语言
-    defaultLanguage: 'zh-CN',
-    // 可选：启用自动生成
-    generateRobots: true
-  }
+  compatibilityDate: '2024-11-07'
 })
