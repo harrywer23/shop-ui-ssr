@@ -118,7 +118,14 @@ export const API_CONSTANTS = {
   TIMEOUT: 30000,
   MAX_RETRIES: 3
 }
-
+export function fnv1a(str:string) {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = (hash * 0x01000193) >>> 0;
+  }
+  return hash >>> 0; // Convert to unsigned 32-bit integer
+}
 // 验证规则
 export const VALIDATION_RULES = {
   username: [

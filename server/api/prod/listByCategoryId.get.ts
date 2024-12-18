@@ -1,6 +1,5 @@
 import { defineEventHandler } from 'h3';
-import {API_CONSTANTS} from "~/utils/constants"
-import { createHash } from 'node:crypto';
+import {API_CONSTANTS, fnv1a} from "~/utils/constants"
 
 import { LRUCache } from 'lru-cache';
 const cache =new LRUCache<string, any>({
@@ -9,7 +8,6 @@ const cache =new LRUCache<string, any>({
 })
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
-  // const config = useRuntimeConfig();
   // 获取请求头
   const headers = event.req.headers;
   const language= headers["accept-language"] ;
@@ -18,7 +16,7 @@ export default defineEventHandler(async (event) => {
 // 你需要计算 MD5 的字符串
   const stringToHash =query ? JSON.stringify(query):"listByCategoryId";
 // 创建一个 MD5 哈希实例
-  const hash = createHash('md5').update(stringToHash).digest('hex');
+  const hash = fnv1a(stringToHash);
 // 输出结果
 //   console.log(hash);
   const cacheKey = `prod:listByCategoryId:${hash}`;
@@ -32,7 +30,7 @@ export default defineEventHandler(async (event) => {
   try {
     // 构建完整的 URL
     const fullUrl = `${API_CONSTANTS.BASE_URL}/prod/listByCategoryId?`+tansParams(query);
-    //console.log('Fetching from URL:', fullUrl);
+    console.log('Fetching from URL:', fullUrl);
 
     // 在处理函数内执行 fetch
     const response = await fetch(fullUrl, {

@@ -1,6 +1,5 @@
 import { defineEventHandler } from 'h3';
-import {API_CONSTANTS} from "~/utils/constants"
-// import { createHash } from 'node:crypto';
+import {API_CONSTANTS,fnv1a} from "~/utils/constants"
 
 import { LRUCache } from 'lru-cache';
 const cache =new LRUCache<string, any>({
@@ -14,18 +13,18 @@ export default defineEventHandler(async (event) => {
   const headers = event.req.headers;
   const language= headers["accept-language"] ;
 
-//   // console.log('language:', language)
-//   const stringToHash =query ? JSON.stringify(query):"listByTagId";
-// // 创建一个 MD5 哈希实例
-//   const hash = createHash('md5').update(stringToHash).digest('hex');
-// // 输出结果
-// //   console.log(hash);
-//   const cacheKey = `prod:listByTagId:${hash}`;
-//
-//   const cachedData = cache.get(cacheKey);
-//   if (cachedData) {
-//     return cachedData;
-//   }
+  // console.log('language:', language)
+  const stringToHash =query ? JSON.stringify(query):"listByTagId";
+// 创建一个 MD5 哈希实例
+  const hash = fnv1a(stringToHash);
+// 输出结果
+//   console.log(hash);
+  const cacheKey = `prod:listByTagId:${hash}`;
+
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
   try {
     // 构建完整的 URL
     const fullUrl = `${API_CONSTANTS.BASE_URL}/prod/listByTagId?`+tansParams(query);
@@ -38,9 +37,9 @@ export default defineEventHandler(async (event) => {
     });
     // 解析响应
     const data = await response.json();
-    // if (data.code === 200) {
-    //    cache.set(cacheKey, data);
-    // }
+    if (data.code === 200) {
+       cache.set(cacheKey, data);
+    }
 
     return data;
 
