@@ -450,7 +450,7 @@ const currentImage = ref('')
 // 计算宣传图片列表
 const imgList = computed(() => {
   if (!productInfo.value?.imgs) return [];
-  // 分割字符串为数组限制最大长度为3
+  // 分割字符串为数组限制最大长度�����3
   const imgsArray = productInfo.value.imgs.split(',');
   return imgsArray.slice(0, 3);
 });
@@ -534,7 +534,7 @@ const isSkuValueAvailable = (propId: string | number, valueId: string | number):
     const isAvailable = !!matchingSku
     return isAvailable
   } catch (error) {
-    console.error('检查SKU值可���性失败:', error)
+    console.error('检查SKU值可性失败:', error)
     return false
   }
 }
@@ -628,7 +628,7 @@ const hasSku = computed(() => {
   return productInfo.value?.propList?.length > 0 && productInfo.value?.skuList?.length > 0
 })
 
-// 获取最大���存
+// 获取最大存
 function getMaxStock(): number {
   if (hasSku.value) {
     return currentSku.value?.actualStocks || 0
@@ -693,10 +693,10 @@ async function handleBuyNow() {
         translations: productInfo.value.translations,
         from: "direct"
       }
-     
+
       cartStore.addDirectBuyItem(orderData)
       navigateTo(`/checkout?prodId=${currentSku.value.prodId}&skuId=${currentSku.value.skuId}`)
-      
+
     } else {
       // 购买普通商品
       const orderData = {
@@ -722,7 +722,7 @@ async function handleBuyNow() {
         translations: productInfo.value.translations,
         from: "direct"
       }
-      
+
       cartStore.addDirectBuyItem(orderData)
       navigateTo(`/checkout?prodId=${productInfo.value.prodId}&prodName=${productInfo.value.prodName}`)
     }
@@ -779,7 +779,7 @@ async function handleAddToCart() {
     })
   }
 }
-// 修改��新量方法
+// 修改新量方法
 function updateQuantity(delta: number) {
   const newQuantity = quantity.value + delta
   const maxStock = getMaxStock()
@@ -826,7 +826,7 @@ const handleSkuImageClick = (sku: any) => {
     currentImage.value = getImageUrl(sku.pic || productInfo.value?.pic)
     //console.log('设置当前显示图片:', currentImage.value)
 
-    // 解�� SKU 的规格属性
+    // 解 SKU 的规格属性
     const properties = sku.properties.split(';')
     const newSkuValues: Record<string, string | number> = {}
 
@@ -947,30 +947,52 @@ const metaKeywords = computed(() => {
   return keywords.join(', ')
 })
 
-// 生成结构化数据
+// 修改结构化数据部分
 const structuredData = computed(() => {
+  if (!productInfo.value) return null;
+
+  const currentPrice = hasSku.value && currentSku.value
+    ? currentSku.value.price
+    : productInfo.value.price;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: productInfo.value?.prodName,
-    description: productInfo.value?.brief,
-    image: productInfo.value?.pic,
+    name: getCurrentLanguageName(productInfo.value.translations, productInfo.value.prodName),
+    description: productInfo.value.brief || getCurrentLanguageName(productInfo.value.translations, productInfo.value.prodName),
+    image: [getImageUrl(productInfo.value.pic)],
+    sku: hasSku.value && currentSku.value ? currentSku.value.skuId : productInfo.value.prodId,
+    mpn: productInfo.value.prodCode,
     brand: {
       '@type': 'Brand',
-      name: productInfo.value?.brand
+      name: 'Dimension Market'
     },
     offers: {
       '@type': 'Offer',
-      priceCurrency: 'CNY',
-      price: productInfo.value?.price,
-      availability: productInfo.value?.skuList.some(item => item.stocks > 0)
+      url: `https://www.cmall.uk/product/detail?prodId=${productInfo.value.prodId}`,
+      priceCurrency: 'USD',
+      price: currentPrice,
+      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString(),
+      itemCondition: 'https://schema.org/NewCondition',
+      availability: productInfo.value.totalStocks > 0
         ? 'https://schema.org/InStock'
-        : 'https://schema.org/OutOfStock'
-    }
+        : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Dimension Market'
+      }
+    },
+    aggregateRating: productInfo.value.commentsCount > 0 ? {
+      '@type': 'AggregateRating',
+      ratingValue: productInfo.value.avgScore || 5,
+      reviewCount: productInfo.value.commentsCount,
+      bestRating: 5,
+      worstRating: 1
+    } : undefined
   }
 })
 
-// 设置页面 Meta 信息
+// 修改 useHead 部分
 useHead({
   title: metaTitle,
   meta: [
@@ -979,25 +1001,26 @@ useHead({
     // Open Graph tags
     { property: 'og:title', content: metaTitle },
     { property: 'og:description', content: metaDescription },
-    { property: 'og:image', content: productInfo.value?.pic },
+    { property: 'og:image', content: productInfo.value?.pic ? getImageUrl(productInfo.value.pic) : undefined },
     { property: 'og:type', content: 'product' },
-    { property: 'og:price:amount', content: String(productInfo.value?.price) },
-    { property: 'og:price:currency', content: 'USA' },
+    { property: 'og:price:amount', content: String(getCurrentPrice.value) },
+    { property: 'og:price:currency', content: 'USD' },
     // Twitter Card tags
     { name: 'twitter:card', content: 'product' },
     { name: 'twitter:title', content: metaTitle },
     { name: 'twitter:description', content: metaDescription },
-    { name: 'twitter:image', content: productInfo.value?.pic }
+    { name: 'twitter:image', content: productInfo.value?.pic ? getImageUrl(productInfo.value.pic) : undefined }
   ],
   link: [
-    // 添加规范链接
-    { rel: 'canonical', href: `${process.env.SITE_URL}/product/detail/${route.params.id}` }
+    {
+      rel: 'canonical',
+      href: `https://www.cmall.uk/product/detail?prodId=${prodId.value}`
+    }
   ],
   script: [
-    // 添加结构化数据
     {
       type: 'application/ld+json',
-      children: JSON.stringify(structuredData.value)
+      children: computed(() => JSON.stringify(structuredData.value))
     }
   ]
 })
