@@ -1,119 +1,63 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { CheckoutItem, Address, Coupon, OrderAmount } from '~/types/checkout'
-import { ProductType } from '~/utils/constants'
-import { handleDirectCheckout, handleCartCheckout } from '~/utils/checkoutHandler'
+import { ref } from 'vue'
+
+interface OrderItem {
+  orderId: number
+  orderNumber: string
+  kind: number
+  prodName: string
+  isPayed: number
+  amount: number
+}
+
+interface CheckoutInfo {
+  items: OrderItem[]
+  amount: number
+  orderNumbers: string
+  isPayed: number
+}
 
 export const useCheckoutStore = defineStore('checkout', () => {
-  // 状态
-  const checkoutItems = ref<CheckoutItem[]>([])
-  const selectedAddress = ref<Address | null>(null)
-  const selectedCoupon = ref<Coupon | null>(null)
-  const orderAmount = ref<OrderAmount>({
-    subtotal: 0,
-    shippingFee: 0,
-    discount: 0,
-    couponDiscount: 0
-  })
+  // 存储结账信息
+  const checkoutInfo = ref<CheckoutInfo | null>(null)
 
-  // 计算属性
-  const isVirtualOrder = computed(() =>
-    checkoutItems.value.every(item => item.isVirtual === 1)
-  )
-
-  const hasPresellItems = computed(() =>
-    checkoutItems.value.some(item => item.prodType === ProductType.PRESELL)
-  )
-
-  const subtotal = computed(() =>
-    checkoutItems.value.reduce((total, item) =>
-      total + item.price * item.quantity, 0
-    ).toFixed(2)
-  )
-
-  const totalAmount = computed(() => {
-    const total = Number(subtotal.value) +
-      orderAmount.value.shippingFee -
-      orderAmount.value.discount -
-      orderAmount.value.couponDiscount
-    return total.toFixed(2)
-  })
-
-  // 方法
-  async function initCheckoutData(params: {
-    from: string
-    prodId?: string | number
-    skuId?: string | number
-    quantity?: number
-  }) {
-    try {
-      if (params.from === 'direct') {
-        checkoutItems.value = await handleDirectCheckout(
-          params.prodId!,
-          params.skuId,
-          params.quantity
-        )
-      } else {
-        const cartItemsStr = localStorage.getItem('cartStore');
-        const cartItems=ref([]);
-        if(cartItemsStr !=null){
-          JSON.parse(cartItems);
-        }
-        //console.log('UseCheckoutItems  JS out:',cartItems)
-        checkoutItems.value = await handleCartCheckout(cartItems)
-      }
-    } catch (error) {
-      console.error('初始化结算数据失败:', error)
-      throw error
+  // 设置结账信息
+  function setCheckoutInfo(info: CheckoutInfo) {
+    checkoutInfo.value = {
+      items: info.items.map(item => ({
+        orderId: item.orderId || 0,
+        orderNumber: item.orderNumber || '',
+        kind: item.kind || 0,
+        prodName: item.prodName || '',
+        isPayed: item.isPayed || 0,
+        amount: item.amount || 0
+      })),
+      amount: info.amount || 0,
+      orderNumbers: info.orderNumbers || '',
+      isPayed: info.isPayed || 0
     }
   }
 
-  function setSelectedAddress(address: Address) {
-    selectedAddress.value = address
+  // 获取结账信息
+  function getCheckoutInfo(): CheckoutInfo | null {
+    return checkoutInfo.value
   }
 
-  function setSelectedCoupon(coupon: Coupon) {
-    selectedCoupon.value = coupon
-    if (coupon) {
-      orderAmount.value.couponDiscount = calculateCouponDiscount(coupon)
-    } else {
-      orderAmount.value.couponDiscount = 0
-    }
-  }
-
-  function calculateCouponDiscount(coupon: Coupon): number {
-    if (coupon.couponType === 1) {
-      return coupon.discount
-    } else {
-      const discount = Number(subtotal.value) * (1 - coupon.discount)
-      return Math.min(discount, coupon.maxDiscount || discount)
-    }
-  }
-
-  function reset() {
-    checkoutItems.value = []
-    selectedAddress.value = null
-    selectedCoupon.value = null
-    orderAmount.value = {
-      subtotal: 0,
-      shippingFee: 0,
-      discount: 0,
-      couponDiscount: 0
-    }
+  // 清空结账信息
+  function clearCheckoutInfo() {
+    checkoutInfo.value = null
   }
 
   return {
-    checkoutItems,
-    selectedAddress,
-    selectedCoupon,
-    orderAmount,
-    isVirtualOrder,
-    hasPresellItems,
-    subtotal,
-    totalAmount,
-    initCheckoutData,
-    setSelectedAddress,
-    setSelectedCoupon,
-    reset
+    checkoutInfo,
+    setCheckoutInfo,
+    getCheckoutInfo,
+    clearCheckoutInfo
   }
+}, {
+  persist: process.client ? {
+    key: 'checkout-storage',
+    storage: localStorage,
+    paths: ['checkoutInfo']
+  } : false
 })

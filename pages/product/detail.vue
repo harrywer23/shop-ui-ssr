@@ -429,6 +429,7 @@ import type { ProductDetail, Sku } from '~/types/product'
 import { formatDateTime, getCurrentLanguageName, getImageUrl, getLanguageName } from "~/utils/tools";
 import { useI18n } from "vue-i18n";
 import { useDebounceFn } from '@vueuse/core'
+import { useCartStore } from '~/stores/cart'
 const { locale, t } = useI18n()
 const lang = locale.value;
 const route = useRoute()
@@ -449,7 +450,7 @@ const currentImage = ref('')
 // 计算宣传图片列表
 const imgList = computed(() => {
   if (!productInfo.value?.imgs) return [];
-  // 分割字符串为数组��限制最大长度为3
+  // 分割字符串为数组限制最大长度为3
   const imgsArray = productInfo.value.imgs.split(',');
   return imgsArray.slice(0, 3);
 });
@@ -533,12 +534,12 @@ const isSkuValueAvailable = (propId: string | number, valueId: string | number):
     const isAvailable = !!matchingSku
     return isAvailable
   } catch (error) {
-    console.error('检查SKU值可用性失败:', error)
+    console.error('检查SKU值可���性失败:', error)
     return false
   }
 }
 
-// 修改���择 SKU 值的方法
+// 修改选择 SKU 值的方法
 function selectSkuValue(propId: string | number, valueId: string | number) {
   try {
     if (!isSkuValueAvailable(propId, valueId)) {
@@ -627,7 +628,7 @@ const hasSku = computed(() => {
   return productInfo.value?.propList?.length > 0 && productInfo.value?.skuList?.length > 0
 })
 
-// 获取最大库存
+// 获取最大���存
 function getMaxStock(): number {
   if (hasSku.value) {
     return currentSku.value?.actualStocks || 0
@@ -663,31 +664,27 @@ async function handleBuyNow() {
   }
 
   try {
-    console.log("----------handleBuyNow---------------")
-    const cartData =ref([]);
+    // 先完全清空购物车
+    cartStore.clearCart()
     if (hasSku.value && currentSku.value) {
-      console.log("----------handleBuyNow-----1----------")
       // 购买 SKU 商品
-      const  orderData = {
+      const orderData = {
         prodId: currentSku.value.prodId,
         skuId: currentSku.value.skuId,
-        prodName: getLanguageName(productInfo.value.translations,productInfo.value?.prodName,lang), // 使用商品名称
-        skuName: getLanguageName(currentSku.value?.translations,currentSku.value?.skuName,lang),
-        deliveryTemplateId:productInfo.value.deliveryTemplateId,
+        prodName: getLanguageName(productInfo.value.translations, productInfo.value?.prodName, lang),
+        skuName: getLanguageName(currentSku.value?.translations, currentSku.value?.skuName, lang),
+        deliveryTemplateId: productInfo.value.deliveryTemplateId,
         price: currentSku.value.price,
         oriPrice: currentSku.value.oriPrice,
         pic: currentSku.value.pic || productInfo.value.pic,
         quantity: quantity.value,
         basketCount: quantity.value,
-        prodType: productInfo.value.prodType, // 使用商品类型
-        // 预售相关信息
+        prodType: productInfo.value.prodType,
         presellStatus: currentSku.value.presellStatus,
         presellPrice: currentSku.value.presellPrice,
         presellDeposit: currentSku.value.presellDeposit,
-        // 团购相关信息
         groupPrice: currentSku.value.groupPrice,
         groupMinNum: currentSku.value.groupMinNum,
-        // 秒杀相关信息
         seckillPrice: currentSku.value.seckillPrice,
         isVirtual: productInfo.value.isVirtual,
         isSkuItem: 1,
@@ -696,13 +693,13 @@ async function handleBuyNow() {
         translations: productInfo.value.translations,
         from: "direct"
       }
-      cartData.value.push(orderData);
-      setCache("cartStore", cartData.value)
-      window.location.href = `/checkout?prodId=${currentSku.value.prodId}&skuId=${currentSku.value.skuId}`
+     
+      cartStore.addDirectBuyItem(orderData)
+      navigateTo(`/checkout?prodId=${currentSku.value.prodId}&skuId=${currentSku.value.skuId}`)
+      
     } else {
-      console.log("----------handleBuyNow------2---------")
       // 购买普通商品
-      const  orderData = {
+      const orderData = {
         prodId: productInfo.value.prodId,
         prodName: productInfo.value.prodName,
         price: productInfo.value.price,
@@ -711,28 +708,24 @@ async function handleBuyNow() {
         quantity: quantity.value,
         basketCount: quantity.value,
         prodType: productInfo.value.prodType,
-        deliveryTemplateId:productInfo.value.deliveryTemplateId,
-        // 预售相关信息
+        deliveryTemplateId: productInfo.value.deliveryTemplateId,
         presellStatus: productInfo.value.presellStatus,
         presellPrice: productInfo.value.presellPrice,
         presellDeposit: productInfo.value.presellDeposit,
-        // 团购相关信息
         groupPrice: productInfo.value.groupPrice,
         groupMinNum: productInfo.value.groupMinNum,
-        // 秒杀相关信息
         seckillPrice: productInfo.value.seckillPrice,
-        isVirtual: productInfo.value.isVirtual ,
+        isVirtual: productInfo.value.isVirtual,
         isSkuItem: 0,
         weight: productInfo.value?.weight,
         volume: productInfo.value?.volume,
         translations: productInfo.value.translations,
         from: "direct"
       }
-      cartData.value.push(orderData);
-      setCache("cartStore", cartData.value)
-      window.location.href = `/checkout?prodId=${productInfo.value.prodId}&prodName=${productInfo.value.prodName}&`
+      
+      cartStore.addDirectBuyItem(orderData)
+      navigateTo(`/checkout?prodId=${productInfo.value.prodId}&prodName=${productInfo.value.prodName}`)
     }
-
   } catch (error) {
     console.error('购买失败:', error)
     $q.notify({
@@ -786,7 +779,7 @@ async function handleAddToCart() {
     })
   }
 }
-// 修改更新量方法
+// 修改��新量方法
 function updateQuantity(delta: number) {
   const newQuantity = quantity.value + delta
   const maxStock = getMaxStock()
@@ -833,7 +826,7 @@ const handleSkuImageClick = (sku: any) => {
     currentImage.value = getImageUrl(sku.pic || productInfo.value?.pic)
     //console.log('设置当前显示图片:', currentImage.value)
 
-    // 解析 SKU 的规格属性
+    // 解�� SKU 的规格属性
     const properties = sku.properties.split(';')
     const newSkuValues: Record<string, string | number> = {}
 
@@ -1087,6 +1080,8 @@ const getTypeKey = (type: number) => {
   }
   return typeMap[type] || 'NORMAL'
 }
+
+const cartStore = useCartStore()
 
 </script>
 

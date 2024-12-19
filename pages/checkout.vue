@@ -30,7 +30,11 @@
       <template v-else>
         <CartCheckoutItems
           :items="checkoutItems"
+          v-if="checkoutItems && checkoutItems.length > 0"
         />
+        <div v-else class="text-center q-pa-md text-grey">
+          {{ t('cart.empty') }}
+        </div>
       </template>
     </div>
 
@@ -127,18 +131,20 @@
             <template v-slot:avatar>
               <q-icon name="warning" color="warning" />
             </template>
-            <div class="text-subtitle2 text-weight-medium">预售定金说明</div>
+            <div class="text-subtitle2 text-weight-medium">
+              {{ t('checkout.presell.notice.title') }}
+            </div>
             <div class="text-caption q-mt-sm">
-              1. 预售商品需支付定金：¥{{ presellDeposit }}
+              {{ t('checkout.presell.notice.deposit', { amount: presellDeposit }) }}
               <template v-if="checkoutItems.every(item => item.prodType === ProductType.PRESELL)">
-                （当前仅需支付定金）
+                {{ t('checkout.presell.notice.depositOnly') }}
               </template>
             </div>
             <div class="text-caption">
-              2. 定金支付后，订单生成24小时后取消订单将不予退还定金
+              {{ t('checkout.presell.notice.noRefund') }}
             </div>
             <div class="text-caption">
-              3. 尾款支付时间请留意商品详情页说明
+              {{ t('checkout.presell.notice.finalPayment') }}
             </div>
           </q-banner>
         </div>
@@ -193,26 +199,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { ProductType } from '~/utils/constants'
 import type { CheckoutItem, Coupon, OrderAmount, OrderSubmitData } from '~/types/checkout'
-
 import AddressManager from '~/components/address/AddressManager.vue'
 import CartCheckoutItems from '~/components/checkout/CartCheckoutItems.vue'
-import { useCheckoutItems } from '~/composables/useCheckoutItems'
 import CouponSelector from '~/components/checkout/CouponSelector.vue'
 import { useAddress } from '~/composables/useAddress'
 import type { Address } from '~/types/address'
-import {deleteCache, setCache} from "~/utils/storage";
+import { useCartStore } from '~/stores/cart'
+import { useCheckoutStore } from '~/stores/checkout'
+import { storeToRefs } from 'pinia'
 
 // Composables
 const router = useRouter()
 const route = useRoute()
 const $q = useQuasar()
 const { t } = useI18n()
+const cartStore = useCartStore()
+const checkoutStore = useCheckoutStore()
+const { items } = storeToRefs(cartStore)
 
 // 状态定义
 const orderRemark = ref('')
@@ -227,20 +236,15 @@ const {
 } = useAddress()
 
 // 优惠券相关状态
-// const showCouponDialog = ref(false)
-// const selectedCoupon = ref<Coupon | null>(null)
 // 根据来源获取结算商品
 const checkoutItems = computed(() => {
-  if (route.query.from === 'cart') {
-    // 从 localStorage 获取购物车商品
-    const cartItems = getCache('cartStore')
-    return Array.isArray(cartItems) ? cartItems : []
-  } else {
-    // 直接购买商品
-    const cartItems = getCache('cartStore')
-    // console.log("cartItems:",cartItems)
-    return Array.isArray(cartItems) ? cartItems : []
+  if (!items.value || !Array.isArray(items.value)) {
+    return []
   }
+  return items.value.map(item => ({
+    ...item,
+    quantity: item.basketCount || item.quantity || 1
+  }))
 })
 
 // 订单金额
@@ -271,7 +275,7 @@ const totalItems = computed(() =>
     : 0
 )
 
-// 计算商品小计
+// 计算商品��计
 const subtotal = computed(() => {
   if (!Array.isArray(checkoutItems.value)) return '0.00'
 
@@ -327,7 +331,7 @@ const calculateFinalAmount = () => {
   return total.toFixed(2)
 }
 
-// 获取用户余额
+// 取用户余额
 async function getUserBalance() {
   try {
     const response = await api.get('/admin/user/detail')
@@ -476,29 +480,38 @@ async function submitOrder() {
     const response = await api.post('/admin/cart/checkout', JSON.stringify(orderData))
     const data = await response.data
     if (data.code === 200) {
-      // 如果是从购物车来的,清空已购买的商品
-      deleteCache("cartStore")
-      setCache("checkout", data.data)
+      // 清空购物车中的直接购买项目
+      cartStore.clearDirectBuyItems()
+
+      // 保存订单信息到 store
+      checkoutStore.setCheckoutInfo({
+        items: data.data.items,
+        amount: data.data.amount,
+        orderNumbers: data.data.orderNumbers,
+        isPayed: data.data.isPayed
+      })
+
+      // 显示成功提示
       $q.notify({
         type: 'positive',
         message: t('checkout.submit.success')
       })
-      if(data.data.isPayed == 1){
+
+      // 根据支付状态跳转
+      if (data.data.isPayed === 1) {
         router.push({
           path: '/order/success',
           query: {
             orderNumber: data.data.orderNumbers,
             amount: data.data.amount
-
           }
         })
-      }else {
-        // 跳转到支付页面
+      } else {
         router.push({
           path: '/order/paymentCheckout',
           query: {
-            orderNumber: data.data.orderNumber,
-            amount: calculateFinalAmount(),
+            orderNumber: data.data.orderNumbers,
+            amount: data.data.amount,
             method: paymentMethod.value,
             type: hasPresellItems.value ? 'presell' : 'normal'
           }
@@ -518,18 +531,15 @@ async function submitOrder() {
   }
 }
 
-// 使用商品加载composable
-const {
-  loading: itemsLoading,
-  error: itemsError,
-  loadCheckoutItems
-} = useCheckoutItems()
 
-// 初始化数据时加载商品信息
+// 初始化数据时加载商信息
 onMounted(async () => {
+
   try {
+     // 先清空之前的结账信息
+  checkoutStore.clearCheckoutInfo()
     await Promise.all([
-      loadCheckoutItems(),
+      // loadCheckoutItems(),
       getUserBalance()
     ])
   } catch (error) {
@@ -581,6 +591,18 @@ watch(selectedAddress, (newAddress) => {
 watch(checkoutItems, (items) => {
   //console.log('结算商品数据更新:', items)
 }, { immediate: true })
+
+// 在组件卸载时清空结账信息
+// onUnmounted(() => {
+//   if (checkoutStore) {
+//     checkoutStore.clearCheckoutInfo()
+//   }
+// })
+
+// 检查购物车数据
+onMounted(() => {
+  console.log("购物车数据：", cartStore.getCartItems())
+})
 </script>
 
 <style scoped lang="scss">

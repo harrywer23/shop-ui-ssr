@@ -26,7 +26,7 @@ export default {
     address2: '住所2',
     address2Placeholder: '追加の住所情報（会社名、階数など）',
     optional: 'オプション',
-    setDefault: 'デフォルトの住所として設定',
+    setDefault: 'デフォルトの住��として設定',
     addNew: '新しい住所を追加'
   },
   payment: {
@@ -77,5 +77,14 @@ export default {
   },
   coupon: {
     select: 'クーポンを選択'
+  },
+  presell: {
+    notice: {
+      title: '予約販売デポジット説明',
+      deposit: '予約販売商品のデポジット：¥{amount}',
+      depositOnly: '（現在はデポジットのみ必要）',
+      noRefund: 'デポジット支払い後のキャンセルは返金不可',
+      finalPayment: '残金支払いスケジュールは商品詳細をご確認ください'
+    }
   }
 }

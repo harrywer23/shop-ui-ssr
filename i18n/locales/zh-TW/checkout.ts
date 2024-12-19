@@ -77,5 +77,14 @@ export default {
   },
   coupon: {
     select: '選擇優惠券'
+  },
+  presell: {
+    notice: {
+      title: '預售定金說明',
+      deposit: '預售商品需支付定金：NT${amount}',
+      depositOnly: '（當前僅需支付定金）',
+      noRefund: '定金支付後，取消訂單將不予退還定金',
+      finalPayment: '尾款支付時間請留意商品詳情頁說明'
+    }
   }
 } 

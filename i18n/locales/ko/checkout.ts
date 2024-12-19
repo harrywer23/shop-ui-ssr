@@ -65,7 +65,7 @@ export default {
     cityMaxLength: '도시명은 50자를 초과할 수 없습니다',
     address1Required: '상세주소를 입력해주세요',
     addressMaxLength: '주소 200자를 초과할 수 없습니다',
-    zipCodeFormat: '올���른 우편번호를 입력해주세요',
+    zipCodeFormat: '올바른 우편번호를 입력해주세요',
     fillRequired: '필수 정보를 입력해주세요'
   },
   totalItems: '총 {count}개 상품',
@@ -77,5 +77,14 @@ export default {
   },
   coupon: {
     select: '쿠폰 선택'
+  },
+  presell: {
+    notice: {
+      title: '사전 판매 보증금 안내',
+      deposit: '사전 판매 상품 보증금: ₩{amount}',
+      depositOnly: '(현재 보증금만 결제 필요)',
+      noRefund: '보증금 결제 후 취소 시 환불 불가',
+      finalPayment: '잔금 결제 일정은 상품 상세 페이지를 확인해 주세요'
+    }
   }
 } 

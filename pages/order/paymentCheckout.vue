@@ -3,7 +3,7 @@
     <div class="container q-pa-md">
       <!-- 订单信息卡片 -->
       <q-card flat bordered class="order-info q-mb-md">
-        <q-card-section v-for="(order,index) in checkOrder.items" :key="index">
+        <q-card-section v-for="(order,index) in orderInfo.items" :key="index">
           <div class="text-h6">{{ $t('payment.orderInfo') }}</div>
           <div class="row q-col-gutter-md q-mt-md">
             <div class="col-12 col-md-6">
@@ -18,7 +18,7 @@
           </div>
         </q-card-section>
         <q-card-section>
-          <div>合计：{{checkOrder.amount}}</div>
+          <div>合计：{{orderInfo.amount}}</div>
         </q-card-section>
       </q-card>
 
@@ -108,9 +108,9 @@
    <q-dialog v-model="paypalDialog">
       <q-card style="width: 90vw; max-width: 800px">
         <PayaplCard
-          :amount="checkOrder.amount"
-          :items="checkOrder.items"
-          :orderNumber="checkOrder.orderNumbers"
+          :amount="orderInfo.amount"
+          :items="orderInfo.items"
+          :orderNumber="orderInfo.orderNumbers"
           product-name="支付订单"
           url="/user"
         />
@@ -124,28 +124,30 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { api } from '~/utils/axios'
-import PayaplCard from "~/components/payment/PaypalCardComponent.vue";
-import type { PaymentOrderIntroDto} from '~/utils/payment'
-import {useI18n} from "vue-i18n";
-import {getImageUrl} from "~/utils/tools";
-const { t } = useI18n()
+import PayaplCard from "~/components/payment/PaypalCardComponent.vue"
+import type { PaymentOrderIntroDto } from '~/utils/payment'
+import { useI18n } from "vue-i18n"
+import { getImageUrl } from "~/utils/tools"
+import { useCheckoutStore } from '~/stores/checkout'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const $q = useQuasar()
+const checkoutStore = useCheckoutStore()
 
 // 状态变量
 const orderInfo = ref({
-  // 扩展的支付信息
   amount: 0,
-  orderNumbers:"",
-  // 订单信息
-  items: <PaymentOrderIntroDto>[],
-  status: ''
+  orderNumbers: "",
+  items: [] as PaymentOrderIntroDto[],
+  status: '',
+  isPayed: 0
 })
+
 const userBalance = ref(0)
-const selectedMethod = ref('balance')
-const paypalDialog=ref(false);
+const selectedMethod = ref(route.query.method?.toString() || 'balance')
+const paypalDialog = ref(false)
 const paying = ref(false)
 const showQrCode = ref(false)
 const qrCodeUrl = ref('')
@@ -155,33 +157,53 @@ const checkTimer = ref<NodeJS.Timer>()
 const canPay = computed(() => {
   if (!orderInfo.value) return false
 
-  // 余额支付时检查余额是否足够
   if (selectedMethod.value === 'balance') {
     if (!userBalance.value) return false
     return Number(userBalance.value) >= Number(orderInfo.value.amount)
   }
 
-  // PayPal 支付时直接允许点击
   if (selectedMethod.value === 'paypal') {
     return true
   }
 
   return false
 })
-const checkOrder=ref([])
+
 // 加载订单信息
 const loadOrderInfo = async () => {
   try {
-    const cartItems = getCache('checkout');
-    console.log("----------loadOrderInfo------1---------",cartItems)
-    checkOrder.value=cartItems;
-    orderInfo.value=cartItems;
+    // 从 checkoutStore 获取数据
+    const checkoutInfo = checkoutStore.getCheckoutInfo()
+    console.log("----------loadOrderInfo------1---------", checkoutInfo)
+    
+    if (!checkoutInfo) {
+      throw new Error(t('payment.error.noOrderInfo'))
+    }
+
+    // 更新订单信息
+    orderInfo.value = {
+      amount: checkoutInfo.amount,
+      orderNumbers: checkoutInfo.orderNumbers,
+      items: checkoutInfo.items.map(item => ({
+        orderId: item.orderId,
+        orderNumber: item.orderNumber,
+        kind: item.kind,
+        prodName: item.prodName,
+        isPayed: item.isPayed,
+        amount: item.amount
+      })),
+      status: 'pending',
+      isPayed: checkoutInfo.isPayed
+    }
+
   } catch (error) {
     console.error('加载订单信息失败:', error)
     $q.notify({
       type: 'negative',
-      message: error instanceof Error ? error.message : '加载订单信息失败'
+      message: error instanceof Error ? error.message : t('payment.error.loadFailed')
     })
+    // 如果没有订单信息，返回上一页
+    router.back()
   }
 }
 
@@ -218,23 +240,25 @@ const handlePayment = async () => {
 
     if (selectedMethod.value === 'paypal') {
       paypalDialog.value = true
-      return  // 直接返回，不执行后续代码
+      return
     }
 
     if (selectedMethod.value === 'balance') {
-      // 调用支付接口
       const response = await api.post('/admin/paypal/pay',
-          JSON.stringify({
-            returnUrl: `${window.location.origin}/order/success`,
-            cancelUrl: `${window.location.origin}/order/fail`,
-            country: "CN",
-            description: "结账页面跳转支付",
-            items: checkOrder.value.items,
-      })
-      );
+        JSON.stringify({
+          returnUrl: `${window.location.origin}/order/success`,
+          cancelUrl: `${window.location.origin}/order/fail`,
+          country: "CN",
+          description: "结账页面跳转支付",
+          items: orderInfo.value.items,
+          orderNumbers: orderInfo.value.orderNumbers
+        })
+      )
 
       if (response.data.code === 200) {
-        // 余额支付直接跳转到成功页面
+        // 支付成功后清空结账信息
+        checkoutStore.clearCheckoutInfo()
+        
         router.push({
           path: '/order/success',
           query: {
@@ -245,22 +269,6 @@ const handlePayment = async () => {
       } else {
         throw new Error(response.data.msg || t('payment.error.payFailed'))
       }
-    } else {
-
-      // // 其他支付方式
-      // const response = await api.post('/order/pay', {
-      //   orderNumber: orderInfo.value.orderNumbers,
-      //   payMethod: selectedMethod.value
-      // })
-      //
-      // if (response.data.code === 200) {
-      //   // 显示二维码
-      //   qrCodeUrl.value = response.data.data.qrCode
-      //   showQrCode.value = true
-      //   // startCheckPayStatus()
-      // } else {
-      //   throw new Error(response.data.msg || t('payment.error.payFailed'))
-      // }
     }
   } catch (error) {
     console.error('支付失败:', error)
@@ -276,9 +284,8 @@ const handlePayment = async () => {
 // 生命周期钩子
 onMounted(async () => {
   await Promise.all([
-      loadOrderInfo(),
+    loadOrderInfo(),
     loadUserBalance(),
-    // getUserInfo()
   ])
 })
 

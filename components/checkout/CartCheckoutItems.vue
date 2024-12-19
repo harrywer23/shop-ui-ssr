@@ -4,16 +4,21 @@
       <q-card-section>
         <div class="text-h6 q-mb-md">{{ t('checkout.items.title') }}</div>
 
-        <q-list>
+        <q-list v-if="items && items.length > 0">
           <q-item v-for="item in items" :key="item.skuId || item.prodId">
             <q-item-section avatar>
-              <q-img :src="getImageUrl(item.pic)" style="width: 80px; height: 80px" />
+              <q-img
+                :src="getImageUrl(item.pic)"
+                style="width: 80px; height: 80px"
+                :ratio="1"
+                fit="cover"
+              />
             </q-item-section>
 
             <q-item-section>
               <q-item-label>{{ item.prodName }}</q-item-label>
-              <q-item-label caption v-if="item.properties">
-                {{ item.properties }}
+              <q-item-label caption v-if="item.skuName">
+                {{ item.skuName }}
               </q-item-label>
 
               <!-- 价格显示部分 -->
@@ -21,33 +26,13 @@
                 <!-- 预售商品 -->
                 <template v-if="item.prodType === ProductType.PRESELL">
                   <div class="text-primary text-weight-medium">
-                    预售价：¥{{ item.presellPrice }}
+                    {{ t('product.presellPrice') }}：¥{{ item.presellPrice }}
                   </div>
                   <div class="text-grey-8">
-                    定金：¥{{ item.presellDeposit }}
+                    {{ t('product.deposit') }}：¥{{ item.presellDeposit }}
                   </div>
                   <div class="text-grey-8">
-                    尾款：¥{{ (item.presellPrice - item.presellDeposit).toFixed(2) }}
-                  </div>
-                </template>
-
-                <!-- 团购商品 -->
-                <template v-else-if="item.prodType === ProductType.GROUP">
-                  <div class="text-primary text-weight-medium">
-                    团购价：¥{{ item.groupPrice }}
-                  </div>
-                  <div class="text-grey-8">
-                    {{ item.groupMinNum }}人成团
-                  </div>
-                </template>
-
-                <!-- 秒杀商品 -->
-                <template v-else-if="item.prodType === ProductType.SECKILL">
-                  <div class="text-primary text-weight-medium">
-                    秒杀价：¥{{ item.seckillPrice }}
-                  </div>
-                  <div class="text-grey-8 text-strike">
-                    原价：¥{{ item.oriPrice }}
+                    {{ t('product.finalPayment') }}：¥{{ (item.presellPrice - item.presellDeposit).toFixed(2) }}
                   </div>
                 </template>
 
@@ -65,7 +50,7 @@
 
             <q-item-section side>
               <div class="text-subtitle1">
-                × {{ item.basketCount || item.quantity }}
+                × {{ item.basketCount || item.quantity || 1 }}
               </div>
               <div class="text-primary text-weight-medium q-mt-sm">
                 ¥{{ calculateItemTotal(item) }}
@@ -73,6 +58,10 @@
             </q-item-section>
           </q-item>
         </q-list>
+
+        <div v-else class="text-center q-pa-md text-grey">
+          {{ t('cart.empty') }}
+        </div>
 
         <q-separator class="q-my-md" />
 
@@ -90,55 +79,104 @@
 </template>
 
 <script setup lang="ts">
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ProductType } from '~/utils/constants'
 import type { CheckoutItem } from '~/types/checkout'
 
-
 const { t } = useI18n()
+
 const props = defineProps<{
   items: CheckoutItem[]
 }>()
 
-// 获取图片URL
+// 监听 items 属性变化
+watch(() => props.items, (newItems) => {
+  console.log('CartCheckoutItems - 接收到的商品数据:', {
+    itemsLength: newItems?.length,
+    items: newItems,
+    firstItem: newItems?.[0]
+  })
+}, { immediate: true, deep: true })
+
+// 在组件挂载时打印初始数据
+onMounted(() => {
+  console.log('CartCheckoutItems - 组件挂载时的数据:', {
+    itemsLength: props.items?.length,
+    items: props.items,
+    firstItem: props.items?.[0]
+  })
+})
+
+// 添加计算属性来验证数据
+const validItems = computed(() => {
+  const valid = props.items?.filter(item => {
+    const isValid = item && item.prodId && item.prodName && item.price
+    if (!isValid) {
+      console.warn('CartCheckoutItems - 发现无效商品数据:', item)
+    }
+    return isValid
+  })
+  console.log('CartCheckoutItems - 有效商品数量:', valid?.length)
+  return valid
+})
 
 // 计算单个商品总价
 const calculateItemTotal = (item: CheckoutItem) => {
-  const quantity = item.basketCount || item.quantity || 0
+  const quantity = item.basketCount || item.quantity || 1
+  let price = item.price
 
   switch (item.prodType) {
     case ProductType.PRESELL:
-      return (item.price * quantity).toFixed(2)
+      price = item.presellDeposit || item.presellPrice || price
+      break
     case ProductType.GROUP:
-      return (item.groupPrice * quantity).toFixed(2)
+      price = item.groupPrice || price
+      break
     case ProductType.SECKILL:
-      return (item.seckillPrice * quantity).toFixed(2)
-    default:
-      return (item.price * quantity).toFixed(2)
+      price = item.seckillPrice || price
+      break
   }
+
+  return (price * quantity).toFixed(2)
 }
 
-// 计算所有商品总价
+// 修改计算总价的函数，添加日志
 const calculateTotal = () => {
+  if (!props.items || props.items.length === 0) {
+    console.log('CartCheckoutItems - 没有商品数据')
+    return '0.00'
+  }
+
   const total = props.items.reduce((sum, item) => {
-    const quantity = item.basketCount || item.quantity || 0
+    const quantity = item.basketCount || item.quantity || 1
     let price = item.price
 
     switch (item.prodType) {
       case ProductType.PRESELL:
-        price = item.presellDeposit
+        price = item.presellDeposit || item.presellPrice || price
         break
       case ProductType.GROUP:
-        price = item.groupPrice
+        price = item.groupPrice || price
         break
       case ProductType.SECKILL:
-        price = item.seckillPrice
+        price = item.seckillPrice || price
         break
     }
 
-    return sum + (price * quantity)
+    const itemTotal = price * quantity
+    console.log('CartCheckoutItems - 商品计算:', {
+      prodId: item.prodId,
+      prodName: item.prodName,
+      price,
+      quantity,
+      itemTotal
+    })
+
+    return sum + itemTotal
   }, 0)
 
+  console.log('CartCheckoutItems - 总价计算结果:', total.toFixed(2))
   return total.toFixed(2)
 }
 </script>

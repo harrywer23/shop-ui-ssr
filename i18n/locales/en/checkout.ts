@@ -77,5 +77,14 @@ export default {
   },
   coupon: {
     select: 'Select Coupon'
+  },
+  presell: {
+    notice: {
+      title: 'Pre-sale Deposit Information',
+      deposit: 'Pre-sale items require a deposit: ${amount}',
+      depositOnly: '(Only deposit payment required now)',
+      noRefund: 'Deposit is non-refundable after payment',
+      finalPayment: 'Please check product details for final payment schedule'
+    }
   }
 } 

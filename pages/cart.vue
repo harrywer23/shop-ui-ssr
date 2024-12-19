@@ -25,7 +25,7 @@
               <q-img :src="getImageUrl(item.pic)" style="width: 100px; height: 100px" />
             </q-item-section>
 
-            <!-- ���品信息 -->
+            <!-- 商品信息 -->
             <q-item-section>
               <q-item-label>{{ item.prodName }}</q-item-label>
               <q-item-label caption v-if="item.skuName">
@@ -172,10 +172,11 @@
 import { ref, computed,  onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import {setCache} from "~/utils/storage";
+// import {setCache} from "~/utils/storage";
 import {getImageUrl} from "~/utils/tools";
 import { useI18n } from 'vue-i18n'
 import CachedImage from "~/components/common/CachedImage.vue";
+import { useCartStore } from '~/stores/cart'
 
 const router = useRouter()
 const $q = useQuasar()
@@ -344,70 +345,77 @@ const toggleSelectAll = (value: boolean) => {
   })
 }
 
+// 初始化 store
+const cartStore = useCartStore()
+
 const checkout = () => {
   const selectedItems = availableItems.value.filter(item => item.selected && item.stockEnough)
-   console.log("选中的商品："  ,selectedItems)
+  console.log("选中的商品：", selectedItems)
+  
   // 检查是否有选中的商品
   if (selectedItems.length === 0) {
     $q.notify({
       type: 'warning',
-      message: '请选择要结算的商品'
+      message: t('cart.noItemSelected')
     })
     return
   }
 
-  // 将选中的商品保存到 localStorage
-  if (process.client) {
-    try {
-      // 确保数据是可序列化的对象，并添加 quantity 字段
-      const cartData = selectedItems.map(item => ({
-        basketId: item.basketId,
-        prodId: item.prodId,
-        skuId: item.skuId,
-        prodName: item.prodName,
-        skuName: item.skuName,
-        price: item.price,
-        pic: item.pic,
-        basketCount: item.basketCount,
-        quantity: item.basketCount, // 添加 quantity 字段，值与 basketCount 相同
-        selected: item.selected,
-        stockEnough: item.stockEnough,
-        actualStocks: item.actualStocks,
-        maxBuyCount: item.maxBuyCount,
-        prodStatus: item.prodStatus,
-        prodType: item.prodType,
-        oriPrice: item.oriPrice,
-        // 预售相关信息
-        presellStatus: item.presellStatus,
-        presellPrice: item.presellPrice,
-        presellDeposit: item.price,
-        // 团购相关信息
-        groupPrice: item.price,
-        groupMinNum: item.groupMinNum,
-        // 秒杀相关信息
-        seckillPrice: item.price,
-        isVirtual:  item.isVirtual ,
-        isSkuItem: item.isSkuItem,
-        weight: item?.weight,
-        volume: item?.volume,
-      }))
+  try {
+    // 先完全清空购物车
+    cartStore.clearCart()
+    
+    // 将选中的商品数据标准化
+    const cartData = selectedItems.map(item => ({
+      basketId: item.basketId,
+      prodId: item.prodId,
+      skuId: item.skuId,
+      prodName: item.prodName,
+      skuName: item.skuName,
+      price: item.price,
+      pic: item.pic,
+      basketCount: item.basketCount,
+      quantity: item.basketCount,
+      selected: item.selected,
+      stockEnough: item.stockEnough,
+      actualStocks: item.actualStocks,
+      maxBuyCount: item.maxBuyCount,
+      prodStatus: item.prodStatus,
+      prodType: item.prodType,
+      oriPrice: item.oriPrice,
+      // 预售相关信息
+      presellStatus: item.presellStatus,
+      presellPrice: item.presellPrice,
+      presellDeposit: item.price,
+      // 团购相关信息
+      groupPrice: item.price,
+      groupMinNum: item.groupMinNum,
+      // 秒杀相关信息
+      seckillPrice: item.price,
+      isVirtual: item.isVirtual,
+      isSkuItem: item.isSkuItem,
+      weight: item?.weight,
+      volume: item?.volume,
+      from: 'cart' // 添加来源标记
+    }))
 
-      // console.log('要保存的购物车数据:', cartData)
-      setCache("cartStore", cartData)
-    } catch (e) {
-      // console.error('保存购物车数据失败:', e)
-      $q.notify({
-        type: 'negative',
-        message: '保存购物车数据失败'
-      })
-      return
-    }
+    // 保存所有选中的商品数据
+    cartData.forEach(item => {
+      cartStore.addDirectBuyItem(item)
+    })
+
+    // 跳转到结账页面
+    router.push({
+      path: '/checkout',
+      query: { from: 'cart' }
+    })
+  } catch (error) {
+    console.error('准备结账数据失败:', error)
+    $q.notify({
+      type: 'negative',
+      message: t('cart.checkoutError')
+    })
   }
-
-  router.push({
-    path: '/checkout',
-    query: { from: 'cart' }
-  })
 }
 
 // 在组件挂载时获取购物车数据（仅在客户端执行）

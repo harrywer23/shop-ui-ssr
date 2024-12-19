@@ -77,5 +77,14 @@ export default {
   },
   coupon: {
     select: '选择优惠券'
+  },
+  presell: {
+    notice: {
+      title: '预售定金说明',
+      deposit: '预售商品需支付定金：¥{amount}',
+      depositOnly: '（当前仅需支付定金）',
+      noRefund: '定金支付后，取消订单将不予退还定金',
+      finalPayment: '尾款支付时间请留意商品详情页说明'
+    }
   }
 } 

@@ -8,8 +8,25 @@ export default defineNuxtConfig({
     static: 'static', // 新的静态文件夹名称
   },
 
-  modules: ['@nuxtjs/sitemap', '@nuxtjs/i18n', '@vite-pwa/nuxt', 'nuxt-quasar-ui', '@nuxtjs/seo', '@pinia/nuxt'],
+  modules: ['@nuxtjs/sitemap',
+    '@nuxtjs/i18n',
+    '@vite-pwa/nuxt', 'nuxt-quasar-ui',
+    '@nuxtjs/seo', '@pinia/nuxt',
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: ['defineStore', 'acceptHMRUpdate'],
+      }
+    ]
+  ],
+  imports: {
+    dirs: ['stores']
+  },
+  pinia: {
+    autoImports: ['defineStore', 'storeToRefs'],
+    storesDirs: ['./stores/**'],
 
+  },
   pwa: {
     manifest: {
       name: '次元集市',

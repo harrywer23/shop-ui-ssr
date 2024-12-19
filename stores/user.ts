@@ -9,9 +9,9 @@ export const useUserStore = defineStore({
   state: (): UserState => ({
     someState: ''
   }),
-  
+
   persist: process.client ? {
     storage: localStorage,
     paths: ['someState']
   } : undefined
-}) 
+})
