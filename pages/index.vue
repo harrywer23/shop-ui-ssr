@@ -66,7 +66,7 @@ onMounted(() => {
           arrows
           navigation
           infinite
-          :autoplay="3000"
+          :autoplay="10000"
           class="carousel-custom"
         >
           <q-carousel-slide

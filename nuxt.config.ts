@@ -134,9 +134,7 @@ export default defineNuxtConfig({
 
   sitemap: {
     sitemaps: {
-      // 主站点地图
       main: {
-        // 静态路由
         urls: [
           { loc: '/', priority: 1.0 },
           { loc: '/product/sort?category=1', priority: 0.8 },
@@ -150,22 +148,20 @@ export default defineNuxtConfig({
           { loc: '/help', priority: 0.5 }
         ]
       },
-      // 动态页面站点地图
       posts: {
-        // 从 API 端点获取动态 URL
         sources: [
           '/api/__sitemap__/urls'
         ]
       }
     },
-    // 全局配置
     defaultSitemapsChunkSize: 1000,
     exclude: ['/admin/**'],
     defaults: {
       changefreq: 'daily',
       priority: 0.5,
       lastmod: new Date().toISOString()
-    }
+    },
+    hostname: null
   },
 
   vite: {

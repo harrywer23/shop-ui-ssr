@@ -1,11 +1,15 @@
-import { defineSitemapEventHandler } from '#imports'
-import { createError } from 'h3'
+import { defineSitemapEventHandler, useRuntimeConfig } from '#imports'
+import { createError, getRequestURL } from 'h3'
 import type { SitemapUrl } from '#sitemap/types'
 import { serverApi } from '~/utils/server-api'
 import type { Product, Category } from '~/types/sitemap'
 
 export default defineSitemapEventHandler(async (event) => {
   try {
+    // 获取当前请求的URL信息
+    const requestURL = getRequestURL(event)
+    const baseURL = `${requestURL.protocol}//${requestURL.host}`
+    
     const urls: SitemapUrl[] = []
 
     // 获取所有商品
@@ -16,13 +20,11 @@ export default defineSitemapEventHandler(async (event) => {
 
       products.forEach(product => {
         urls.push({
-          // loc: `/product/detail?prodId=${product.prodId}`,
           loc: `${product}`,
           lastmod: product.updateTime || new Date().toISOString(),
           changefreq: 'daily',
           priority: 0.8,
-          _sitemap: 'posts',
-          _i18nTransform: true
+          _sitemap: 'posts'
         })
       })
     }
@@ -39,8 +41,7 @@ export default defineSitemapEventHandler(async (event) => {
             changefreq: 'weekly',
             priority: 0.7,
             lastmod: new Date().toISOString(),
-            _sitemap: 'posts',
-            _i18nTransform: true
+            _sitemap: 'posts'
           })
         }
       })
@@ -62,13 +63,18 @@ export default defineSitemapEventHandler(async (event) => {
         changefreq: 'weekly',
         priority: page.priority,
         lastmod: new Date().toISOString(),
-        _sitemap: 'general',
-        _i18nTransform: true
+        _sitemap: 'general'
       })
     })
 
-    console.log(`Generated ${urls.length} URLs for sitemap`)
-    return urls
+    // 为所有URL添加完整的域名
+    const fullUrls = urls.map(url => ({
+      ...url,
+      loc: url.loc.startsWith('http') ? url.loc : `${baseURL}${url.loc}`
+    }))
+
+    console.log(`Generated ${fullUrls.length} URLs for sitemap`)
+    return fullUrls
 
   } catch (error) {
     console.error('Error generating sitemap:', error)
