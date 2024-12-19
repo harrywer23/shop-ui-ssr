@@ -1,4 +1,4 @@
-import { useI18n } from 'vue-i18n'
+import { useNuxtApp } from '#app'
 
 export function tansParams(params: { [x: string]: any; }) {
     let result = ''
@@ -30,38 +30,39 @@ export function getImageUrl(imgUrl: string | null | undefined): string {
 }
 
 // 获取当前语言的分类名称
-export const getCurrentLanguageName = (translations: Translations, name: string) => {
-    const { locale } = useI18n()
-    const lang = locale.value;
+export const getCurrentLanguageName = (translations: any, defaultName: string) => {
+  if (!translations) return defaultName
 
-    // 如果没有translations，返回原始名称
-    if (!translations) return name;
+  try {
+    const translationsObj = typeof translations === 'string'
+      ? JSON.parse(translations)
+      : translations
 
-    // 确保 translations 是一个对象
-    let parsedTranslations = translations;
-    if (typeof translations === 'string') {
-        try {
-            parsedTranslations = JSON.parse(translations);
-        } catch (error) {
-            console.error("Failed to parse translations:", error);
-            return name;  // 如果 JSON 解析失败，返回原始名称
-        }
-    }
+    if (!translationsObj) return defaultName
+
+    // 从 nuxt app 中获取当前语言
+    const nuxtApp = useNuxtApp()
+    const locale = nuxtApp.$i18n.locale.value
 
     // 根据当前语言返回对应的翻译
-    switch (lang) {
-        case 'en':
-            return parsedTranslations.en || name;
-        case 'zh-TW':
-            return parsedTranslations.zhTw || name;
-        case 'ja':
-            return parsedTranslations.ja || name;
-        case 'ko':
-            return parsedTranslations.ko || name;
-        default:
-            return name;
+    switch (locale) {
+      case 'en':
+        return translationsObj.en || defaultName
+      case 'zh-TW':
+        return translationsObj.zhTw || defaultName
+      case 'ja':
+        return translationsObj.ja || defaultName
+      case 'ko':
+        return translationsObj.ko || defaultName
+      default:
+        return defaultName
     }
+  } catch (e) {
+    console.error('Parse translations failed:', e)
+    return defaultName
+  }
 }
+
 export const getLanguageName = (translations: Translations, name: string, lang: string) => {
     // 如果没有translations，返回原始名称
     if (!translations) return name;
