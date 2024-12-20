@@ -23,7 +23,8 @@ export default {
     confirmReceipt: 'Confirm Receipt',
     confirmReceiptSuccess: 'Confirmed receipt successfully',
     confirmReceiptFailed: 'Failed to confirm receipt',
-    loadFailed: 'Failed to load order details'
+    loadFailed: 'Failed to load order details',
+    applyReturn: 'Apply for Return'
   },
   cancelRequest: {
     title: 'Cancel Request',

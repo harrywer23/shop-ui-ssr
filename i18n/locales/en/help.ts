@@ -7,7 +7,8 @@ export default {
     payment: 'Payment',
     shipping: 'Shipping',
     refund: 'Refunds & Returns',
-    account: 'Account'
+    account: 'Account',
+    returnPolicy: 'Return Policy'
   },
   wasHelpful: 'Was this answer helpful?',
   yes: 'Yes',
@@ -32,6 +33,10 @@ export default {
       cancelOrder: {
         question: 'How do I cancel an order?',
         answer: 'You can cancel orders before shipping:<br>1. Go to "My Orders" page<br>2. Find the order you want to cancel<br>3. Click "Cancel Order" button<br>4. Select cancellation reason and confirm<br>Note: Orders cannot be cancelled after shipping, please request a return instead'
+      },
+      autoCancel: {
+        question: 'Will orders be automatically cancelled?',
+        answer: 'Yes, orders will be automatically cancelled or completed in these cases:<br>1. Orders will be automatically cancelled if payment is not received within 24 hours after placing the order<br>2. Orders will be automatically confirmed as received if no confirmation is made within 30 days after shipping'
       }
     },
     customization: {
@@ -75,7 +80,7 @@ export default {
       },
       refundTime: {
         question: 'How long do refunds take?',
-        answer: 'Refund time varies by payment method:<br>1. Alipay/WeChat Pay: 1-3 business days<br>2. Credit cards: 3-15 business days<br>3. Bank transfer: 3-7 business days<br>Actual receipt time depends on financial institution processing'
+        answer: 'Refund processing timeline:<br>1. Refund will be processed within 7-20 business days after receiving the returned item<br>2. Refunds will be credited to your account balance by default, which can be used for future purchases or withdrawn<br>3. If you prefer a refund to original payment method, processing time varies:<br>- Alipay/WeChat Pay: 1-3 business days<br>- Credit cards: 3-15 business days<br>- Bank transfer: 3-7 business days<br>Final receipt time depends on financial institution processing'
       },
       conditions: {
         question: 'What are the refund conditions?',
@@ -90,6 +95,28 @@ export default {
       security: {
         question: 'How do I keep my account secure?',
         answer: 'We recommend these security measures:<br>1. Set a strong password<br>2. Enable two-factor authentication<br>3. Change password regularly<br>4. Don\'t save login info on public devices<br>5. Monitor account notifications'
+      }
+    },
+    returnPolicy: {
+      returnWindow: {
+        question: 'What is the return window?',
+        answer: 'Returns are accepted within 7 days after receiving the item. Please note:<br>1. We only accept returns for new and unused items<br>2. Some items must remain in original unopened packaging<br>3. Customized items, food, and personal care products cannot be returned<br>4. Customized items include but are not limited to: personalized items, size customization, material customization, etc.<br>5. Please carefully confirm before purchasing customized items as they cannot be returned once ordered'
+      },
+      returnShipping: {
+        question: 'Who pays for return shipping?',
+        answer: 'The seller covers return shipping costs. We will provide a return shipping label, you just need to follow the return process.'
+      },
+      returnProcess: {
+        question: 'How do I return an item?',
+        answer: '1. Log into your account and go to "My Orders"<br>2. Select the order you want to return<br>3. Click "Request Return"<br>4. Fill in return reason and item condition<br>5. Get return address and shipping label<br>6. Ship the item<br>7. Wait for refund processing (up to 30 days)'
+      },
+      supportedCountries: {
+        question: 'Which countries support returns?',
+        answer: 'We support returns from the following countries and regions:<br>Denmark, Russia, Canada, Hungary, Taiwan, Austria, Panama, Greece, Germany, Italy, Norway, Singapore, Japan, Chile, Belgium, France, Poland, Ireland, Sweden, Switzerland, USA, Finland, UK, Netherlands, Portugal, Spain, South Korea, Hong Kong'
+      },
+      exchangePolicy: {
+        question: 'Do you support exchanges?',
+        answer: 'Sorry, we currently do not support product exchanges. If you receive an item with issues, you can:<br>1. Request a return and refund<br>2. Place a new order after the return is processed'
       }
     }
   }

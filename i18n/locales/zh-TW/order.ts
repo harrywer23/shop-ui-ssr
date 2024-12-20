@@ -23,7 +23,8 @@ export default {
     confirmReceipt: '確認收貨',
     confirmReceiptSuccess: '確認收貨成功',
     confirmReceiptFailed: '確認收貨失敗',
-    loadFailed: '獲取訂單詳情失敗'
+    loadFailed: '獲取訂單詳情失敗',
+    applyReturn: '申請退貨'
   },
   status: {
     unpaid: '待付款',

@@ -207,6 +207,14 @@
         :label="t('order.detail.confirmReceipt')"
         @click="confirmReceipt"
       />
+
+      <!-- 添加退货申请按钮 -->
+      <q-btn
+        v-if="canApplyReturn"
+        color="warning"
+        :label="t('order.detail.applyReturn')"
+        @click="goToReturnApply"
+      />
     </div>
 
     <!-- 加载状态 -->
@@ -217,7 +225,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar, date } from 'quasar'
 import { useI18n } from 'vue-i18n'
@@ -346,6 +354,27 @@ const goBack = () => {
 // 跳转到商品详情
 const goToProduct = (prodId: number) => {
   router.push(`/product/detail?prodId=${prodId}`)
+}
+
+// 判断是否可以申请退货
+const canApplyReturn = computed(() => {
+  if (!order.value) return false
+  
+  // 检查订单状态：已发货、未取消、未退款
+  const validStatus = order.value.status === OrderStatus.COMPLETED
+  
+  // 检查收货时间是否在7天内
+  if (!order.value.receiveTime) return false
+  const receiveTime = new Date(order.value.receiveTime)
+  const now = new Date()
+  const diffDays = Math.floor((now.getTime() - receiveTime.getTime()) / (1000 * 60 * 60 * 24))
+  
+  return validStatus && diffDays <= 7
+})
+
+// 跳转到退货申请页面
+const goToReturnApply = () => {
+  router.push(`/user/return/apply?orderId=${order.value.orderId}`)
 }
 
 // 初始化

@@ -136,7 +136,8 @@ const categories = [
   { id: 'payment', icon: 'payment' },
   { id: 'shipping', icon: 'local_shipping' },
   { id: 'refund', icon: 'assignment_return' },
-  { id: 'account', icon: 'person' }
+  { id: 'account', icon: 'person' },
+  { id: 'returnPolicy', icon: 'assignment_return' }
 ]
 
 // 常见问题数据
@@ -236,6 +237,37 @@ const faqs = [
     category: 'account',
     question: t('help.faqs.account.security.question'),
     answer: t('help.faqs.account.security.answer')
+  },
+  // 退货政策相关
+  {
+    id: 'returnPolicy-1',
+    category: 'returnPolicy',
+    question: t('help.faqs.returnPolicy.returnWindow.question'),
+    answer: t('help.faqs.returnPolicy.returnWindow.answer')
+  },
+  {
+    id: 'returnPolicy-2',
+    category: 'returnPolicy',
+    question: t('help.faqs.returnPolicy.returnShipping.question'),
+    answer: t('help.faqs.returnPolicy.returnShipping.answer')
+  },
+  {
+    id: 'returnPolicy-3',
+    category: 'returnPolicy',
+    question: t('help.faqs.returnPolicy.returnProcess.question'),
+    answer: t('help.faqs.returnPolicy.returnProcess.answer')
+  },
+  {
+    id: 'returnPolicy-4',
+    category: 'returnPolicy',
+    question: t('help.faqs.returnPolicy.supportedCountries.question'),
+    answer: t('help.faqs.returnPolicy.supportedCountries.answer')
+  },
+  {
+    id: 'returnPolicy-5',
+    category: 'returnPolicy',
+    question: t('help.faqs.returnPolicy.exchangePolicy.question'),
+    answer: t('help.faqs.returnPolicy.exchangePolicy.answer')
   }
 ]
 

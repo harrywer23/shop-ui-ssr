@@ -23,7 +23,8 @@ export default {
     confirmReceipt: '수령 확인',
     confirmReceiptSuccess: '수령 확인 완료',
     confirmReceiptFailed: '수령 확인 실패',
-    loadFailed: '주문 상세 로드 실패'
+    loadFailed: '주문 상세 로드 실패',
+    applyReturn: '반품 신청'
   },
   status: {
     unpaid: '미결제',

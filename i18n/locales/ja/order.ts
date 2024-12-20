@@ -23,7 +23,8 @@ export default {
     confirmReceipt: '受取確認',
     confirmReceiptSuccess: '受取確認が完了しました',
     confirmReceiptFailed: '受取確認に失敗しました',
-    loadFailed: '注文詳細の読み込みに失敗しました'
+    loadFailed: '注文詳細の読み込みに失敗しました',
+    applyReturn: '返品申請'
   },
   status: {
     unpaid: '未払い',
