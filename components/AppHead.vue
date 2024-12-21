@@ -153,7 +153,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n';
 
@@ -212,12 +212,29 @@ const handleLogout = () => {
 
   router.push('/login');
 };
+// 添加 Google Analytics 初始化函数
+const initGoogleAnalytics = () => {
+  const script1 = document.createElement('script')
+  script1.async = true
+  script1.src = 'https://www.googletagmanager.com/gtag/js?id=GT-K4THCHR3'
+  document.head.appendChild(script1)
+
+  window.dataLayer = window.dataLayer || []
+  function gtag() {
+    dataLayer.push(arguments)
+  }
+  gtag('js', new Date())
+  gtag('config', 'GT-K4THCHR3')
+}
 // 在组件挂载时设置初始语言
 onMounted(() => {
   const langCookie = useCookie('user-language');
   if (langCookie.value) {
     handleLanguageChange(langCookie.value);
   }
+  
+  // 初始化 Google Analytics
+  initGoogleAnalytics()
 });
 </script>
 

@@ -25,11 +25,11 @@
         <q-btn
           color="primary"
           icon="add_photo_alternate"
-          :label="'上传图片'"
+          :label="t('custom.error.editor.uploadImage')"
           size="sm"
           @click="triggerFileInput"
         >
-          <q-tooltip>支持 jpg/png/gif/webp 格式，单个文件不超过2MB</q-tooltip>
+          <q-tooltip>{{ t('custom.error.editor.imageTooltip') }}</q-tooltip>
         </q-btn>
       </div>
     </div>
@@ -39,12 +39,14 @@
 <script setup>
 import Editor from '@tinymce/tinymce-vue'
 import { useQuasar } from 'quasar'
+import { useI18n } from 'vue-i18n'
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { api } from '~/utils/axios'
 import {API_CONSTANTS} from "~/utils/constants";
 
 const IMAGE_BASE_URL = API_CONSTANTS.BASE_URL
 const $q = useQuasar()
+const { t } = useI18n()
 const fileInput = ref(null)
 const toxFullscreen = ref(false)
 
@@ -119,63 +121,6 @@ const handleEditorInput = (value) => {
 }
 
 // 处理文件上传
-// const handleFileChange = async (event) => {
-//   const file = event.target.files[0]
-//   if (!file) return
-
-//   // 文件验证
-//   if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
-//     $q.notify({
-//       type: 'negative',
-//       message: '仅支持 jpg/png/gif/webp 格式图片'
-//     })
-//     return
-//   }
-
-//   if (file.size > 2 * 1024 * 1024) {
-//     $q.notify({
-//       type: 'negative',
-//       message: '图片大小不能超过 2MB'
-//     })
-//     return
-//   }
-
-//   try {
-//     $q.loading.show({ message: '正在上传图片...' })
-
-//     const formData = new FormData()
-//     formData.append('file', file)
-
-//     const response = await api.post('/common/uploadImage', formData, {
-//       headers: { 'Content-Type': 'multipart/form-data' }
-//     })
-
-//     if (response.data.code === 200) {
-//       const fullImageUrl = `${IMAGE_BASE_URL}${response.data.data.sourceUrl}`
-//       const editor = window.tinymce.get(props.id)
-
-//       if (editor) {
-//         editor.execCommand('mceInsertContent', false, `<img src="${fullImageUrl}" alt="" />`)
-//         editor.fire('change')
-//       }
-
-//       $q.notify({
-//         type: 'positive',
-//         message: '图片上传成功'
-//       })
-//     }
-//   } catch (error) {
-//     console.error('上传失败:', error)
-//     $q.notify({
-//       type: 'negative',
-//       message: '图片上传失败'
-//     })
-//   } finally {
-//     $q.loading.hide()
-//     event.target.value = ''
-//   }
-// }
-// 处理文件上传
 const handleFileChange = async (event) => {
   const file = event.target.files[0]
   if (!file) return
@@ -184,7 +129,7 @@ const handleFileChange = async (event) => {
   if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
     $q.notify({
       type: 'negative',
-      message: '仅支持 jpg/png/gif/webp 格式图片'
+      message: t('custom.error.editor.formatError')
     })
     return
   }
@@ -192,13 +137,13 @@ const handleFileChange = async (event) => {
   if (file.size > 2 * 1024 * 1024) {
     $q.notify({
       type: 'negative',
-      message: '图片大小不能超过 2MB'
+      message: t('custom.error.editor.sizeError')
     })
     return
   }
 
   try {
-    $q.loading.show({ message: '正在上传图片...' })
+    $q.loading.show({ message: t('custom.error.editor.uploading') })
 
     const formData = new FormData()
     formData.append('file', file)
@@ -226,25 +171,26 @@ const handleFileChange = async (event) => {
 
         $q.notify({
           type: 'positive',
-          message: '图片上传成功'
+          message: t('custom.error.editor.uploadSuccess')
         })
       } else {
-        throw new Error('编辑器实例未找到')
+        throw new Error(t('custom.error.editor.instanceNotFound'))
       }
     } else {
-      throw new Error(response.data.msg || '上传失败')
+      throw new Error(response.data.msg || t('custom.error.editor.uploadFailed'))
     }
   } catch (error) {
     console.error('上传失败:', error)
     $q.notify({
       type: 'negative',
-      message: error instanceof Error ? error.message : '图片上传失败'
+      message: error instanceof Error ? error.message : t('custom.error.editor.uploadFailed')
     })
   } finally {
     $q.loading.hide()
     event.target.value = ''
   }
 }
+
 // 触发文件选择
 const triggerFileInput = () => {
   fileInput.value?.click()

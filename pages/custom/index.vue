@@ -6,9 +6,9 @@
           <div class="banner-icon">
             <q-img src="/icons/产品海报.svg" width="64px" />
           </div>
-          <h1 class="text-h2">二次元周边定制</h1>
+          <h1 class="text-h2">{{ t('custom.title') }}</h1>
           <p class="text-h6 q-mt-md">
-            让您的创意成为现实，打造独一无二的收藏品
+            {{ t('custom.subtitle') }}
           </p>
         </div>
       </div>
@@ -22,28 +22,30 @@
               <q-card-section>
                 <div class="text-h5 text-primary">
                   <q-img src="/icons/会员用户.svg" width="32px" class="q-mr-sm" />
-                  个人专属定制
+                  {{ t('custom.personal.title') }}
                 </div>
-                <div class="text-subtitle1 q-mt-sm">一对一专属服务，打造独一无二的作品</div>
+                <div class="text-subtitle1 q-mt-sm">
+                  {{ t('custom.personal.subtitle') }}
+                </div>
 
                 <!-- 价格指示 -->
                 <div class="price-indicator q-mt-md">
-                  <div class="text-h6">起价：¥3,000</div>
-                  <div class="text-caption">定金比例：30%-50%</div>
+                  <div class="text-h6">{{ t('custom.personal.startingPrice') }}</div>
+                  <div class="text-caption">{{ t('custom.personal.deposit') }}</div>
                 </div>
 
                 <!-- 适用场景 -->
                 <div class="section-block q-mt-lg">
                   <div class="block-title">
                     <q-icon name="target" color="primary" />
-                    适用场景
+                    {{ t('custom.personal.scenarios.title') }}
                   </div>
                   <div class="block-content">
                     <ul>
-                      <li>追求独特性，想要独一无二的收藏品</li>
-                      <li>有明确的创意和定制需求</li>
-                      <li>注重品质，愿意为专属服务付费</li>
-                      <li>需要较快的制作周期</li>
+                      <li>{{ t('custom.personal.scenarios.scenario1') }}</li>
+                      <li>{{ t('custom.personal.scenarios.scenario2') }}</li>
+                      <li>{{ t('custom.personal.scenarios.scenario3') }}</li>
+                      <li>{{ t('custom.personal.scenarios.scenario4') }}</li>
                     </ul>
                   </div>
                 </div>
@@ -56,12 +58,40 @@
                   </div>
                   <q-timeline color="primary">
                     <q-timeline-entry
-                      v-for="(step, index) in personalSteps"
-                      :key="index"
-                      :title="step.title"
-                      :subtitle="step.time"
+                      :title="t('custom.personal.steps.step1.title')"
+                      :subtitle="t('custom.personal.steps.step1.time')"
                     >
-                      {{ step.content }}
+                      {{ t('custom.personal.steps.step1.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.personal.steps.step2.title')"
+                      :subtitle="t('custom.personal.steps.step2.time')"
+                    >
+                      {{ t('custom.personal.steps.step2.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.personal.steps.step3.title')"
+                      :subtitle="t('custom.personal.steps.step3.time')"
+                    >
+                      {{ t('custom.personal.steps.step3.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.personal.steps.step4.title')"
+                      :subtitle="t('custom.personal.steps.step4.time')"
+                    >
+                      {{ t('custom.personal.steps.step4.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.personal.steps.step5.title')"
+                      :subtitle="t('custom.personal.steps.step5.time')"
+                    >
+                      {{ t('custom.personal.steps.step5.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.personal.steps.step6.title')"
+                      :subtitle="t('custom.personal.steps.step6.time')"
+                    >
+                      {{ t('custom.personal.steps.step6.content') }}
                     </q-timeline-entry>
                   </q-timeline>
                 </div>
@@ -73,11 +103,32 @@
                     专属特权
                   </div>
                   <div class="block-content">
-                    <div class="privilege-item" v-for="(item, index) in personalPrivileges" :key="index">
-                      <q-icon :name="item.icon" color="positive" />
+                    <div class="privilege-item">
+                      <q-icon name="design_services" color="positive" />
                       <div class="privilege-content">
-                        <div class="privilege-title">{{ item.title }}</div>
-                        <div class="privilege-desc">{{ item.description }}</div>
+                        <div class="privilege-title">{{ t('custom.personal.privileges.privilege1.title') }}</div>
+                        <div class="privilege-desc">{{ t('custom.personal.privileges.privilege1.description') }}</div>
+                      </div>
+                    </div>
+                    <div class="privilege-item">
+                      <q-icon name="verified" color="positive" />
+                      <div class="privilege-content">
+                        <div class="privilege-title">{{ t('custom.personal.privileges.privilege2.title') }}</div>
+                        <div class="privilege-desc">{{ t('custom.personal.privileges.privilege2.description') }}</div>
+                      </div>
+                    </div>
+                    <div class="privilege-item">
+                      <q-icon name="speed" color="positive" />
+                      <div class="privilege-content">
+                        <div class="privilege-title">{{ t('custom.personal.privileges.privilege3.title') }}</div>
+                        <div class="privilege-desc">{{ t('custom.personal.privileges.privilege3.description') }}</div>
+                      </div>
+                    </div>
+                    <div class="privilege-item">
+                      <q-icon name="support_agent" color="positive" />
+                      <div class="privilege-content">
+                        <div class="privilege-title">{{ t('custom.personal.privileges.privilege4.title') }}</div>
+                        <div class="privilege-desc">{{ t('custom.personal.privileges.privilege4.description') }}</div>
                       </div>
                     </div>
                   </div>
@@ -100,28 +151,30 @@
               <q-card-section>
                 <div class="text-h5 text-primary">
                   <q-img src="/icons/分类or广场or其他.svg" width="32px" class="q-mr-sm" />
-                  众人请愿定制
+                  {{ t('custom.crowdfunding.title') }}
                 </div>
-                <div class="text-subtitle1 q-mt-sm">集众人之力，共同实现梦想</div>
+                <div class="text-subtitle1 q-mt-sm">
+                  {{ t('custom.crowdfunding.subtitle') }}
+                </div>
 
                 <!-- 价格指示 -->
                 <div class="price-indicator q-mt-md">
-                  <div class="text-h6">预估价：¥299-999</div>
-                  <div class="text-caption">最低众筹数量：100份</div>
+                  <div class="text-h6">{{ t('custom.crowdfunding.estimatedPrice') }}</div>
+                  <div class="text-caption">{{ t('custom.crowdfunding.minQuantity') }}</div>
                 </div>
 
                 <!-- 适用场景 -->
                 <div class="section-block q-mt-lg">
                   <div class="block-title">
                     <q-icon name="target" color="primary" />
-                    适用场景
+                    {{ t('custom.crowdfunding.scenarios.title') }}
                   </div>
                   <div class="block-content">
                     <ul>
-                      <li>热门IP周边的集体需求</li>
-                      <li>期待更实惠的定制价格</li>
-                      <li>愿意等待较长制作周期</li>
-                      <li>想要参与集体众筹活动</li>
+                      <li>{{ t('custom.crowdfunding.scenarios.scenario1') }}</li>
+                      <li>{{ t('custom.crowdfunding.scenarios.scenario2') }}</li>
+                      <li>{{ t('custom.crowdfunding.scenarios.scenario3') }}</li>
+                      <li>{{ t('custom.crowdfunding.scenarios.scenario4') }}</li>
                     </ul>
                   </div>
                 </div>
@@ -130,16 +183,44 @@
                 <div class="section-block">
                   <div class="block-title">
                     <q-icon name="timeline" color="primary" />
-                    众筹流程
+                    {{ t('custom.crowdfunding.steps.title') }}
                   </div>
                   <q-timeline color="primary">
                     <q-timeline-entry
-                      v-for="(step, index) in crowdfundingSteps"
-                      :key="index"
-                      :title="step.title"
-                      :subtitle="step.time"
+                      :title="t('custom.crowdfunding.steps.step1.title')"
+                      :subtitle="t('custom.crowdfunding.steps.step1.time')"
                     >
-                      {{ step.content }}
+                      {{ t('custom.crowdfunding.steps.step1.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.crowdfunding.steps.step2.title')"
+                      :subtitle="t('custom.crowdfunding.steps.step2.time')"
+                    >
+                      {{ t('custom.crowdfunding.steps.step2.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.crowdfunding.steps.step3.title')"
+                      :subtitle="t('custom.crowdfunding.steps.step3.time')"
+                    >
+                      {{ t('custom.crowdfunding.steps.step3.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.crowdfunding.steps.step4.title')"
+                      :subtitle="t('custom.crowdfunding.steps.step4.time')"
+                    >
+                      {{ t('custom.crowdfunding.steps.step4.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.crowdfunding.steps.step5.title')"
+                      :subtitle="t('custom.crowdfunding.steps.step5.time')"
+                    >
+                      {{ t('custom.crowdfunding.steps.step5.content') }}
+                    </q-timeline-entry>
+                    <q-timeline-entry
+                      :title="t('custom.crowdfunding.steps.step6.title')"
+                      :subtitle="t('custom.crowdfunding.steps.step6.time')"
+                    >
+                      {{ t('custom.crowdfunding.steps.step6.content') }}
                     </q-timeline-entry>
                   </q-timeline>
                 </div>
@@ -148,14 +229,35 @@
                 <div class="section-block">
                   <div class="block-title">
                     <q-icon name="card_membership" color="primary" />
-                    支持者权益
+                    {{ t('custom.crowdfunding.privileges.title') }}
                   </div>
                   <div class="block-content">
-                    <div class="privilege-item" v-for="(item, index) in crowdfundingPrivileges" :key="index">
-                      <q-icon :name="item.icon" color="positive" />
+                    <div class="privilege-item">
+                      <q-icon :name="getCrowdfundingPrivilegeIcon(0)" color="positive" />
                       <div class="privilege-content">
-                        <div class="privilege-title">{{ item.title }}</div>
-                        <div class="privilege-desc">{{ item.description }}</div>
+                        <div class="privilege-title">{{ t('custom.crowdfunding.privileges.item1.title') }}</div>
+                        <div class="privilege-desc">{{ t('custom.crowdfunding.privileges.item1.description') }}</div>
+                      </div>
+                    </div>
+                    <div class="privilege-item">
+                      <q-icon :name="getCrowdfundingPrivilegeIcon(1)" color="positive" />
+                      <div class="privilege-content">
+                        <div class="privilege-title">{{ t('custom.crowdfunding.privileges.item2.title') }}</div>
+                        <div class="privilege-desc">{{ t('custom.crowdfunding.privileges.item2.description') }}</div>
+                      </div>
+                    </div>
+                    <div class="privilege-item">
+                      <q-icon :name="getCrowdfundingPrivilegeIcon(2)" color="positive" />
+                      <div class="privilege-content">
+                        <div class="privilege-title">{{ t('custom.crowdfunding.privileges.item3.title') }}</div>
+                        <div class="privilege-desc">{{ t('custom.crowdfunding.privileges.item3.description') }}</div>
+                      </div>
+                    </div>
+                    <div class="privilege-item">
+                      <q-icon :name="getCrowdfundingPrivilegeIcon(3)" color="positive" />
+                      <div class="privilege-content">
+                        <div class="privilege-title">{{ t('custom.crowdfunding.privileges.item4.title') }}</div>
+                        <div class="privilege-desc">{{ t('custom.crowdfunding.privileges.item4.description') }}</div>
                       </div>
                     </div>
                   </div>
@@ -164,7 +266,7 @@
                 <q-btn
                   color="primary"
                   class="full-width q-mt-lg"
-                  label="发起众筹定制"
+                  :label="t('custom.crowdfunding.applyButton')"
                   icon="groups"
                   @click="router.push('/custom/apply?type=2')"
                 />
@@ -229,131 +331,92 @@
           </div>
         </div>
       </div>
+
+      <!-- 我的定制申请 -->
+      <div class="section my-customs-section">
+        <div class="row items-center justify-between q-mb-md">
+          <h2 class="text-h4 q-my-none">{{ t('custom.list.title') }}</h2>
+          <q-btn
+            color="primary"
+            :label="t('common.viewMore')"
+            icon-right="arrow_forward"
+            to="/custom/list"
+            flat
+          />
+        </div>
+
+        <div v-if="loading" class="text-center q-pa-lg">
+          <q-spinner color="primary" size="3em" />
+          <div class="text-grey q-mt-sm">{{ t('common.loading') }}</div>
+        </div>
+
+        <div v-else-if="recentCustoms.length === 0" class="text-center q-pa-xl">
+          <q-icon name="inbox" size="4em" color="grey-5" />
+          <div class="text-grey q-mt-sm">{{ t('custom.list.empty') }}</div>
+        </div>
+
+        <div v-else class="row q-col-gutter-md">
+          <div v-for="item in recentCustoms" :key="item.id" class="col-12 col-sm-6 col-md-4">
+            <q-card class="custom-preview-card">
+              <q-card-section>
+                <div class="row items-center no-wrap">
+                  <div class="col">
+                    <div class="text-h6">{{ item.title }}</div>
+                    <div class="text-caption text-grey">
+                      {{ t('custom.list.orderNumber') }}: {{ item.orderNumber }}
+                    </div>
+                  </div>
+                  <q-chip
+                    :color="getStatusColor(item.status)"
+                    text-color="white"
+                    size="sm"
+                  >
+                    {{ t(`custom.status.${item.status}`) }}
+                  </q-chip>
+                </div>
+              </q-card-section>
+
+              <q-card-section>
+                <div class="text-body2">
+                  <div class="row q-gutter-sm">
+                    <div class="col-12">
+                      <q-icon name="event" size="xs" class="q-mr-xs" />
+                      {{ formatDate(item.createTime) }}
+                    </div>
+                    <div class="col-12">
+                      <q-icon name="category" size="xs" class="q-mr-xs" />
+                      {{ t(`custom.type.${item.type}`) }}
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+
+              <q-card-actions align="right">
+                <q-btn
+                  flat
+                  color="primary"
+                  :label="t('common.viewDetails')"
+                  :to="`/custom/detail/${item.id}`"
+                />
+              </q-card-actions>
+            </q-card>
+          </div>
+        </div>
+      </div>
     </div>
   </template>
 
   <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, onMounted, computed } from 'vue'
   import { useRouter } from 'vue-router'
-  import CachedImage from "~/components/common/CachedImage.vue";
+  import { useI18n } from 'vue-i18n'
+  import { date } from 'quasar'
+  import { API_CONSTANTS } from "~/utils/constants"
 
   const router = useRouter()
-
-  // 个人定制流程
-  const personalSteps = [
-    {
-      title: '提交申请',
-      time: 'Day 1',
-      content: '填写详细的定制需求，上传参考图片'
-    },
-    {
-      title: '需求沟通',
-      time: 'Day 2-3',
-      content: '专属客服一对一沟通细节需求'
-    },
-    {
-      title: '方案制定',
-      time: 'Day 4-7',
-      content: '设计师定制专属方案和效果图'
-    },
-    {
-      title: '支付定金',
-      time: 'Day 8',
-      content: '确认方案后支付30%-50%定金'
-    },
-    {
-      title: '开始制作',
-      time: 'Day 9-38',
-      content: '工匠开始制作，定期反馈进度'
-    },
-    {
-      title: '完成发货',
-      time: 'Day 39-40',
-      content: '确认成品并支付尾款后发货'
-    }
-  ]
-
-  // 众筹定制流程
-  const crowdfundingSteps = [
-    {
-      title: '发起众筹',
-      time: 'Day 1',
-      content: '提交众筹申请和初步方案'
-    },
-    {
-      title: '方案评估',
-      time: 'Day 2-5',
-      content: '评估可行性并制定众筹方案'
-    },
-    {
-      title: '开启预订',
-      time: 'Day 6-35',
-      content: '正式启动众筹，接受支持者预订'
-    },
-    {
-      title: '达成目标',
-      time: 'Day 36',
-      content: '达到目标份数，确认生产方案'
-    },
-    {
-      title: '批量生产',
-      time: 'Day 37-96',
-      content: '工厂开始批量生产定制商品'
-    },
-    {
-      title: '分批发货',
-      time: 'Day 97-100',
-      content: '完成生产后分批发货给支持者'
-    }
-  ]
-
-  // 个人定制特权
-  const personalPrivileges = [
-    {
-      icon: 'design_services',
-      title: '专属设计',
-      description: '一对一沟通，完全按照您的想法设计'
-    },
-    {
-      icon: 'verified',
-      title: '版权保护',
-      description: '独家版权，确保作品独一无二'
-    },
-    {
-      icon: 'speed',
-      title: '优先制作',
-      description: '优先排期，更快的制作周期'
-    },
-    {
-      icon: 'support_agent',
-      title: '专人服务',
-      description: '专属客服全程跟进服务'
-    }
-  ]
-
-  // 众筹特权
-  const crowdfundingPrivileges = [
-    {
-      icon: 'savings',
-      title: '优惠价格',
-      description: '批量生产，享受更优惠的价格'
-    },
-    {
-      icon: 'numbers',
-      title: '编号版本',
-      description: '限量编号，专属收藏价值'
-    },
-    {
-      icon: 'card_giftcard',
-      title: '支持者福利',
-      description: '专属周边、抽选特典等福利'
-    },
-    {
-      icon: 'forum',
-      title: '粉丝社群',
-      description: '加入支持者社群，分享快乐'
-    }
-  ]
+  const { t } = useI18n()
+  const loading = ref(false)
+  const recentCustoms = ref([])
 
   // 成功案例
   const successCases = [
@@ -390,19 +453,94 @@
       answer: '个人定制提供一对一专属服务，完全按照个人需求定制，价格较高但独特性强；众筹定制通过集体购买降低成本，价格更亲民，但需要达到最低众筹数量。'
     },
     {
-      question: '定制周期大概需要多久？',
-      answer: '个人定制一般需要30-40天，众筹定制因为涉及众筹周期和批量生产，通常需要90-100天。具体时间会在预估方案中说明。'
+      question: '制作周期大概要多久？',
+      answer: '个人定制一般需要30-40天，众筹定制因为涉及众筹周期和批量生产通常需要90-100天。具体时间会在预方案中说明。'
     },
     {
       question: '定金比例是多少？',
-      answer: '个人定制一般需要支付30%-50%的定金，具体比例根据定制难度和材质决定；众筹定制需要支付全款，但众筹失败会全额退款。'
+      answer: '个人定制一需要支付30%-50%的定金，具体比例根据定制难度和材质决定；众筹定制需要支付全款，但众筹失败会全额退款。'
     },
     {
       question: '是否可以修改定制方案？',
-      answer: '个人定制在确认方案前可以多次沟通修改；众筹定制因涉及多人，一旦方案确定后较难大幅修改，但可以在众筹前提出建议。'
+      answer: '个人定制在确认方案前可多次沟通修改；众筹定制涉及多人，一旦方案确定后较难大幅修改，但可以在众筹前提出建议。'
     }
   ]
-  import {API_CONSTANTS} from "~/utils/constants";
+
+  // 获取特权图标
+  const getPrivilegeIcon = (index: number) => {
+    const icons = ['design_services', 'verified', 'speed', 'support_agent']
+    return icons[index]
+  }
+
+  // 获取众筹特权图标
+  const getCrowdfundingPrivilegeIcon = (index: number) => {
+    const icons = ['savings', 'numbers', 'card_giftcard', 'forum']
+    return icons[index]
+  }
+
+  // 获取状态对应的颜色
+  const getStatusColor = (status: string) => {
+    const colors: Record<string, string> = {
+      pending: 'orange',
+      approved: 'positive',
+      rejected: 'negative',
+      inProgress: 'info',
+      completed: 'positive',
+      cancelled: 'grey'
+    }
+    return colors[status] || 'grey'
+  }
+
+  // 格式日期
+  const formatDate = (dateString: string) => {
+    return date.formatDate(dateString, 'YYYY-MM-DD')
+  }
+
+  // 获取最近的定制申请
+  const fetchRecentCustoms = async () => {
+    loading.value = true
+    try {
+      // TODO: 实现实际的API调用
+      // const response = await api.getRecentCustoms()
+      // recentCustoms.value = response.data
+
+      // 临时使用模拟数据
+      recentCustoms.value = [
+        {
+          id: 1,
+          title: '神-刻晴手办定制',
+          orderNumber: 'CD202401010001',
+          status: 'pending',
+          createTime: '2024-01-01',
+          type: 'figure'
+        },
+        {
+          id: 2,
+          title: '鬼灭之刃-炭治郎装定制',
+          orderNumber: 'CD202401010002',
+          status: 'inProgress',
+          createTime: '2024-01-02',
+          type: 'clothing'
+        },
+        {
+          id: 3,
+          title: '海贼王-路飞草帽定制',
+          orderNumber: 'CD202401010003',
+          status: 'completed',
+          createTime: '2024-01-03',
+          type: 'accessory'
+        }
+      ]
+    } catch (error) {
+      console.error('Failed to fetch recent customs:', error)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  onMounted(() => {
+    fetchRecentCustoms()
+  })
 
   // 获取图片URL
   const getImageUrl = (url: string) => {
@@ -410,6 +548,46 @@
     if (url.startsWith('http')) return url
     return `${API_CONSTANTS.BASE_URL}${url}`
   }
+
+  // 个人定制特权
+  const personalPrivileges = [
+    {
+      title: '专属设计',
+      description: '一对一沟通，完全按照您的想法设计'
+    },
+    {
+      title: '版权保护',
+      description: '独家版权，确保作品独一无二'
+    },
+    {
+      title: '优先制作',
+      description: '优先排期，更快的制作周期'
+    },
+    {
+      title: '专人服务',
+      description: '专属客服全程跟进服务'
+    }
+  ]
+
+  // 众筹特权
+  const crowdfundingPrivileges = [
+    {
+      title: '优惠价格',
+      description: '批量生产，享受更优惠的价格'
+    },
+    {
+      title: '编号版本',
+      description: '限量编号，专属收藏价值'
+    },
+    {
+      title: '支持者福利',
+      description: '专属周边、抽选特典等福利'
+    },
+    {
+      title: '粉丝社群',
+      description: '加入支持者社群，分享快乐'
+    }
+  ]
   </script>
 
   <style lang="scss" scoped>
@@ -508,9 +686,23 @@
         margin-bottom: 8px;
       }
     }
+
+    .my-customs-section {
+      background: #f5f7fa;
+
+      .custom-preview-card {
+        height: 100%;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
   }
 
-  // 响应式调整
+  // 响应式调
   @media (max-width: 599px) {
     .custom-page {
       .banner-section {

@@ -6,6 +6,11 @@ import ko from './i18n/locales/ko'
 
 export default defineI18nConfig(() => ({
   legacy: false,
+  locale: 'zh-CN',
+  fallbackLocale: 'en',
+  globalInjection: true,
+  missingWarn: false,
+  fallbackWarn: false,
   messages: {
     en,
     'zh-CN': zhCN,
