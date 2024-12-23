@@ -43,6 +43,16 @@
       </div>
     </div>
 
+    <!-- 添加安全标识区域 -->
+    <div class="security-badges">
+      <div class="badge-container">
+        <img src="/security/visa.png" alt="Visa" class="security-badge">
+        <img src="/security/mastercard.png" alt="Mastercard" class="security-badge">
+        <img src="/payment/paypal.jpeg" alt="PayPal" class="security-badge">
+        <img src="/security/ssl.png" alt="SSL Secure" class="security-badge">
+      </div>
+    </div>
+
     <!-- 版权信息 -->
     <div class="footer-bottom">
       <p>Copyright © 2002-{{  new Date().getFullYear() }} www.cmall.uk www.51x.uk All Rights Reserved {{  new Date().getFullYear() }}</p>
@@ -133,6 +143,54 @@ const { t } = useI18n()
 @media (max-width: 480px) {
   .footer-content {
     grid-template-columns: 1fr;
+  }
+}
+
+/* 更新安全标识相关样式 */
+.security-badges {
+  max-width: 1200px;
+  margin: 30px auto 0;
+  padding: 15px 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
+
+.badge-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  padding: 5px 0;
+}
+
+.security-badge {
+  height: 35px;
+  width: auto;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+  filter: grayscale(20%);
+}
+
+.security-badge:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .security-badges {
+    margin-top: 20px;
+    padding: 10px;
+  }
+
+  .badge-container {
+    gap: 20px;
+  }
+
+  .security-badge {
+    height: 25px;
   }
 }
 </style>
