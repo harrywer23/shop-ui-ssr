@@ -83,7 +83,7 @@ export default {
       title: '适用场景',
       scenario1: '热门IP周边的集体需求',
       scenario2: '期待更实惠的定制价格',
-      scenario3: '愿意等待较长制作周期',
+      scenario3: '愿意等待较长制作���期',
       scenario4: '想要参与集体众筹活动'
     },
 
@@ -184,7 +184,7 @@ export default {
     title: '定制申请',
     formTitle: '申请信',
     name: '申请姓名',
-    contact: '联系电话',
+    contact: '联���电话',
     email: '电子邮箱',
     type: '定制类型',
     requirements: '需求描述',
@@ -232,7 +232,25 @@ export default {
       description: '需求描述',
       descriptionRequired: '请输入需求描述',
       type: '定制类型',
-      rewardDescriptionPlaceholder: '请详细描述回报内容...'
+      rewardDescriptionPlaceholder: '请详细描述回报内容...',
+      applicationType: '申请类型',
+      personalApplication: '个人申请',
+      crowdfundingApplication: '众筹申请',
+      targetAmount: '目标金额',
+      minSupportAmount: '最低支持金额',
+      startTime: '开始时间',
+      endTime: '结束时间',
+      rewards: '回报设置',
+      rewardTitle: '回报标题',
+      rewardAmount: '回报金额',
+      rewardDescription: '回报描述',
+      addReward: '添加回报',
+      title: '申请标题',
+      titleRequired: '请输入申请标题',
+      description: '需求描述',
+      descriptionRequired: '请填写需求描述',
+      type: '定制类型',
+      rewardDescriptionPlaceholder: '请详���描述回报内容...'
     }
   },
   cases: {
@@ -271,7 +289,7 @@ export default {
       },
       {
         question: '定制周期大概需要多久？',
-        answer: '个人定制一般需要30-40天，众筹定制因为涉及众筹周期和批量生产，通常需要90-100天。具体时间会在预估方案中说明。'
+        answer: '个人定制一般需要30-40天，众筹定制因为涉及众筹周期和批量生产，通常需要90-100天。具体时间会在预估方案中说���。'
       },
       {
         question: '定金比例是多少？',
@@ -286,7 +304,7 @@ export default {
     type: {
       clothing: '服装制',
       jewelry: '珠宝首饰',
-      furniture: '家具定��',
+      furniture: '家具定',
       artwork: '艺术作品',
       other: '他定制'
     },
@@ -311,7 +329,7 @@ export default {
     minTargetAmount: '目标金额不能低于1000',
     invalidMinSupportAmount: '请输入有效的最低支持金额',
     exceedTargetAmount: '最低支持金额不能超过目标金额',
-    startTimeRequired: '请选择开始时间',
+    startTimeRequired: '请��择开始时间',
     endTimeRequired: '请选择结束时间',
     invalidEndTime: '结束时间必须晚于开始时间',
     rewardTitleRequired: '请输入回报标题',
@@ -330,7 +348,7 @@ export default {
     onlineUsers: '在线用户',
     online: '在线',
     offline: '离线',
-    sendFailed: '发送���息失败',
+    sendFailed: '发送息失败',
     connectionError: '连接失败，请检查网络',
     notConnected: '未连接到服务器，请稍后重试',
     loadHistoryFailed: '加载历史消息失败',
@@ -348,6 +366,18 @@ export default {
       transportClose: '传输连接关闭',
       upgradeError: '协议升级失败',
       unknown: '未知错误'
+    }
+  },
+  custom: {
+    type: {
+      personal: "个人定制",
+      crowdfunding: "众筹定制",
+      figure: "手办模型",
+      clothing: "服装定制",
+      jewelry: "珠宝首饰",
+      furniture: "家具定制",
+      artwork: "艺术作品",
+      other: "其他定制"
     }
   }
 }

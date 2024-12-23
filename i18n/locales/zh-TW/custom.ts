@@ -214,7 +214,7 @@ export default {
     referenceImages: '參考圖片',
     uploadImages: '上傳圖片',
     uploadAttachment: '上傳附件',
-    additionalRequirements: '其他要求',
+    additionalRequirements: '其他要��',
     form: {
       description: '需求描述',
       descriptionRequired: '請輸入需求描述',
@@ -295,7 +295,7 @@ export default {
     empty: '暫無定製申請',
     orderNumber: '訂單編號',
     filter: {
-      all: '全���',
+      all: '���部',
       pending: '待審核',
       inProgress: '進行中',
       completed: '已完成'
@@ -318,7 +318,12 @@ export default {
     figure: '手辦模型',
     clothing: '服裝定製',
     accessory: '配件定製',
-    other: '其他定製'
+    other: '其他定製',
+    personal: '個人定制',
+    crowdfunding: '眾籌定制',
+    jewelry: '珠寶首飾',
+    furniture: '家具定制',
+    artwork: '藝術作品'
   },
   error: {
     invalidTargetAmount: '請輸入有效的目標金額',
@@ -333,7 +338,7 @@ export default {
     rewardDescriptionRequired: '請輸入回報描述',
     editor: {
       uploadImage: '上傳圖片',
-      uploading: '正在上傳圖片...',
+      uploading: '正���上傳圖片...',
       uploadSuccess: '圖片上傳成功',
       uploadFailed: '圖片上傳失敗',
       instanceNotFound: '編輯器實例未找到',

@@ -50,7 +50,7 @@
 
             <!-- 定制类型 -->
             <q-select
-              v-model="formData.type"
+              v-model="formData.itemType"
               :options="customTypes"
               :label="t('custom.apply.form.type')"
               filled
@@ -60,30 +60,15 @@
             />
 
             <!-- 需求描述 -->
-            <div class="q-mb-lg">
-              <div class="text-subtitle2 q-mb-sm">{{ t('custom.apply.form.description') }}</div>
-              <TinyMce
+            <div class="q-mb-md">
+              <div class="text-subtitle1 q-mb-sm">详细需求描述</div>
+              <rich-editor
                 v-model="formData.requirements"
-                :init="{
-                  height: 400,
-                  menubar: false,
-                  plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                    'insertdatetime', 'media', 'table', 'help', 'wordcount'
-                  ],
-                  toolbar: `
-                    undo redo | formatselect | bold italic backcolor | \
-                    alignleft aligncenter alignright alignjustify | \
-                    bullist numlist outdent indent | removeformat | help
-                  `,
-                  content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }'
-                }"
-                :disabled="submitting"
-                @change="handleEditorChange"
+                placeholder="请详细描述您的定制需求..."
+                :rules="[val => !!val || '请填写详细需求描述']"
               />
-              <div v-if="formErrors.requirements" class="text-negative text-caption">
-                {{ t('custom.apply.form.descriptionRequired') }}
+              <div class="text-caption text-grey-7 q-mt-sm">
+                请尽可能详细地描述您的定制需求，包括具体的尺寸、材质、颜色等要求。
               </div>
             </div>
 
@@ -164,139 +149,18 @@
 
             <!-- 申请类型选择 -->
             <div class="q-mb-md">
-              <div class="text-subtitle2 q-mb-sm">{{ t('custom.apply.form.applicationType') }}</div>
-              <q-btn-toggle
-                v-model="formData.applicationType"
+              <div class="text-subtitle1 q-mb-sm">{{ t('custom.apply.form.applicationType') }}</div>
+              <q-option-group
+                v-model="formData.type"
                 :options="[
-                  { label: t('custom.apply.form.personalApplication'), value: 'personal' },
-                  { label: t('custom.apply.form.crowdfundingApplication'), value: 'crowdfunding' }
+                  { label: t('custom.type.personal'), value: 1 },
+                  { label: t('custom.type.crowdfunding'), value: 2 }
                 ]"
-                spread
-                class="full-width"
-                @update:model-value="handleApplicationTypeChange"
+                color="primary"
+                inline
               />
             </div>
 
-            <!-- 众筹特有字段 - 仅在选择众筹申请时显示 -->
-            <template v-if="formData.applicationType === 'crowdfunding'">
-              <div class="row q-col-gutter-md">
-                <div class="col-12 col-md-6">
-                  <q-input
-                    v-model.number="formData.targetAmount"
-                    type="number"
-                    :label="t('custom.apply.form.targetAmount')"
-                    filled
-                    :rules="[
-                      val => val > 0 || t('custom.apply.error.invalidTargetAmount'),
-                      val => val >= 1000 || t('custom.apply.error.minTargetAmount')
-                    ]"
-                  />
-                </div>
-                <div class="col-12 col-md-6">
-                  <q-input
-                    v-model.number="formData.minSupportAmount"
-                    type="number"
-                    :label="t('custom.apply.form.minSupportAmount')"
-                    filled
-                    :rules="[
-                      val => val > 0 || t('custom.apply.error.invalidMinSupportAmount'),
-                      val => val <= formData.targetAmount || t('custom.apply.error.exceedTargetAmount')
-                    ]"
-                  />
-                </div>
-              </div>
-
-              <div class="row q-col-gutter-md q-mb-md">
-                <div class="col-12 col-md-6">
-                  <q-input
-                    v-model="formData.startTime"
-                    :label="t('custom.apply.form.startTime')"
-                    filled
-                    type="datetime-local"
-                    :rules="[val => !!val || t('custom.apply.error.startTimeRequired')]"
-                  />
-                </div>
-                <div class="col-12 col-md-6">
-                  <q-input
-                    v-model="formData.endTime"
-                    :label="t('custom.apply.form.endTime')"
-                    filled
-                    type="datetime-local"
-                    :rules="[
-                      val => !!val || t('custom.apply.error.endTimeRequired'),
-                      val => !formData.startTime || new Date(val) > new Date(formData.startTime) || t('custom.apply.error.invalidEndTime')
-                    ]"
-                  />
-                </div>
-              </div>
-
-              <!-- 回报设置 -->
-              <div class="rewards-section q-mb-lg">
-                <div class="text-subtitle2 q-mb-sm">{{ t('custom.apply.form.rewards') }}</div>
-                <div v-for="(reward, index) in formData.rewards" :key="index" class="reward-item q-pa-md q-mb-md bg-grey-2">
-                  <div class="row q-col-gutter-md">
-                    <div class="col-12 col-md-6">
-                      <q-input
-                        v-model="reward.title"
-                        :label="t('custom.apply.form.rewardTitle')"
-                        filled
-                        :rules="[val => !!val || t('custom.apply.error.rewardTitleRequired')]"
-                      />
-                    </div>
-                    <div class="col-12 col-md-6">
-                      <q-input
-                        v-model.number="reward.amount"
-                        type="number"
-                        :label="t('custom.apply.form.rewardAmount')"
-                        filled
-                        :rules="[val => val > 0 || t('custom.apply.error.invalidRewardAmount')]"
-                      />
-                    </div>
-                    <div class="col-12">
-                      <div class="text-subtitle2 q-mb-sm">{{ t('custom.apply.form.rewardDescription') }}</div>
-                      <TinyMce
-                        v-model="reward.description"
-                        :init="{
-                          height: 200,
-                          menubar: false,
-                          plugins: [
-                            'advlist', 'autolink', 'lists', 'link', 'charmap', 'preview',
-                            'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                            'insertdatetime', 'table', 'help', 'wordcount'
-                          ],
-                          toolbar: `
-                            undo redo | formatselect | bold italic | \
-                            alignleft aligncenter alignright | \
-                            bullist numlist | removeformat | help
-                          `,
-                          content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }',
-                          placeholder: t('custom.apply.form.rewardDescriptionPlaceholder')
-                        }"
-                        :disabled="submitting"
-                        @change="(content) => handleRewardDescriptionChange(index, content)"
-                      />
-                      <div v-if="rewardErrors[index]?.description" class="text-negative text-caption">
-                        {{ t('custom.apply.error.rewardDescriptionRequired') }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row justify-end q-mt-sm">
-                    <q-btn
-                      flat
-                      color="negative"
-                      :label="t('common.delete')"
-                      @click="removeReward(index)"
-                    />
-                  </div>
-                </div>
-                <q-btn
-                  outline
-                  color="primary"
-                  :label="t('custom.apply.form.addReward')"
-                  @click="addReward"
-                />
-              </div>
-            </template>
 
             <!-- 提交按钮 -->
             <div class="row justify-end q-mt-lg">
@@ -355,9 +219,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { api } from '@/utils/axios'
 import { useQuasar } from 'quasar'
-import TinyMce from '~/components/tiny-mce/index.vue'
 import ImageUploader from '~/components/common/ImageUploader.vue'
 import FileUploader from '~/components/common/FileUploader.vue'
+import RichEditor from '~/components/rich-editor/index.vue'
 import {getImageUrl} from "~/utils/tools";
 
 const route = useRoute()
@@ -370,14 +234,14 @@ interface FormData {
   name: string
   contact: string
   email: string
-  type: string
+  type: number
+  itemType: string
   requirements: string
   budgetMin: number
   budgetMax: number
   referenceImages: string[]
   attachments: string[]
   additionalRequirements: string
-  applicationType: string
   targetAmount: number | null
   minSupportAmount: number | null
   startTime: string
@@ -401,14 +265,14 @@ const formData = ref<FormData>({
   name: '',
   contact: '',
   email: '',
-  type: '',
+  type: 1,
+  itemType: '',
   requirements: '',
   budgetMin: 0,
   budgetMax: 0,
   referenceImages: [],
   attachments: [],
   additionalRequirements: '',
-  applicationType: 'personal',
   targetAmount: null,
   minSupportAmount: null,
   startTime: '',
@@ -428,6 +292,7 @@ const customTypes = [
   { label: t('custom.type.jewelry'), value: 'jewelry' },
   { label: t('custom.type.furniture'), value: 'furniture' },
   { label: t('custom.type.artwork'), value: 'artwork' },
+  { label: t('custom.type.figure'), value: 'figure' },
   { label: t('custom.type.other'), value: 'other' }
 ]
 
@@ -462,14 +327,14 @@ const handleImageUploadSuccess = (urls: string[]) => {
 const handleImageUploadError = (error: any) => {
   console.error('图片上传失败:', error)
   let errorMessage = t('custom.apply.error.imageUploadFailed')
-  
+
   // 处理特定错误类型
   if (error.code === 'FILE_SIZE_LIMIT_EXCEEDED') {
     errorMessage = t('custom.apply.error.fileTooLarge')
   } else if (error.code === 'MAX_FILES_EXCEEDED') {
     errorMessage = t('custom.apply.error.tooManyFiles')
   }
-  
+
   $q.notify({
     type: 'negative',
     message: errorMessage
@@ -529,18 +394,6 @@ const formatFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-// 处理申请类型变更
-const handleApplicationTypeChange = () => {
-  if (formData.value.applicationType === 'personal') {
-    // 切换到个人申请时清空众筹相关字段
-    formData.value.targetAmount = null
-    formData.value.minSupportAmount = null
-    formData.value.startTime = ''
-    formData.value.endTime = ''
-    formData.value.rewards = []
-  }
-}
-
 // 添加回报选项
 const addReward = () => {
   formData.value.rewards.push({
@@ -595,7 +448,7 @@ const validateForm = () => {
   }
 
   // 验证众筹回报描述
-  if (formData.value.applicationType === 'crowdfunding') {
+  if (formData.value.type === 'crowdfunding') {
     formData.value.rewards.forEach((reward, index) => {
       if (!reward.description.trim()) {
         if (!rewardErrors.value[index]) {
@@ -624,7 +477,7 @@ const validateForm = () => {
     isValid = false
   }
 
-  // ... 其他验证逻辑 ...
+  // ... 其���验证逻辑 ...
 
   return isValid
 }
@@ -649,8 +502,19 @@ const submitApplication = async () => {
       referenceImages: formData.value.referenceImages.map((url: string) => url)
     }
 
+    // 如果是众筹申请，添加众筹相关字段
+    if (formData.value.type === 'crowdfunding') {
+      Object.assign(submitData, {
+        targetAmount: parseFloat(crowdfundingData.value.targetAmount),
+        minSupportAmount: parseFloat(crowdfundingData.value.minSupportAmount),
+        startTime: crowdfundingData.value.startTime,
+        endTime: crowdfundingData.value.endTime,
+        rewards: rewards.value
+      })
+    }
+
     // 提交申请
-    const response = await api.post('/custom/apply', submitData)
+    const response = await api.post('/admin/custom/apply', submitData)
 
     if (response.data.code === 200) {
       $q.notify({
@@ -698,12 +562,12 @@ onUnmounted(() => {
   formData.value.referenceImages.forEach(url => URL.revokeObjectURL(url))
 })
 
-// 清理编辑器实���
+// 清理编辑器实例
 onBeforeUnmount(() => {
   // TinyMCE 会自动清理实例
 })
 
-// 回报错误状态
+// 回报误状态
 const rewardErrors = ref<Array<{description?: boolean}>>([])
 
 // 处理回报描述变化
@@ -714,6 +578,24 @@ const handleRewardDescriptionChange = (index: number, content: string) => {
     rewardErrors.value[index].description = false
   }
 }
+
+// 处理附件上传成功
+const handleAttachmentUpload = (files: any[]) => {
+  console.log('上传的附件:', files)
+}
+
+// 处理附件上传失败
+const handleAttachmentError = (error: any) => {
+  console.error('附件上传失败:', error)
+}
+
+// 初始化响应式数据
+const attachments = ref<Array<{
+  url: string
+  md5: string
+  size: number
+  title: string
+}>>([])
 </script>
 
 <style lang="scss" scoped>
@@ -779,6 +661,58 @@ const handleRewardDescriptionChange = (index: number, content: string) => {
 
   :deep(.tox .tox-edit-area__iframe) {
     background: #fff;
+  }
+}
+
+.editor-content {
+  font-family: Arial, sans-serif;
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  ul, ol {
+    padding-left: 2em;
+    margin-bottom: 1em;
+  }
+
+  blockquote {
+    border-left: 4px solid #ccc;
+    margin-left: 0;
+    padding-left: 1em;
+    color: #666;
+  }
+}
+
+// 自定义编辑器工具栏样式
+.q-editor {
+  border-radius: 4px;
+
+  .q-editor__toolbar {
+    background-color: #f5f5f5;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  .q-editor__content {
+    min-height: 300px;
+    padding: 12px;
+  }
+}
+
+// 响应式调整
+@media (max-width: 599px) {
+  .q-editor__toolbar {
+    flex-wrap: wrap;
+
+    .q-btn-group {
+      margin-bottom: 4px;
+    }
   }
 }
 </style>

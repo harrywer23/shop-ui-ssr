@@ -103,15 +103,21 @@ const handleFileChange = async (newFiles: File[]) => {
       }
     })
     
-    if (response.data.code === 200) {
+    if (response.data.succ) {
       const fileData = response.data.data
       uploadedFiles.value = [...uploadedFiles.value, {
         url: fileData.sourceUrl,
         name: fileData.title,
         size: parseInt(fileData.size),
-        id: fileData.id
+        id: fileData.id,
+        md5: fileData.md5
       }]
-      emit('update:modelValue', uploadedFiles.value.map(file => file.url))
+      emit('update:modelValue', uploadedFiles.value.map(file => ({
+        url: file.url,
+        md5: file.md5,
+        size: file.size,
+        title: file.name
+      })))
       emit('upload-success', uploadedFiles.value)
       
       // 清空文件选择
@@ -178,7 +184,12 @@ const onRejected = (rejectedEntries: any[]) => {
 const removeFile = (index: number) => {
   files.value = files.value.filter((_, i) => i !== index)
   uploadedFiles.value = uploadedFiles.value.filter((_, i) => i !== index)
-  emit('update:modelValue', uploadedFiles.value.map(file => file.url))
+  emit('update:modelValue', uploadedFiles.value.map(file => ({
+    url: file.url,
+    md5: file.md5,
+    size: file.size,
+    title: file.name
+  })))
 }
 
 // 修改清空文件方法

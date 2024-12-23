@@ -1,269 +1,252 @@
 <template>
-  <div class="custom-orders-page">
-    <div class="page-container">
-      <h1 class="text-h5 q-mb-lg">{{ t('custom.title') }}</h1>
+  <div class="custom-applications-page">
 
-      <!-- 订单状态标签页 -->
-      <q-tabs
-        v-model="currentTab"
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <q-tab name="all" :label="t('common.all')" />
-        <q-tab name="pending" :label="t('custom.status.pending')" />
-        <q-tab name="approved" :label="t('custom.status.approved')" />
-        <q-tab name="production" :label="t('custom.status.production')" />
-        <q-tab name="shipping" :label="t('custom.status.shipping')" />
-        <q-tab name="completed" :label="t('custom.status.completed')" />
-        <q-tab name="cancelled" :label="t('custom.status.cancelled')" />
-      </q-tabs>
-
-      <!-- 订单列表 -->
-      <div class="order-list q-mt-md">
-        <q-card v-for="order in filteredOrders(currentTab)" :key="order.custom_order_id" flat bordered class="q-mb-md">
-          <q-card-section>
-            <div class="row items-center justify-between q-mb-sm">
-              <div class="text-subtitle1">{{ t('custom.detail.orderNumber') }}: {{ order.orderNumber }}</div>
-              <div class="text-caption">{{ formatDate(order.createTime) }}</div>
-            </div>
-
-            <div class="row q-col-gutter-md">
-              <div class="col-12">
-                <div class="text-h6">{{ order.category }}</div>
-                <div class="text-body2 q-mt-sm">{{ order.requirements }}</div>
-              </div>
-            </div>
-
-            <q-separator class="q-my-md" />
-
-            <div class="row justify-between items-center">
-              <div class="text-subtitle2">{{ getStatusText(order.status) }}</div>
-              <div class="row q-gutter-sm">
-                <!-- 查看进度按钮 -->
-                <q-btn
-                  v-if="order.status >= 4"
-                  color="primary"
-                  :label="t('custom.detail.progress')"
-                  @click="viewProgress(order)"
-                  flat
-                />
-
-                <!-- 确认预估按钮 -->
-                <q-btn
-                  v-if="order.status === 1"
-                  color="primary"
-                  :label="t('custom.detail.confirmEstimate')"
-                  @click="confirmEstimate(order)"
-                  flat
-                />
-
-                <!-- 查看详情按钮 -->
-                <q-btn
-                  color="primary"
-                  :label="t('common.viewDetail')"
-                  :to="`/user/custom/${order.custom_order_id}`"
-                  flat
-                />
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
+    <div class="page-content">
+      <div class="page-header">
+        <h2 class="text-h5">{{ t('custom.list.title') }}</h2>
+        <q-btn
+          color="primary"
+          :label="t('custom.apply.submit')"
+          :to="{ name: 'custom-apply' }"
+        />
       </div>
 
-      <!-- 进度弹窗 -->
-      <q-dialog v-model="showProgress">
-        <q-card style="min-width: 350px">
-          <q-card-section class="row items-center">
-            <div class="text-h6">{{ t('custom.detail.progress') }}</div>
-            <q-space />
-            <q-btn icon="close" flat round dense v-close-popup />
-          </q-card-section>
+      <!-- 筛选工具栏 -->
+      <div class="filter-toolbar q-mb-md">
+        <div class="row items-center justify-between q-col-gutter-md">
+          <div class="col-12 col-sm-auto">
+            <q-btn-group flat>
+              <q-btn
+                v-for="status in filterStatus"
+                :key="status.value"
+                :label="t(`custom.status.${status.label}`)"
+                :color="currentStatus === status.value ? 'primary' : 'grey'"
+                @click="currentStatus = status.value"
+                flat
+              />
+            </q-btn-group>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <q-select
+              v-model="sortBy"
+              :options="sortOptions"
+              dense
+              outlined
+              emit-value
+              map-options
+            />
+          </div>
+        </div>
+      </div>
 
-          <q-card-section>
-            <q-timeline color="primary">
-              <q-timeline-entry
-                v-for="(progress, index) in progressList"
-                :key="index"
-                :title="progress.title"
-                :subtitle="formatDate(progress.time)"
-              >
-                <div>{{ progress.description }}</div>
-              </q-timeline-entry>
-            </q-timeline>
-          </q-card-section>
-        </q-card>
-      </q-dialog>
+      <!-- 申请列表 -->
+      <q-list bordered separator>
+        <q-item
+          v-for="item in applications"
+          :key="item.id"
+          clickable
+          v-ripple
+          :to="`/user/custom/detail?cid=${item.id}`"
+        >
+          <q-item-section>
+            <q-item-label class="text-h6">{{ item.title }}</q-item-label>
+            <q-item-label caption>
+              <div class="row q-gutter-x-md">
+                <div>
+                  <q-icon name="schedule" size="xs" class="q-mr-xs" />
+                  {{ formatDate(item.createdAt) }}
+                </div>
+                <div>
+                  <q-icon name="category" size="xs" class="q-mr-xs" />
+                  {{ t(`custom.type.${item.itemType}`) }}
+                </div>
+                <div>
+                  <q-icon name="attach_money" size="xs" class="q-mr-xs" />
+                  {{ formatPrice(item.budgetMin) }} - {{ formatPrice(item.budgetMax) }}
+                </div>
+              </div>
+            </q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-chip
+              :color="getStatusColor(item.status)"
+              text-color="white"
+              size="sm"
+            >
+              {{ t(`custom.status.${getStatusText(item.status)}`) }}
+            </q-chip>
+          </q-item-section>
+        </q-item>
+      </q-list>
+
+      <!-- 分页 -->
+      <div class="row justify-center q-mt-md">
+        <q-pagination
+          v-model="currentPage"
+          :max="Math.ceil(total / pageSize)"
+          :max-pages="6"
+          boundary-numbers
+          direction-links
+        />
+      </div>
+
+      <!-- 空状态 -->
+      <div v-if="!applications.length" class="empty-state q-pa-lg text-center">
+        <q-icon name="inbox" size="48px" color="grey-5" />
+        <div class="text-h6 q-mt-md">{{ t('custom.list.empty') }}</div>
+        <q-btn
+          color="primary"
+          :label="t('custom.apply.submit')"
+          class="q-mt-md"
+          :to="{ name: 'custom-apply' }"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: 'users',
-  middleware: 'auth'
-});
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { api } from '~/utils/axios'
-import { useQuasar } from 'quasar'
 import { date } from 'quasar'
+import { api } from '@/utils/axios'
 
-const router = useRouter()
 const { t } = useI18n()
-const $q = useQuasar()
 
-interface Progress {
-  title: string
-  time: string
-  description: string
-}
+// 状态过滤选项
+const filterStatus = [
+  { label: 'all', value: '' },
+  { label: 'pending', value: 0 },
+  { label: 'inProgress', value: 1 },
+  { label: 'completed', value: 2 }
+]
 
-interface CustomOrder {
-  custom_order_id: string
-  orderNumber: string
-  category: string
-  requirements: string
-  status: number
-  createTime: string
-}
+// 排序选项
+const sortOptions = [
+  { label: t('custom.list.sort.latest'), value: 'latest' },
+  { label: t('custom.list.sort.earliest'), value: 'earliest' },
+  { label: t('custom.list.sort.deadline'), value: 'deadline' }
+]
 
-const currentTab = ref('all')
-const orders = ref<CustomOrder[]>([])
-const showProgress = ref(false)
-const progressList = ref<Progress[]>([])
+// 响应式数据
+const applications = ref([])
+const total = ref(0)
+const currentPage = ref(1)
+const pageSize = ref(10)
+const currentStatus = ref('')
+const sortBy = ref('latest')
 
-// 根据状态筛选订单
-const filteredOrders = (status: string) => {
-  return orders.value.filter(order => {
-    switch (status) {
-      case 'pending':
-        return order.status === 0
-      case 'approved':
-        return order.status === 1
-      case 'production':
-        return order.status === 4
-      case 'shipping':
-        return order.status === 6
-      case 'completed':
-        return order.status === 8
-      case 'cancelled':
-        return order.status === 9
-      default:
-        return true
+// 获取申请列表
+const fetchApplications = async () => {
+  try {
+    const response = await api.get('/admin/custom/applications', {
+      params: {
+        page: currentPage.value,
+        pageSize: pageSize.value,
+        status: currentStatus.value,
+        sort: sortBy.value
+      }
+    })
+
+    if (response.data.succ) {
+      applications.value = response.data.data
+      total.value = response.data.total
     }
-  })
-}
-
-// 获取状态文本
-const getStatusText = (status: number) => {
-  switch (status) {
-    case 0:
-      return t('custom.status.pending')
-    case 1:
-      return t('custom.status.approved')
-    case 2:
-      return t('custom.status.rejected')
-    case 3:
-      return t('custom.status.deposit')
-    case 4:
-      return t('custom.status.production')
-    case 5:
-      return t('custom.status.final')
-    case 6:
-      return t('custom.status.shipping')
-    case 7:
-      return t('custom.status.shipped')
-    case 8:
-      return t('custom.status.completed')
-    case 9:
-      return t('custom.status.cancelled')
-    default:
-      return t('custom.status.unknown')
+  } catch (error) {
+    console.error('获取申请列表失败:', error)
   }
 }
 
 // 格式化日期
 const formatDate = (dateStr: string) => {
-  if (!dateStr) return '-'
-  return date.formatDate(dateStr, 'YYYY-MM-DD HH:mm:ss')
+  return date.formatDate(dateStr, 'YYYY-MM-DD HH:mm')
 }
 
-// 查看进度
-const viewProgress = async (order: CustomOrder) => {
-  try {
-    const response = await api.get(`/custom/progress/${order.custom_order_id}`)
-    if (response.data.code === 200) {
-      progressList.value = response.data.data
-      showProgress.value = true
-    }
-  } catch (error) {
-    console.error('获取进度信息失败:', error)
-    $q.notify({
-      type: 'negative',
-      message: t('custom.detail.error.loadFailed')
-    })
+// 格式化价格
+const formatPrice = (price: number) => {
+  return `¥${price.toLocaleString()}`
+}
+
+// 获取状态颜色
+const getStatusColor = (status: number) => {
+  const statusColors = {
+    0: 'orange', // pending
+    1: 'blue',   // inProgress
+    2: 'green',  // completed
+    3: 'red',    // rejected
+    4: 'grey'    // cancelled
   }
+  return statusColors[status] || 'grey'
 }
 
-// 确认预估价格
-const confirmEstimate = async (order: CustomOrder) => {
-  try {
-    const response = await api.post(`/custom/estimate/confirm/${order.custom_order_id}`)
-    if (response.data.code === 200) {
-      $q.notify({
-        type: 'positive',
-        message: t('custom.detail.estimateConfirmed')
-      })
-      loadOrders()
-    } else {
-      $q.notify({
-        type: 'negative',
-        message: response.data.msg || t('custom.detail.error.confirmFailed')
-      })
-    }
-  } catch (error) {
-    console.error('确认预估失败:', error)
-    $q.notify({
-      type: 'negative',
-      message: t('custom.detail.error.confirmFailed')
-    })
+// 获取状态文本
+const getStatusText = (status: number) => {
+  const statusMap = {
+    0: 'pending',
+    1: 'inProgress',
+    2: 'completed',
+    3: 'rejected',
+    4: 'cancelled'
   }
+  return statusMap[status] || 'unknown'
 }
 
-// 加载订单列表
-const loadOrders = async () => {
-  try {
-    const queryParams = new URLSearchParams({
-      pageNum: 1,
-      pageSize: 12
-    })
-
-    const response = await api.get('/admin/custom/order/list?'+queryParams.toString())
-    if (response.data.code === 200) {
-      orders.value = response.data.data
-    }
-  } catch (error) {
-    console.error('获取定制订单列表失败:', error)
-  }
-}
+// 监听分页和筛选变化
+watch([currentPage, currentStatus, sortBy], () => {
+  fetchApplications()
+})
 
 onMounted(() => {
-  loadOrders()
+  fetchApplications()
 })
 </script>
 
 <style lang="scss" scoped>
-.custom-orders-page {
-  padding: 20px;
+.custom-applications-page {
+  .page-title {
+    margin-bottom: 24px;
 
-  .page-container {
+    .text-h4 {
+      margin-bottom: 8px;
+    }
+
+    .q-breadcrumbs {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+
+  .page-content {
+    padding: 0 20px;
     max-width: 1200px;
     margin: 0 auto;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .filter-toolbar {
+    background: #f5f5f5;
+    padding: 12px;
+    border-radius: 4px;
+  }
+
+  .empty-state {
+    color: #666;
+  }
+
+  @media (max-width: 599px) {
+    .filter-toolbar {
+      .q-btn-group {
+        width: 100%;
+        .q-btn {
+          flex: 1;
+        }
+      }
+    }
   }
 }
 </style>
