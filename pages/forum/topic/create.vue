@@ -300,7 +300,7 @@ const selectedPath = computed(() => {
 // 加载分类列表
 const loadCategories = async () => {
   try {
-    const response = await api.get('/forum/category/list')
+    const response = await api.get('/forum/category/list?limit=100')
     if (response.data.code === 200) {
       // 直接使用原始数据，不进行类型转换
       allCategories.value = response.data.data
@@ -389,7 +389,7 @@ const flattenCategories = (tree) => {
 // 解析translations字段
 const parseTranslations = (category: ForumCategory) => {
   if (!category.translations) return {}
-  return typeof category.translations === 'string' 
+  return typeof category.translations === 'string'
     ? JSON.parse(category.translations)
     : category.translations
 }
@@ -408,7 +408,7 @@ const getCurrentLanguageName = (category: ForumCategory) => {
       console.log("------translations.en-------------------", translations.en)
       return translations.en || category.name
     case 'zh-TW':
-      return translations.zhTw || category.name  
+      return translations.zhTw || category.name
     case 'ja':
       return translations.ja || category.name
     case 'ko':
@@ -537,12 +537,12 @@ onMounted(() => {
       transition: all 0.3s ease;
       border-radius: 12px;
       font-weight: 500;
-      
+
       &:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       }
-      
+
       &.primary-btn {
         min-width: 160px;
         padding: 12px 24px;
@@ -557,7 +557,7 @@ onMounted(() => {
       display: flex;
       align-items: center;
       margin-bottom: 1rem;
-      
+
       &::before {
         content: '';
         width: 4px;
@@ -573,17 +573,17 @@ onMounted(() => {
     background: #f7f9fc;
     border-radius: 12px;
     padding: 16px;
-    
+
     .path-title {
       font-size: 1.1rem;
       font-weight: 600;
       color: #666;
       margin-bottom: 12px;
     }
-    
+
     .q-chip {
       transition: all 0.3s ease;
-      
+
       &:hover {
         transform: translateY(-1px);
       }
