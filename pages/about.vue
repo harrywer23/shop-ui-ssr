@@ -59,10 +59,34 @@
           <div class="text-h6 q-mb-md">{{ t('about.contact.title') }}</div>
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
-              <div class="contact-info">
-                <q-icon name="place" size="sm" class="q-mr-sm" />
-                <span>{{ t('about.contact.address') }}</span>
+              <!-- UK Office -->
+              <div class="office-section q-mb-md">
+                <div class="text-subtitle1 q-mb-sm">UK Office</div>
+                <div class="contact-info">
+                  <q-icon name="business" size="sm" class="q-mr-sm" />
+                  <span>BLACK WHITE UMBRELLA LTD</span>
+                </div>
+                <div class="contact-info">
+                  <q-icon name="place" size="sm" class="q-mr-sm" />
+                  <span>7 COPPERFIELD ROAD, COVENTRY<br>
+                        WEST MIDLANDS, ENGLAND<br>
+                        UNITED KINGDOM CV2 4AQ</span>
+                </div>
               </div>
+              
+              <!-- China Office -->
+              <div class="office-section q-mb-md">
+                <div class="text-subtitle1 q-mb-sm">中国办公室</div>
+                <div class="contact-info">
+                  <q-icon name="business" size="sm" class="q-mr-sm" />
+                  <span>中国海南海口美兰红盼易百货商行</span>
+                </div>
+                <div class="contact-info">
+                  <q-icon name="place" size="sm" class="q-mr-sm" />
+                  <span>海南省海口市美兰区海府街道南宝路与椰林路交叉路口东160米南宝路小区E12号楼1单元第二层91号</span>
+                </div>
+              </div>
+
               <div class="contact-info">
                 <q-icon name="email" size="sm" class="q-mr-sm" />
                 <span>super@aivrw.com</span>
@@ -133,5 +157,21 @@ const milestones = [
 
 .business-hours > div {
   margin-bottom: 0.5rem;
+}
+
+.office-section {
+  border-left: 3px solid #1976d2;
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.contact-info {
+  display: flex;
+  align-items: flex-start;  /* 改为flex-start以便于长地址的显示 */
+  margin-bottom: 1rem;
+}
+
+.contact-info span {
+  line-height: 1.4;
 }
 </style>

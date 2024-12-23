@@ -10,28 +10,28 @@
 
     <nav class="toc">
       <ol>
-        <li><NuxtLink to="/use#anchor_acceptance_of_terms">接受条款</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_payment_terms">支付条款</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_refund_policy">退款退货政策</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_account_management">账户管理</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_user_responsibilities">用户责任</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_service_description">服务说明</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_intellectual_property">知识产权；使用者有限许可</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_aiavr_trademarks">aiavr 商标</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_information_you_provide">您提供的信息</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_your_content">您的内容</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_infringement">违反侵害权利索赔/DMCA 通知</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_limitations">限制</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_restriction">限制和终止使用</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_links">第三方网站链接</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_warranties">保证和免责声明</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_indemnification">赔偿</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_disclaimer">免责声明</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_termination">终止条款</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_governing_law">法律管辖</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_modifications">条款修改</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_contact">联系方式</NuxtLink></li>
-        <li><NuxtLink to="/use#anchor_miscellanous">其他</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_acceptance_of_terms">接受条款</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_payment_terms">支付条款</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_refund_policy">退款退货政策</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_account_management">账户管理</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_user_responsibilities">用户责任</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_service_description">服务说明</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_intellectual_property">知识产权；使用者有限许可</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_aiavr_trademarks">aiavr 商标</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_information_you_provide">您提供的信息</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_your_content">您的内容</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_infringement">违反侵害权利索赔/DMCA 通知</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_limitations">限制</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_restriction">限制和终止使用</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_links">第三方网站链接</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_warranties">保证和免责声明</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_indemnification">赔偿</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_disclaimer">免责声明</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_termination">终止条款</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_governing_law">法律管辖</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_modifications">条款修改</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_contact">联系方式</NuxtLink></li>
+        <li><NuxtLink to="/terms#anchor_miscellanous">其他</NuxtLink></li>
       </ol>
     </nav>
 

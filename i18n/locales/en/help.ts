@@ -104,7 +104,7 @@ export default {
       },
       returnShipping: {
         question: 'Who pays for return shipping?',
-        answer: 'The seller covers return shipping costs. We will provide a return shipping label, you just need to follow the return process.'
+        answer: 'The seller covers return shipping costs. We will provide a return shipping label, you just need to follow the return process.<br><br>Default Return Address:<br>Building 31, Unit 301, Area 41, An Le Village, Xin\'an Street, Bao\'an District, Shenzhen，China'
       },
       returnProcess: {
         question: 'How do I return an item?',

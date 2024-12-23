@@ -48,19 +48,12 @@
                 <!-- 图片上传 -->
                 <div class="q-mb-md">
                   <div class="text-subtitle2 q-mb-sm">{{ $t('suggestions.screenshots') }}</div>
-                  <q-file
+                  <ImageUploader
                     v-model="formData.files"
-                    :label="$t('suggestions.uploadImage')"
-                    outlined
-                    multiple
-                    accept=".jpg,.jpeg,.png,.gif"
-                    max-files="5"
-                    @rejected="onRejected"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="attach_file" />
-                    </template>
-                  </q-file>
+                    :max-files="5"
+                    @upload-success="onUploadSuccess"
+                    @upload-error="onUploadError"
+                  />
                 </div>
 
                 <!-- 联系方式 -->
@@ -127,6 +120,7 @@
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
+import ImageUploader from '~/components/ImageUploader.vue'
 
 definePageMeta({
   layout: 'default'
@@ -178,37 +172,43 @@ const formData = ref({
 })
 
 const submitting = ref(false)
+const uploadedUrls = ref<string[]>([])
+
+const onUploadSuccess = (urls: string[]) => {
+  uploadedUrls.value = urls
+}
+
+const onUploadError = (error: any) => {
+  $q.notify({
+    type: 'negative',
+    message: t('suggestions.uploadError')
+  })
+}
 
 const onSubmit = async () => {
   submitting.value = true
   try {
-    const submitData = new FormData()
-    submitData.append('type', formData.value.type)
-    submitData.append('title', formData.value.title)
-    submitData.append('content', formData.value.content)
-    submitData.append('expectation', formData.value.expectation)
-    submitData.append('contact', formData.value.contact)
-    
-    if (formData.value.files) {
-      formData.value.files.forEach((file: File) => {
-        submitData.append('files', file)
-      })
+    const workOrderData = {
+      title: formData.value.title,
+      explanation: formData.value.content + '\n期望效果：\n' + formData.value.expectation,
+      imgUrls: uploadedUrls.value.join(','),
+      email: formData.value.contact,
+      workType: 2,   // 2表示建议大类
+      subType: formData.value.type.value, // 获取选择项的value值
+      status: 0,
     }
 
-    const response = await fetch('/api/suggestions', {
-      method: 'POST',
-      body: submitData
-    })
+    const response = await api.post('/workOrder/add', workOrderData)
 
-    const result = await response.json()
-    if (result.code === 200) {
+    if (response.code === 200) {
       $q.notify({
         type: 'positive',
         message: t('suggestions.submitSuccess')
       })
       resetForm()
+      uploadedUrls.value = []
     } else {
-      throw new Error(result.msg || t('suggestions.submitError'))
+      throw new Error(response.msg || t('suggestions.submitError'))
     }
   } catch (error) {
     console.error('提交建议失败:', error)
@@ -219,13 +219,6 @@ const onSubmit = async () => {
   } finally {
     submitting.value = false
   }
-}
-
-const onRejected = () => {
-  $q.notify({
-    type: 'negative',
-    message: t('suggestions.fileError')
-  })
 }
 
 const resetForm = () => {

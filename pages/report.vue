@@ -46,19 +46,12 @@
             <!-- 证据上传 -->
             <div class="q-mb-md">
               <div class="text-subtitle2 q-mb-sm">{{ $t('report.evidence') }}</div>
-              <q-file
+              <ImageUploader
                 v-model="formData.files"
-                :label="$t('report.uploadImage')"
-                outlined
-                multiple
-                accept=".jpg,.jpeg,.png,.gif"
-                max-files="5"
-                @rejected="onRejected"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="attach_file" />
-                </template>
-              </q-file>
+                :max-files="5"
+                @upload-success="onUploadSuccess"
+                @upload-error="onUploadError"
+              />
             </div>
 
             <!-- 联系方式 -->
@@ -101,6 +94,7 @@
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
+import ImageUploader from '~/components/ImageUploader.vue'
 
 definePageMeta({
   layout: 'default'
@@ -135,37 +129,43 @@ const formData = ref({
 })
 
 const submitting = ref(false)
+const uploadedUrls = ref<string[]>([])
+
+const onUploadSuccess = (urls: string[]) => {
+  uploadedUrls.value = urls
+}
+
+const onUploadError = (error: any) => {
+  $q.notify({
+    type: 'negative',
+    message: t('report.uploadError')
+  })
+}
 
 const onSubmit = async () => {
   submitting.value = true
   try {
-    const submitData = new FormData()
-    submitData.append('type', formData.value.type)
-    submitData.append('target', formData.value.target)
-    submitData.append('reason', formData.value.reason)
-    submitData.append('description', formData.value.description)
-    submitData.append('contact', formData.value.contact)
-    
-    if (formData.value.files) {
-      formData.value.files.forEach((file: File) => {
-        submitData.append('files', file)
-      })
+    const workOrderData = {
+      title: formData.value.target,
+      explanation: `类型：${formData.value.type.label}\n原因：${formData.value.reason}\n详细说明：${formData.value.description}`,
+      imgUrls: uploadedUrls.value.join(','),
+      email: formData.value.contact,
+      workType: 3,   // 3表示举报工单大类
+      subType: formData.value.type.value, // 获取选择项的value值
+      status: 0,
     }
 
-    const response = await fetch('/api/report', {
-      method: 'POST',
-      body: submitData
-    })
+    const response = await api.post('/workOrder/add', workOrderData)
 
-    const result = await response.json()
-    if (result.code === 200) {
+    if (response.code === 200) {
       $q.notify({
         type: 'positive',
         message: t('report.submitSuccess')
       })
       resetForm()
+      uploadedUrls.value = []
     } else {
-      throw new Error(result.msg || t('report.submitError'))
+      throw new Error(response.msg || t('report.submitError'))
     }
   } catch (error) {
     console.error('提交举报失败:', error)
@@ -178,13 +178,6 @@ const onSubmit = async () => {
   }
 }
 
-const onRejected = () => {
-  $q.notify({
-    type: 'negative',
-    message: t('report.fileError')
-  })
-}
-
 const resetForm = () => {
   formData.value = {
     type: '',
@@ -194,6 +187,8 @@ const resetForm = () => {
     files: [],
     contact: ''
   }
+  // 重置时同时清空已上传的图片URL
+  uploadedUrls.value = []
 }
 </script>
 

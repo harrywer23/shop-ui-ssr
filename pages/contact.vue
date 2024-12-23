@@ -11,6 +11,50 @@
               <div class="text-h6 q-mb-md">{{ $t('contact.info') }}</div>
 
               <div class="contact-info q-gutter-y-md">
+                <!-- UK Office -->
+                <div class="office-section q-mb-lg">
+                  <div class="text-subtitle1 q-mb-sm">UK Office</div>
+                  <div class="info-item">
+                    <q-icon name="business" size="24px" />
+                    <div class="info-content">
+                      <div class="info-label">Company</div>
+                      <div class="info-value">BLACK WHITE UMBRELLA LTD</div>
+                    </div>
+                  </div>
+                  <div class="info-item">
+                    <q-icon name="location_on" size="24px" />
+                    <div class="info-content">
+                      <div class="info-label">Address</div>
+                      <div class="info-value">
+                        7 COPPERFIELD ROAD, COVENTRY<br>
+                        WEST MIDLANDS, ENGLAND<br>
+                        UNITED KINGDOM CV2 4AQ
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- China Office -->
+                <div class="office-section q-mb-lg">
+                  <div class="text-subtitle1 q-mb-sm">中国办公室</div>
+                  <div class="info-item">
+                    <q-icon name="business" size="24px" />
+                    <div class="info-content">
+                      <div class="info-label">公司名称</div>
+                      <div class="info-value">中国海南海口美兰红盼易百货商行</div>
+                    </div>
+                  </div>
+                  <div class="info-item">
+                    <q-icon name="location_on" size="24px" />
+                    <div class="info-content">
+                      <div class="info-label">地址</div>
+                      <div class="info-value">
+                        海南省海口市美兰区海府街道南宝路与椰林路交叉路口东160米南宝路小区E12号楼1单元第二层91号
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="info-item">
                   <q-icon name="email" size="24px" />
                   <div class="info-content">
@@ -32,14 +76,6 @@
                   <div class="info-content">
                     <div class="info-label">{{ $t('contact.hours') }}</div>
                     <div class="info-value">9:00 AM - 6:00 PM</div>
-                  </div>
-                </div>
-
-                <div class="info-item">
-                  <q-icon name="location_on" size="24px" />
-                  <div class="info-content">
-                    <div class="info-label">{{ $t('contact.address') }}</div>
-                    <div class="info-value">Building 31, Unit 301, Area 41, An Le Village, Xin'an Street, Bao'an District, Shenzhen，China</div>
                   </div>
                 </div>
               </div>
@@ -135,15 +171,9 @@ const submitting = ref(false)
 const onSubmit = async () => {
   submitting.value = true
   try {
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData.value)
-    })
+    const response = await api.post('/api/contact',formData.value)
 
-    const result = await response.json()
+    const result = await response.data
     if (result.code === 200) {
       $q.notify({
         type: 'positive',
@@ -184,6 +214,12 @@ const resetForm = () => {
   }
 
   .contact-info {
+    .office-section {
+      border-left: 3px solid var(--q-primary);
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
     .info-item {
       display: flex;
       align-items: flex-start;
@@ -203,6 +239,7 @@ const resetForm = () => {
 
         .info-value {
           color: #666;
+          line-height: 1.4;
         }
       }
     }

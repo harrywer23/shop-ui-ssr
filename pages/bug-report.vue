@@ -45,19 +45,12 @@
             <!-- 截图上传 -->
             <div class="q-mb-md">
               <div class="text-subtitle2 q-mb-sm">{{ $t('bugReport.screenshots') }}</div>
-              <q-file
+              <ImageUploader
                 v-model="formData.files"
-                :label="$t('bugReport.uploadImage')"
-                outlined
-                multiple
-                accept=".jpg,.jpeg,.png,.gif"
-                max-files="5"
-                @rejected="onRejected"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="attach_file" />
-                </template>
-              </q-file>
+                :max-files="5"
+                @upload-success="onUploadSuccess"
+                @upload-error="onUploadError"
+              />
             </div>
 
             <!-- 联系方式 -->
@@ -88,6 +81,7 @@
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
+import ImageUploader from '~/components/ImageUploader.vue'
 
 const $q = useQuasar()
 const { t } = useI18n()
@@ -110,38 +104,43 @@ const bugTypes = [
   { label: t('bugReport.types.other'), value: 'other' }
 ]
 
+const uploadedUrls = ref<string[]>([])
+
+const onUploadSuccess = (urls: string[]) => {
+  uploadedUrls.value = urls
+}
+
+const onUploadError = (error: any) => {
+  $q.notify({
+    type: 'negative',
+    message: t('bugReport.uploadError')
+  })
+}
+
 const onSubmit = async () => {
   submitting.value = true
   try {
-    const submitData = new FormData()
-    // 添加表单数据
-    submitData.append('type', formData.value.type)
-    submitData.append('title', formData.value.title)
-    submitData.append('description', formData.value.description)
-    submitData.append('steps', formData.value.steps)
-    submitData.append('contact', formData.value.contact)
-    
-    // 添加文件
-    if (formData.value.files) {
-      formData.value.files.forEach((file: File) => {
-        submitData.append('files', file)
-      })
+    const workOrderData = {
+      title: formData.value.title,
+      explanation: formData.value.description + '\n重现步骤：\n' + formData.value.steps,
+      imgUrls: uploadedUrls.value.join(','),
+      email: formData.value.contact,
+      workType: 1,   // 1表示bug报告大类
+      subType: formData.value.type.value, // 获取选择项的value值
+      status: 0,
     }
 
-    const response = await fetch('/api/bug-report', {
-      method: 'POST',
-      body: submitData
-    })
+    const response = await api.post('/workOrder/add', workOrderData)
 
-    const result = await response.json()
-    if (result.code === 200) {
+    if (response.code === 200) {
       $q.notify({
         type: 'positive',
         message: t('bugReport.submitSuccess')
       })
       resetForm()
+      uploadedUrls.value = []
     } else {
-      throw new Error(result.msg || t('bugReport.submitError'))
+      throw new Error(response.msg || t('bugReport.submitError'))
     }
   } catch (error) {
     console.error('提交错误报告失败:', error)
@@ -152,13 +151,6 @@ const onSubmit = async () => {
   } finally {
     submitting.value = false
   }
-}
-
-const onRejected = () => {
-  $q.notify({
-    type: 'negative',
-    message: t('bugReport.fileError')
-  })
 }
 
 const resetForm = () => {

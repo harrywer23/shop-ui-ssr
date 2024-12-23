@@ -24,7 +24,7 @@ export default {
             order: {
                 howToOrder: {
                     question: '如何下单购买商品？',
-                    answer: '1. 选择心仪的商品并点击"加入购物车"或"立即购买"<br>2. 在购物车中确认商品信息<br>3. 填写收货地址和联系方式<br>4. 选择支付方式并完成支付<br>5. 系统自动生成订单，您可以在"我的订单"中查看订单状态'
+                    answer: '1. 选择心仪的商品并点击"加入购物车"或"立即���买"<br>2. 在购物车中确认商品信息<br>3. 填写收货地址和联系方式<br>4. 选择支付方式并完成支付<br>5. 系统自动生成订单，您可以在"我的订单"中查看订单状态'
                 },
                 orderStatus: {
                     question: '如何查看订单状态？',
@@ -41,7 +41,7 @@ export default {
             },
             customization: {
                 howToCustomize: {
-                    question: '如何��制商品？',
+                    question: '如何定制商品？',
                     answer: '1. 在商品页面选择"定制服务"选项<br>2. 上传您的设计图或填写具体需求<br>3. 选择定制参数（尺寸、材质等）<br>4. 提交定制申请<br>5. 等待客服确认并报价<br>6. 确认后付款即可开始制作'
                 },
                 customizationTime: {
@@ -75,7 +75,7 @@ export default {
             },
             refund: {
                 howToRefund: {
-                    question: '如何申请退款？',
+                    question: '如何申请退��？',
                     answer: '1. 进入"我的订单"页面<br>2. 选择需要退款的订单<br>3. 点击"申请退款"<br>4. 选择退款原因并上传相关凭证<br>5. 提交申请等待审核<br>6. 审核通过后退款将原路返回'
                 },
                 refundTime: {
@@ -104,7 +104,7 @@ export default {
                 },
                 returnShipping: {
                     question: '退货运费由谁承担？',
-                    answer: '退货运费由卖方承担。我们将提供退货运单，您只需要按照退货流程操作即可。'
+                    answer: '退货运费由卖方承担。我们将提供退货运单，您只需要按照退货流程操作���可。<br><br>默认退货地址：<br>中国深圳市宝安区新安街道安乐新村41区31栋301'
                 },
                 returnProcess: {
                     question: '如何办理退货？',
