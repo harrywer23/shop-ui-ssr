@@ -34,7 +34,7 @@ export default {
     },
     contact: {
       title: 'Contact Us',
-      address: 'Building 31, Unit 301, Area 41, An Le Village, Xin'an Street, Bao'an District, Shenzhen',
+      address: 'Building 31, Unit 301, Area 41, An Le Village, Xin an Street, Bao an District, Shenzhen',
       phone: '400-123-4567',
       hours: {
         title: 'Business Hours',

@@ -7,8 +7,8 @@ export default {
   privacyPolicy: 'Privacy Policy',
   terms: 'Terms of Service',
   bugReport: 'Bug Report',
-  copyright: 'Copyright © 2002-{year} www.DimensionBazaar.uk All Rights Reserved',
-  companyInfo: 'Dimension Technology Co., Ltd.',
+  copyright: 'Copyright © 2002-{year} www.cmall.uk www.51x.uk All Rights Reserved',
+  companyInfo: 'BLACK WHITE UMBRELLA LTD',
   keywords: 'Anime, Games, Movie Merchandise',
   disclaimer: 'All for Love',
   description: 'Your Digital Art & Collectibles Platform',
@@ -19,4 +19,4 @@ export default {
     navigation: '30 Navigation',
     world: 'Heart World'
   }
-} 
+}

@@ -182,9 +182,9 @@ function togglePasswordVisibility() {
               color="primary"
             />
             <div class="terms-links q-mt-sm">
-              <a href="/privacyPolicy" class="text-primary">{{ t('useTerms') }}</a>
+              <a href="/privacy" class="text-primary">{{ t('useTerms') }}</a>
               <span class="text-grey-6">|</span>
-              <a href="/use" class="text-primary">{{ t('privateTerms') }}</a>
+              <a href="/terms" class="text-primary">{{ t('privateTerms') }}</a>
             </div>
           </div>
 

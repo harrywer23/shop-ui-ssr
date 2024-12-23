@@ -37,7 +37,7 @@
       <div class="footer-section">
         <h3>{{ $t('footer.contact') }}</h3>
         <div class="contact-info">
-          <p>{{ $t('footer.companyInfo') }}</p>
+          <p>BLACK WHITE UMBRELLA LTD</p>
           <p>{{ $t('footer.keywords') }}</p>
         </div>
       </div>
@@ -45,7 +45,7 @@
 
     <!-- 版权信息 -->
     <div class="footer-bottom">
-      <p>{{ $t('footer.copyright', { year: new Date().getFullYear() }) }}</p>
+      <p>Copyright © 2002-{{  new Date().getFullYear() }} www.cmall.uk www.51x.uk All Rights Reserved {{  new Date().getFullYear() }}</p>
       <p>{{ $t('footer.description') }}</p>
       <p>{{ $t('footer.disclaimer') }}</p>
     </div>
