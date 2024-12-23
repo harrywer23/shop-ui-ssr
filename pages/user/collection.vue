@@ -206,8 +206,6 @@
 </template>
 
 <script setup lang="ts">
-import CachedImage from "~/components/common/CachedImage.vue";
-
 definePageMeta({
   layout: 'users',
   middleware: 'auth'

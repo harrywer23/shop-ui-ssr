@@ -213,6 +213,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: 'users',
+  middleware: 'auth'
+});
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
