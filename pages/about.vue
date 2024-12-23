@@ -8,6 +8,21 @@
         <q-card-section>
           <div class="text-h6 q-mb-md">{{ t('about.introduction.title') }}</div>
           <p class="text-body1">{{ t('about.introduction.content') }}</p>
+          
+          <!-- 添加专长列表 -->
+          <div class="specialties-section q-mt-md">
+            <div class="text-subtitle1 q-mb-sm">{{ t('about.introduction.specialties.title') }}</div>
+            <q-list>
+              <q-item v-for="n in 4" :key="n">
+                <q-item-section avatar>
+                  <q-icon name="check_circle" color="primary" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>{{ t(`about.introduction.specialties.item${n}`) }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
         </q-card-section>
       </q-card>
 
@@ -173,5 +188,11 @@ const milestones = [
 
 .contact-info span {
   line-height: 1.4;
+}
+
+.specialties-section {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
 }
 </style>

@@ -2,7 +2,14 @@ export default {
     title: 'About Us',
     introduction: {
       title: 'Company Introduction',
-      content: 'We are an e-commerce platform focused on providing users with a high-quality shopping experience. Since our establishment, we have always adhered to the principle of "user first", committed to providing users with high-quality products and services.'
+      content: 'We are an e-commerce platform specializing in merchandise from anime, games, movies, and novels. We offer a wide range of figurines, models, and merchandise, along with customization services for fans. Since our establishment, we have always adhered to the principle of "user first", committed to providing anime and pop culture enthusiasts with high-quality products and services.',
+      specialties: {
+        title: 'Our Specialties',
+        item1: 'Curated anime, game, and movie merchandise',
+        item2: 'High-quality figurines and models',
+        item3: 'Customization services',
+        item4: 'Licensed products'
+      }
     },
     mission: {
       title: 'Mission and Vision',

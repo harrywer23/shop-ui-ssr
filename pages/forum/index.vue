@@ -131,10 +131,7 @@ const { t, locale } = useI18n()
 const isLoggedIn = ref(false)
 const currentCategory = ref('all')
 const currentPage = ref(1)
-const totalPages = ref(1)
 const categoryTree = ref([])
-const topics = ref([])
-const loading = ref(false)
 const currentSort = ref('latest')
 
 // 排序选项
@@ -224,7 +221,7 @@ const buildTree = (flatData) => {
 // 加载分类列表
 const loadCategories = async () => {
   try {
-    const response = await api.get('/forum/category/list')
+    const response = await api.get('/forum/category/list?limit=100')
     if (response.data.succ) {
       // 处理返回的数据，解析国际化名称
       const processedData = response.data.data.map(item => ({
