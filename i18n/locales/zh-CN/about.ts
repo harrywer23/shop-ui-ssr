@@ -34,7 +34,7 @@ export default {
   },
   contact: {
     title: '联系我们',
-    address: '上海市浦东新区陆家嘴金融贸易区',
+    address: '深圳市宝安区新安街道安乐村41区31栋301',
     phone: '400-123-4567',
     hours: {
       title: '营业时间',

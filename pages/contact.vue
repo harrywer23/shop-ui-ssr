@@ -39,7 +39,7 @@
                   <q-icon name="location_on" size="24px" />
                   <div class="info-content">
                     <div class="info-label">{{ $t('contact.address') }}</div>
-                    <div class="info-value">123 Example Street, City, Country</div>
+                    <div class="info-value">Building 31, Unit 301, Area 41, An Le Village, Xin'an Street, Bao'an District, Shenzhen，China</div>
                   </div>
                 </div>
               </div>

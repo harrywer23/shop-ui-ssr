@@ -133,7 +133,7 @@ export default {
       },
       item3: {
         title: '支持者福利',
-        description: '专属周边、抽选特典等福利'
+        description: '属周边、抽选特典等福利'
       },
       item4: {
         title: '粉丝社群',
@@ -182,8 +182,8 @@ export default {
   },
   apply: {
     title: '定制申请',
-    formTitle: '申请信息',
-    name: '申请人姓名',
+    formTitle: '申请信',
+    name: '申请姓名',
     contact: '联系电话',
     email: '电子邮箱',
     type: '定制类型',
@@ -284,11 +284,11 @@ export default {
     ]
   },
     type: {
-      clothing: '服装定制',
+      clothing: '服装制',
       jewelry: '珠宝首饰',
-      furniture: '家具定制',
+      furniture: '家具定��',
       artwork: '艺术作品',
-      other: '其他定制'
+      other: '他定制'
     },
   list: {
     title: '我的定制申请',
@@ -320,5 +320,34 @@ export default {
   },
     orders: {
       title: '定制订单列表'
+    },
+  chat: {
+    inputPlaceholder: '输入消息...',
+    send: '发送',
+    loadingHistory: '加载历史消息...',
+    emoji: '表情',
+    searchContacts: '搜索联系人',
+    onlineUsers: '在线用户',
+    online: '在线',
+    offline: '离线',
+    sendFailed: '发送���息失败',
+    connectionError: '连接失败，请检查网络',
+    notConnected: '未连接到服务器，请稍后重试',
+    loadHistoryFailed: '加载历史消息失败',
+    disconnected: '连接已断开，正在尝试重新连接',
+    authenticationFailed: '身份验证失败，请重新登录',
+    socketError: {
+      transport: '传输协议错误',
+      timeout: '连接超时',
+      auth: '认证失败',
+      parser: '数据解析错误',
+      network: '网络连接错误',
+      pingTimeout: '心跳超时',
+      serverClose: '服务器主动关闭连接',
+      clientClose: '客户端主动关闭连接',
+      transportClose: '传输连接关闭',
+      upgradeError: '协议升级失败',
+      unknown: '未知错误'
     }
+  }
 }

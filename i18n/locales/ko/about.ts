@@ -34,7 +34,7 @@ export default {
   },
   contact: {
     title: '연락처',
-    address: '상하이시 푸동신구 루자주이 금융무역지구',
+    address: '선전시 바오안구 신안가도 안러촌 41구역 31동 301호',
     phone: '400-123-4567',
     hours: {
       title: '영업 시간',
