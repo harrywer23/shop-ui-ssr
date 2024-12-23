@@ -58,7 +58,15 @@ export default {
     delivery: {
       title: '配送方法',
       merchant: '出店者配送',
-      pickup: '店頭受け取り'
+      pickup: '店頭受け取り',
+      shippingInfo: '配送料金について',
+      seaShipping: '船便',
+      airShipping: '航空便',
+      baseRate: '基本料金',
+      extraWeight: '{weight}kg以上：${rate}/kg',
+      estimatedTime: '配送予定：{min}〜{max}日',
+      shippingNote: '最終的な配送料金は、実際の重量と選択された配送方法に基づいてチェックアウト時に計算されます。',
+      taxInfo: '輸入関税は当社が負担いたします'
     },
     quantity: '数量',
     stock: '在庫',

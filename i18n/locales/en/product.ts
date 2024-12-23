@@ -94,7 +94,15 @@ export default {
     delivery: {
       title: 'Delivery Method',
       merchant: 'Merchant Delivery',
-      pickup: 'Self Pickup'
+      pickup: 'Self Pickup',
+      shippingInfo: 'Shipping Information',
+      seaShipping: 'Sea Shipping',
+      airShipping: 'Air Shipping',
+      baseRate: 'Base Rate',
+      extraWeight: 'Over {weight}kg: ${rate}/kg',
+      estimatedTime: 'Estimated Delivery: {min}-{max} days',
+      shippingNote: 'The final shipping cost will be calculated based on the actual weight and shipping method selected at checkout.',
+      taxInfo: 'Import duties and taxes are covered by us',
     },
     quantity: 'Quantity',
     stock: 'Stock',

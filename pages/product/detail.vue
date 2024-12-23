@@ -72,6 +72,71 @@
               </div>
             </div>
 
+            <!-- 添加运费说明 -->
+            <div class="shipping-info q-mt-md">
+              <q-expansion-item
+                icon="local_shipping"
+                :label="t('product.detail.delivery.shippingInfo')"
+                header-class="text-primary"
+              >
+                <q-card>
+                  <q-card-section>
+                    <div class="row q-col-gutter-md">
+                      <!-- 海运选项 -->
+                      <div class="col-12 col-md-6">
+                        <q-item>
+                          <q-item-section avatar>
+                            <q-icon name="directions_boat" color="primary" />
+                          </q-item-section>
+                          <q-item-section>
+                            <q-item-label>{{ t('product.detail.delivery.seaShipping') }}</q-item-label>
+                            <q-item-label caption>
+                              <div>{{ t('product.detail.delivery.baseRate') }}: $15</div>
+                              <div>{{ t('product.detail.delivery.extraWeight', { weight: 5, rate: 3 }) }}</div>
+                              <div>{{ t('product.detail.delivery.estimatedTime', { min: 7, max: 45 }) }}</div>
+                            </q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </div>
+                      
+                      <!-- 空运选项 -->
+                      <div class="col-12 col-md-6">
+                        <q-item>
+                          <q-item-section avatar>
+                            <q-icon name="flight" color="primary" />
+                          </q-item-section>
+                          <q-item-section>
+                            <q-item-label>{{ t('product.detail.delivery.airShipping') }}</q-item-label>
+                            <q-item-label caption>
+                              <div>{{ t('product.detail.delivery.baseRate') }}: $80</div>
+                              <div>{{ t('product.detail.delivery.extraWeight', { weight: 5, rate: 15 }) }}</div>
+                              <div>{{ t('product.detail.delivery.estimatedTime', { min: 7, max: 15 }) }}</div>
+                            </q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </div>
+                    </div>
+
+                    <q-separator class="q-my-md" />
+                    
+                    <!-- 添加税费说明 -->
+                    <div class="tax-info">
+                      <div class="row items-center q-gutter-sm">
+                        <q-icon name="verified" color="positive" size="sm" />
+                        <div class="text-caption text-positive">
+                          {{ t('product.detail.delivery.taxInfo') }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="text-caption text-grey q-mt-sm">
+                      {{ t('product.detail.delivery.shippingNote') }}
+                    </div>
+                  </q-card-section>
+                </q-card>
+              </q-expansion-item>
+            </div>
+
             <!-- 预售信息 -->
             <template v-if="productInfo?.prodType === ProductType.PRESELL">
               <div class="presell-info q-mt-md">
@@ -450,13 +515,13 @@ const currentImage = ref('')
 // 计算宣传图片列表
 const imgList = computed(() => {
   if (!productInfo.value?.imgs) return [];
-  // 分割字符串为数组限制最大长度�����3
+  // 分割字符串为数组限制最大长度3
   const imgsArray = productInfo.value.imgs.split(',');
   return imgsArray.slice(0, 3);
 });
 
 
-// 计算配送方式
+// 计算配送��式
 const deliveryMode = computed(() => {
   if (!productInfo.value?.deliveryMode) return null
   try {
@@ -1333,6 +1398,24 @@ const cartStore = useCartStore()
   // 品质标签样式
   .q-chip {
     font-weight: 500;
+  }
+
+  // 添加运费说明样式
+  .shipping-info {
+    .q-expansion-item {
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+    
+    .q-item {
+      padding: 12px;
+    }
+  }
+
+  .tax-info {
+    background: #f0f9f0;
+    border-radius: 4px;
+    padding: 8px 12px;
   }
 }
 

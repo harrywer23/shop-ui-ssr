@@ -57,7 +57,15 @@ export default {
     delivery: {
       title: '配送方式',
       merchant: '商家配送',
-      pickup: '用戶自提'
+      pickup: '用戶自提',
+      shippingInfo: '運費說明',
+      seaShipping: '海運',
+      airShipping: '空運',
+      baseRate: '基礎運費',
+      extraWeight: '超過{weight}kg：${rate}/kg',
+      estimatedTime: '預計送達：{min}-{max}天',
+      shippingNote: '最終運費將根據實際重量和您選擇的配送方式在結算時計算。',
+      taxInfo: '進口關稅由我們承擔'
     },
     quantity: '購買數量',
     stock: '庫存',

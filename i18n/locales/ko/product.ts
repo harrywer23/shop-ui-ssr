@@ -93,7 +93,15 @@ export default {
     delivery: {
       title: '배송 방법',
       merchant: '판매자 배송',
-      pickup: '직접 수령'
+      pickup: '직접 수령',
+      shippingInfo: '배송비 안내',
+      seaShipping: '해운 배송',
+      airShipping: '항공 배송',
+      baseRate: '기본 배송비',
+      extraWeight: '{weight}kg 초과: ${rate}/kg',
+      estimatedTime: '예상 배송 기간: {min}-{max}일',
+      shippingNote: '최종 배송비는 실제 무게와 선택하신 배송 방법에 따라 결제 시 계산됩니다.',
+      taxInfo: '수입 관세는 저희가 부담합니다'
     },
     favorite: {
       add: '찜하기',

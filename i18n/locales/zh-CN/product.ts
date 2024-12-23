@@ -90,7 +90,15 @@ export default {
     delivery: {
       title: '配送方式',
       merchant: '商家配送',
-      pickup: '用户自提'
+      pickup: '用户自提',
+      shippingInfo: '运费说明',
+      seaShipping: '海运',
+      airShipping: '空运',
+      baseRate: '基础运费',
+      extraWeight: '超过{weight}kg：${rate}/kg',
+      estimatedTime: '预计送达：{min}-{max}天',
+      shippingNote: '最终运费将根据实际重量和您选择的配送方式在结算时计算。',
+      taxInfo: '进口关税由我们承担'
     },
     favorite: {
       add: '收藏商品',
