@@ -237,16 +237,17 @@ const { t } = useI18n()
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
-const user = useCookie('userInfo');
 const logout = () => {
   // 清除所有 cookies
   const token = useCookie('token')
-  const userInfo = useCookie('userInfo')
   const id = useCookie('id')
+  const verify = useCookie('verify')
+  const userName = useCookie('userName')
 
   token.value = null
-  userInfo.value = null
   id.value = null
+  userName.value = null
+  verify.value = null
 
   // 重定向到登录页面
   router.push('/login')

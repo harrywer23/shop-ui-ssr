@@ -4,7 +4,8 @@
       v-model="inputValue"
       outlined
       dense
-      :placeholder="t('chat.inputPlaceholder')"
+      :placeholder="hasContact ? t('chat.inputPlaceholder') : t('chat.selectContactFirst')"
+      :disable="!hasContact"
       @keyup.enter="handleSend"
     >
       <template v-slot:before>
@@ -13,6 +14,7 @@
           dense
           flat
           icon="mood"
+          :disable="!hasContact"
           @click="toggleEmojiPicker"
         >
           <q-tooltip>{{ t('chat.emoji') }}</q-tooltip>
@@ -24,6 +26,7 @@
           dense
           flat
           icon="send"
+          :disable="!hasContact"
           @click="handleSend"
         >
           <q-tooltip>{{ t('chat.send') }}</q-tooltip>
@@ -46,8 +49,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch } from 'vue'
+<script setup lang="ts">
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -65,8 +68,15 @@ const props = defineProps({
   modelValue: {
     type: String,
     default: ''
+  },
+  currentContact: {
+    type: Object as PropType<Contact | null>,
+    default: null
   }
 })
+
+// 计算是否有选中的联系人
+const hasContact = computed(() => !!props.currentContact)
 
 const emit = defineEmits(['update:modelValue', 'send'])
 

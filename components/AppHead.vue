@@ -24,18 +24,18 @@
           </template>
         </q-select>
          <!-- 用户信息/登录按钮 -->
-         <template v-if="userInfo">
+         <template v-if="userName">
 
 
           <q-btn-dropdown flat class="user-menu">
             <template v-slot:label>
               <q-avatar size="32px">
                 <q-img
-                  :src="getImageUrl(userInfo.imgUrl) || '/images/favicon.ico'"
+                  :src="getImageUrl(avatar) || '/images/favicon.ico'"
                   @error="(err) => err.target.src = '/images/favicon.ico'"
                 />
               </q-avatar>
-              <span class="q-ml-sm">{{ userInfo.nickname }}</span>
+              <span class="q-ml-sm">{{ nickName }}</span>
             </template>
 
             <q-list>
@@ -160,9 +160,10 @@ import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
 const router = useRouter()
-const userInfo = useCookie('userInfo');
 const currentLocale = ref(locale.value);
-
+const userName =useCookie("userName");
+const avatar =useCookie("avatar");
+const nickName =useCookie("nickName");
 
 // 语言选项
 const languageOptions = [
@@ -208,7 +209,6 @@ const handleLogout = () => {
 
   token.value = null;
   id.value = null;
-  userInfo.value = null;
 
   router.push('/login');
 };
@@ -232,7 +232,7 @@ onMounted(() => {
   if (langCookie.value) {
     handleLanguageChange(langCookie.value);
   }
-  
+
   // 初始化 Google Analytics
   initGoogleAnalytics()
 });

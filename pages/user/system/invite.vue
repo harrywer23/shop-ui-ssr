@@ -4,8 +4,8 @@ definePageMeta({
   middleware: 'auth'
 });
 import {ref} from "vue";
-const user = useCookie('userInfo');
-const inviteUrl = ref(`https://user.51x.uk/index?invite=${user.invite}`);
+const invite =useCookie("invite")
+const inviteUrl = ref(`https://user.51x.uk/index?invite=${invite}`);
 const textToCopy = ref(null);
 
 const copyToClipboard = async () => {

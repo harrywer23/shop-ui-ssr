@@ -113,7 +113,11 @@ export const PAYMENT_METHOD_OPTIONS = [
 // API 相关常量
 export const API_CONSTANTS = {
   // BASE_URL: 'http://127.0.0.1:8098',
+  // CHAT_URL: 'http://127.0.0.1:8096',
+  // CHAT_SOCKET_URL:'ws://127.0.0.1:8096/ws',
   BASE_URL: 'https://admin.51x.uk',
+  CHAT_URL: 'https://chat.51x.uk',
+  CHAT_SOCKET_URL:'ws://chat.51x.uk/ws',
   IMAGE_BASE_URL: 'https://image.51x.uk/xinshijie',
   TIMEOUT: 30000,
   MAX_RETRIES: 3
@@ -152,24 +156,6 @@ export const VALIDATION_RULES = {
 }
 
 // Cookie 相关常量
-export const COOKIE_CONSTANTS = {
-  TOKEN: {
-    name: 'token',
-    maxAge: 60 * 60 * 24 * 7, // 7天
-    path: '/',
-    secure: process.env.NODE_ENV === 'production'
-  },
-  USER_INFO: {
-    name: 'userInfo',
-    maxAge: 60 * 60 * 24 * 7,
-    path: '/'
-  },
-  LANGUAGE: {
-    name: 'user-language',
-    maxAge: 60 * 60 * 24 * 365, // 1年
-    path: '/'
-  }
-}
 
 // 本地化相关常量
 export const LOCALE_CONSTANTS = {

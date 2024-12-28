@@ -53,9 +53,9 @@ async function onSubmit() {
       captcha: formData.value.captcha
     })
 
-    const { data } = response
+    const { code,data } =await response.data;
 
-    if (data.code === 200) {
+    if (code === 200) {
       // 设置 cookies
       const token = useCookie('token', {
         maxAge: 60 * 60 * 24 * 7,
@@ -63,17 +63,22 @@ async function onSubmit() {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict'
       })
-      const userInfo = useCookie('userInfo', { maxAge: 60 * 60 * 24 * 7, path: '/' })
       const accessToken = useCookie('accessToken', { maxAge: 60 * 60 * 24 * 7, path: '/' })
       const refreshToken = useCookie('refreshToken', { maxAge: 60 * 60 * 24 * 7, path: '/' })
       const userId = useCookie('id', { maxAge: 60 * 60 * 24 * 7, path: '/' })
+      const verify = useCookie('verify', { maxAge: 60 * 60 * 24 * 7, path: '/' })
+      const userName = useCookie('userName', { maxAge: 60 * 60 * 24 * 7, path: '/' })
+      const avatar = useCookie('avatar', { maxAge: 60 * 60 * 24 * 7, path: '/' })
+      const nickName = useCookie('nickName', { maxAge: 60 * 60 * 24 * 7, path: '/' })
 
-      token.value = data.token
-      userInfo.value = JSON.stringify(data.user)
-      accessToken.value = data.accessToken
-      refreshToken.value = data.refreshToken
-      userId.value = data.user.id.toString()
-
+      token.value = data.token;
+      accessToken.value = data.accessToken;
+      refreshToken.value = data.refreshToken;
+      userId.value = data.userId;
+      verify.value = data.verify;;
+      userName.value = data.userName;
+      avatar.value = data.avatar;
+      nickName.value = data.nickName;
       Notify.create({
         color: 'positive',
         textColor: 'white',

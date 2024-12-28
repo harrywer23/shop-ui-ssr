@@ -28,6 +28,7 @@ import service from './service'
 import suggestions from './suggestions'
 import user from './user'
 import terms from './terms'
+import chat from './chat'
 
 export default {
   about,
@@ -59,5 +60,6 @@ export default {
   service,
   suggestions,
   user,
-  terms
+  terms,
+  chat
 }

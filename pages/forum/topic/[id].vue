@@ -531,9 +531,7 @@ const goToLogin = () => {
 // 检查登录状态
 const checkLoginStatus = () => {
   const token = useCookie('token')
-  const userInfo = useCookie('userInfo')
   isLoggedIn.value = !!token
-  currentUser.value = userInfo ? userInfo.value : null
 }
 
 // 初始化

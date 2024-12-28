@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, defineAsyncComponent } from 'vue'
 import {getImageUrl} from "~/utils/tools";
+import CustomerServiceButton from '~/components/CustomerServiceButton.vue'
 
 const slide = ref(0)
 
@@ -144,6 +145,8 @@ onMounted(() => {
         </template>
       </Suspense>
     </div>
+
+    <CustomerServiceButton />
   </div>
 </template>
 

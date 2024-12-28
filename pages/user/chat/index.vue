@@ -1,12 +1,10 @@
 <template>
   <div class="chat-page">
-    <ChatSidebar />
     <ChatMain />
   </div>
 </template>
 
 <script setup>
-import ChatSidebar from './components/ChatSidebar.vue'
 import ChatMain from './components/ChatMain.vue'
 </script>
 

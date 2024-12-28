@@ -19,7 +19,6 @@ async function onSubmit() {
     if (data.code == 200) {
       useCookie('token',data.token);
       useCookie('id',data.id);
-      useCookie('userInfo',data.user);
       router.push('/restPassowrd'); // 或者其他页面
     } else {
       Dialog.create({

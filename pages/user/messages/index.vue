@@ -100,7 +100,6 @@ import { useQuasar, date } from 'quasar'
 import { api } from '~/utils/axios'
 
 const $q = useQuasar()
-const currentUser = ref(JSON.parse(localStorage.getItem('userInfo') || '{}'))
 const sessions = ref([])
 const currentSession = ref(null)
 const messages = ref([])
