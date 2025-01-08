@@ -54,8 +54,8 @@
               <div v-if="detail.referenceImages?.length" class="images-section q-mb-md">
                 <div class="text-subtitle1 q-mb-sm">参考图片</div>
                 <div class="row q-col-gutter-sm">
-                  <div 
-                    v-for="(img, index) in detail.referenceImages" 
+                  <div
+                    v-for="(img, index) in detail.referenceImages"
                     :key="index"
                     class="col-4 col-sm-3"
                   >
@@ -98,8 +98,8 @@
                 <q-card-section>
                   <div class="text-subtitle1 q-mb-sm">定制费用</div>
                   <div class="text-h5 q-mb-md">￥{{ detail.targetAmount }}</div>
-                  <q-btn 
-                    color="primary" 
+                  <q-btn
+                    color="primary"
                     class="full-width"
                     @click="startCustomization"
                   >
@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { date } from 'quasar'
-import { api } from 'src/boot/axios'
+import { api } from '~/utils/axios'
 
 interface Progress {
   title: string
@@ -273,4 +273,4 @@ const startCustomization = () => {
 .cursor-pointer {
   cursor: pointer;
 }
-</style> 
+</style>

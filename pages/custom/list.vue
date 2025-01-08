@@ -118,8 +118,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { date } from 'quasar'
+import { api } from '~/utils/axios'
 
 const { t } = useI18n()
 const loading = ref(false)
@@ -186,7 +186,7 @@ const fetchCustomList = async () => {
         sort: sortBy.value
       }
     })
-    
+
     if (response.data.succ) {
       customList.value = response.data.data
       totalPages.value = Math.ceil(response.data.total / 10) // 假设每页10条数据

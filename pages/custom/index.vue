@@ -409,8 +409,8 @@
   <script setup lang="ts">
   import { ref, onMounted, computed } from 'vue'
   import { useRouter } from 'vue-router'
-  import { useI18n } from 'vue-i18n'
   import { date } from 'quasar'
+  import { api } from '~/utils/axios'
   import { API_CONSTANTS } from "~/utils/constants"
 
   const router = useRouter()

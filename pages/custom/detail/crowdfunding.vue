@@ -65,8 +65,8 @@
               <div v-if="detail.referenceImages?.length" class="images-section q-mb-md">
                 <div class="text-subtitle1 q-mb-sm">参考图片</div>
                 <div class="row q-col-gutter-sm">
-                  <div 
-                    v-for="(img, index) in detail.referenceImages" 
+                  <div
+                    v-for="(img, index) in detail.referenceImages"
                     :key="index"
                     class="col-4 col-sm-3"
                   >
@@ -105,8 +105,8 @@
             <!-- 回报档位 -->
             <div class="col-12 col-md-4">
               <div class="text-subtitle1 q-mb-sm">支持档位</div>
-              <div 
-                v-for="reward in detail.rewards" 
+              <div
+                v-for="reward in detail.rewards"
                 :key="reward.id"
                 class="q-mb-md"
               >
@@ -119,7 +119,7 @@
                       <span class="text-caption">
                         已支持 {{ reward.supportCount }}/{{ reward.limitCount }}
                       </span>
-                      <q-btn 
+                      <q-btn
                         color="primary"
                         :disable="reward.supportCount >= reward.limitCount"
                         @click="supportProject(reward)"
@@ -159,7 +159,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { date } from 'quasar'
-import { api } from 'src/boot/axios'
+import { api } from '~/utils/axios'
 
 interface Reward {
   id: number
@@ -265,4 +265,4 @@ const supportProject = (reward: Reward) => {
   padding: 1rem;
   border-radius: 4px;
 }
-</style> 
+</style>

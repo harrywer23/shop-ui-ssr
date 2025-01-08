@@ -178,11 +178,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import { api } from '@/utils/axios'
+import { api } from '~/utils/axios'
 import { useQuasar } from 'quasar'
 import { date } from 'quasar'
-import CachedImage from "~/components/common/CachedImage.vue";
 import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()

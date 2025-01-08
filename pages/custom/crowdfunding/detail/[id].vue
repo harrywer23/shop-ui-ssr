@@ -98,8 +98,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import { date } from 'quasar'
 import { api } from '~/utils/axios'
 
 const route = useRoute()
@@ -133,7 +131,7 @@ const progress = computed(() => {
 // 获取剩余时间
 const getRemainingTime = () => {
   if (!detail.value.endTime) return ''
-  
+
   const now = new Date().getTime()
   const end = new Date(detail.value.endTime).getTime()
   const diff = end - now
@@ -209,4 +207,4 @@ onMounted(() => {
     }
   }
 }
-</style> 
+</style>
