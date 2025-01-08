@@ -174,7 +174,6 @@
 
 <script setup lang="ts">
 import {nextTick, onMounted, onUnmounted, ref, computed} from 'vue'
-import {useI18n} from 'vue-i18n'
 import {useQuasar} from 'quasar'
 import {API_CONSTANTS} from '~/utils/constants'
 import {socketManager} from '~/utils/socket'
