@@ -13,29 +13,21 @@ export default defineEventHandler(async (event) => {
   const headers = event.req.headers;
   const language= headers["accept-language"] ;
 
-  console.log('category list language:', language)
   // const crypto = require('crypto');
 // 你需要计算 MD5 的字符串
   const stringToHash =query ? JSON.stringify(query):"list";
 // 创建一个 MD5 哈希实例
    const hash = fnv1a(stringToHash);
 // 输出结果
-  console.log(hash);
   const cacheKey = `category:list:${hash}`;
-
-  // //console.log('Album info request params:', query);
   //
   const cachedData = cache.get(cacheKey);
   if (cachedData) {
-    //console.log('Using cached data for:'+cacheKey);
     return cachedData;
   }
-
   try {
     // 构建完整的 URL
     const fullUrl = `${API_CONSTANTS.BASE_URL}/category/list?`+tansParams(query);
-    //console.log('Fetching from URL:', fullUrl);
-
     // 在处理函数内执行 fetch
     const response = await fetch(fullUrl, {
       headers: {

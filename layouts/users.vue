@@ -197,17 +197,10 @@
         <div class="absolute-bottom bg-transparent">
           <q-avatar  class="q-mb-sm" size="56px">
             <q-img
-              :src="getImageUrl(user.avatar) || `/favicon.webp`" @error.once="e => { e.target.src = `/favicon.webp` }"
+              :src="getImageUrl(avatar) || `/favicon.webp`" @error.once="e => { e.target.src = `/favicon.webp` }"
             />
           </q-avatar>
-          <div class="text-weight-bold">{{ user != null ? user.nickname : '待登录' }}</div>
-          <div v-if="user.email">
-            {{ user.email }}
-            <q-icon v-if="user.isEmail==2" name="warning" style="color: red"/>
-          </div>
-          <div v-if="user.isEmail==2">
-            ( {{ $t(`user.emailVerification`) }})
-          </div>
+          <div class="text-weight-bold">{{ nickname  }}</div>
         </div>
       </q-img>
 
@@ -222,36 +215,40 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { useRouter } from 'vue-router'
 import AppHead from "~/components/AppHead.vue";
-import { useI18n } from 'vue-i18n'
-import CachedImage from "~/components/common/CachedImage.vue";
 import {getImageUrl} from "~/utils/tools";
 
 const router = useRouter()
 const leftDrawerOpen = ref(false)
 const link = ref('detail')
-const { t } = useI18n()
-
+const avatar=ref("");
+const nickname=ref("");
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 const logout = () => {
   // 清除所有 cookies
-  const token = useCookie('token')
-  const id = useCookie('id')
-  const verify = useCookie('verify')
-  const userName = useCookie('userName')
+  const tokenCookie = useCookie('token')
+  const idCookie = useCookie('id')
+  const verifyCookie = useCookie('verify')
+  const userNameCookie = useCookie('userName')
+  const avatarCookie = useCookie('avatar')
 
-  token.value = null
-  id.value = null
-  userName.value = null
-  verify.value = null
+  tokenCookie.value = null
+  idCookie.value = null
+  userNameCookie.value = null
+  verifyCookie.value = null
 
   // 重定向到登录页面
   router.push('/login')
 }
+onMounted(() => {
+  nickname.value = useCookie("nickname").value;
+  avatar.value = useCookie("avatar").value;
+
+})
 </script>
 
 <style scoped>

@@ -134,7 +134,7 @@ async function onSubmit() {
 
             <!-- 用户基本信息 -->
             <div class="text-h6 q-mt-sm">{{ user.nickName || t('admin.userStatus.waitingLogin') }}</div>
-            <div class="text-subtitle2">{{ user.email }}</div>
+            <div class="text-subtitle2">{{ user.email??"" }}</div>
             <q-chip
                 :color="vip ? 'positive' : 'grey'"
                 text-color="white"

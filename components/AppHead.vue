@@ -133,7 +133,7 @@
         </template>
       </q-toolbar>
 
-      <q-tabs align="left">
+      <q-tabs align="left" class="q-mt-md">
         <q-route-tab to="/" :label="$t('nav.home')" />
         <q-route-tab to="/product/list?parentId=1" :label="$t('nav.anime')" />
         <q-route-tab to="/product/list?parentId=2" :label="$t('nav.games')" />
@@ -263,6 +263,16 @@ onMounted(() => {
     .q-icon {
       transform: scale(1.1);
     }
+  }
+}
+
+/* 添加响应式样式 */
+@media (max-width: 600px) {
+  .language-selector {
+    width: 100px; /* 在小屏幕上缩小选择器宽度 */
+  }
+  .q-toolbar {
+    flex-direction: column; /* 垂直排列工具栏内容 */
   }
 }
 </style>
