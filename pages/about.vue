@@ -121,6 +121,15 @@
           </div>
         </q-card-section>
       </q-card>
+
+      <div class="text-subtitle1 q-mb-sm">{{ t('about.contact.info') }}</div>
+      <div class="info-item">
+        <q-icon name="info" size="24px" />
+        <div class="info-content">
+          <div class="info-label">Instructions：</div>
+          <div class="info-value">{{ t('about.contact.infoDetail') }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

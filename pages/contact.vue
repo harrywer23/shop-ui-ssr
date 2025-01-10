@@ -78,6 +78,14 @@
                     <div class="info-value">9:00 AM - 6:00 PM</div>
                   </div>
                 </div>
+
+                <div class="info-item">
+                  <q-icon name="info" size="24px" />
+                  <div class="info-content">
+                    <div class="info-label">说明</div>
+                    <div class="info-value">请在联系时说明国家、具体产品与来意。</div>
+                  </div>
+                </div>
               </div>
             </q-card-section>
           </q-card>

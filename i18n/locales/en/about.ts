@@ -41,6 +41,8 @@ export default {
     },
     contact: {
       title: 'Contact Us',
+      info: 'Contact Information',
+      infoDetail: 'Please specify your country, specific products, and purpose when contacting us.',
       address: 'Building 31, Unit 301, Area 41, An Le Village, Xin an Street, Bao an District, Shenzhen',
       phone: '400-123-4567',
       hours: {

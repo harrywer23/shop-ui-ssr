@@ -41,6 +41,8 @@ export default {
   },
   contact: {
     title: 'お問い合わせ',
+    info: '連絡先情報',
+    infoDetail: 'ご連絡の際は、国、具体的な製品、目的を明記してください。',
     address: '深圳市宝安区新安街道安楽村41区31棟301号',
     phone: '400-123-4567',
     hours: {

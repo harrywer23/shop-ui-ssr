@@ -41,6 +41,8 @@ export default {
   },
   contact: {
     title: '연락처',
+    info: '연락 정보',
+    infoDetail: '연락 시 국가, 특정 제품 및 목적을 명시해 주십시오.',
     address: '선전시 바오안구 신안가도 안러촌 41구역 31동 301호',
     phone: '400-123-4567',
     hours: {

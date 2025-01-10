@@ -41,6 +41,8 @@ export default {
   },
   contact: {
     title: '联系我们',
+    info: '联系信息',
+    infoDetail: '请在联系时说明国家、具体产品与来意。',
     address: '深圳市宝安区新安街道安乐村41区31栋301',
     phone: '400-123-4567',
     hours: {
