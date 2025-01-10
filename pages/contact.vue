@@ -66,8 +66,8 @@
                 <div class="info-item">
                   <q-icon name="phone" size="24px" />
                   <div class="info-content">
-                    <div class="info-label">{{ $t('contact.phone') }}</div>
-                    <div class="info-value">+1 234 567 890</div>
+                    <div class="info-label">Whats App</div>
+                    <div class="info-value">+65 9160 5705</div>
                   </div>
                 </div>
 

@@ -8,7 +8,7 @@
         <q-card-section>
           <div class="text-h6 q-mb-md">{{ t('about.introduction.title') }}</div>
           <p class="text-body1">{{ t('about.introduction.content') }}</p>
-          
+
           <!-- 添加专长列表 -->
           <div class="specialties-section q-mt-md">
             <div class="text-subtitle1 q-mb-sm">{{ t('about.introduction.specialties.title') }}</div>
@@ -88,7 +88,7 @@
                         UNITED KINGDOM CV2 4AQ</span>
                 </div>
               </div>
-              
+
               <!-- China Office -->
               <div class="office-section q-mb-md">
                 <div class="text-subtitle1 q-mb-sm">中国办公室</div>
@@ -108,7 +108,7 @@
               </div>
               <div class="contact-info">
                 <q-icon name="phone" size="sm" class="q-mr-sm" />
-                <span>{{ t('about.contact.phone') }}</span>
+                <span>Whats App: +65 91605705</span>
               </div>
             </div>
             <div class="col-12 col-md-6">
@@ -126,7 +126,6 @@
 </template>
 
 <script setup lang="ts">
-import {useI18n} from "vue-i18n";
 
 const { t } = useI18n()
 const milestones = [
