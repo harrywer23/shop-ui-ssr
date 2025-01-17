@@ -1,13 +1,13 @@
 export default {
   title: '애니메이션 굿즈 커스터마이징',
   subtitle: '아이디어를 현실로, 독특한 컬렉션 제작',
-  
+
   personal: {
     title: '개인 맞춤 제작',
     subtitle: '1대1 전용 서비스로 독특한 작품 제작',
-    startingPrice: '시작가: ¥3,000',
+    startingPrice: '시작가: ¥999',
     deposit: '계약금: 30%-50%',
-    
+
     scenarios: {
       title: '적용 시나리오',
       scenario1: '독특함을 추구하는 분, 세상에 하나뿐인 컬렉션을 원하시는 분',
@@ -15,7 +15,7 @@ export default {
       scenario3: '품질을 중시하고 전용 서비스에 가치를 두시는 분',
       scenario4: '비교적 빠른 제작 주기가 필요하신 분'
     },
-    
+
     steps: {
       title: '서비스 과정',
       step1: {
@@ -49,7 +49,7 @@ export default {
         content: '완성품 확인 및 잔금 지불 후 배송'
       }
     },
-    
+
     privileges: {
       title: '전용 특권',
       privilege1: {
@@ -69,16 +69,16 @@ export default {
         description: '전담 고객 서비스가 전 과정 지원'
       }
     },
-    
+
     applyButton: '개인 맞춤 신청'
   },
-  
+
   crowdfunding: {
     title: '크라우드펀딩 제작',
     subtitle: '함께하는 힘으로 꿈을 실현',
-    estimatedPrice: '예상 가격: ¥299-999',
+    estimatedPrice: '예상 가격: ¥19-999',
     minQuantity: '최소 제작 수량: 100개',
-    
+
     scenarios: {
       title: '적용 시나리오',
       scenario1: '인기 IP 상품의 단체 수요',
@@ -86,7 +86,7 @@ export default {
       scenario3: '긴 제작 기간 수용 가능',
       scenario4: '크라우드펀딩 참여 희망'
     },
-    
+
     steps: {
       title: '크라우드펀딩 과정',
       step1: {
@@ -120,7 +120,7 @@ export default {
         content: '제작 완료 후 서포터에 ���차 배송'
       }
     },
-    
+
     privileges: {
       title: '서포터 혜택',
       item1: {
@@ -140,10 +140,10 @@ export default {
         description: '서포터 커뮤니티 참여'
       }
     },
-    
+
     applyButton: '크라우드펀딩 시작'
   },
-  
+
   orders: {
     title: '맞춤 주문 목록',
     detail: {
@@ -211,7 +211,7 @@ export default {
       }
     }
   },
-  
+
   list: {
     title: '내 맞춤 신청',
     empty: '맞춤 신청이 없습니다',
@@ -228,7 +228,7 @@ export default {
       deadline: '납기일순'
     }
   },
-  
+
   status: {
     pending: '검토 대기',
     approved: '승인됨',
@@ -237,11 +237,11 @@ export default {
     completed: '완료',
     cancelled: '취소됨'
   },
-  
+
   type: {
     figure: '피규어 모델',
     clothing: '의류 맞춤',
     accessory: '액세서리 맞춤',
     other: '기타 맞춤'
   }
-} 
+}

@@ -1,13 +1,13 @@
 export default {
   title: 'アニメグッズカスタマイズ',
   subtitle: 'アイデアを現実に、唯一無二のコレクションを作成',
-  
+
   personal: {
     title: 'パーソナルカスタム',
     subtitle: '1対1の専属サービスで独自の作品を制作',
-    startingPrice: '開始価格：¥3,000',
+    startingPrice: '開始価格：¥999',
     deposit: '契約金：30%-50%',
-    
+
     scenarios: {
       title: '適用シーン',
       scenario1: 'ユニークな作品、世界に一つだけのコレクションを求める方',
@@ -15,7 +15,7 @@ export default {
       scenario3: '品質を重視し、専属サービスに価値を見出す方',
       scenario4: '比較的早い制作サイクルを必要とする方'
     },
-    
+
     steps: {
       title: 'サービスの流れ',
       step1: {
@@ -49,7 +49,7 @@ export default {
         content: '完成品を確認し、残金支払い後に発送'
       }
     },
-    
+
     privileges: {
       title: '特別特典',
       privilege1: {
@@ -69,16 +69,16 @@ export default {
         description: '専属カスタマーサービスが全過程をサポート'
       }
     },
-    
+
     applyButton: 'パーソナルカスタムを申請'
   },
-  
+
   crowdfunding: {
     title: 'クラウドファンディング制作',
     subtitle: '皆の力を集めて、夢を実現',
-    estimatedPrice: '予想価格：¥299-999',
+    estimatedPrice: '予想価格：¥19-999',
     minQuantity: '最小製作数：100個',
-    
+
     scenarios: {
       title: '適用シーン',
       scenario1: '人気IPグッズの集団需要',
@@ -86,7 +86,7 @@ export default {
       scenario3: '長めの制作期間でも構わない方',
       scenario4: 'クラウドファンディングへの参加希望'
     },
-    
+
     steps: {
       title: 'クラウドファンディングの流れ',
       step1: {
@@ -120,7 +120,7 @@ export default {
         content: '製作完了後、サポーターへ順次発送'
       }
     },
-    
+
     privileges: {
       title: 'サポーター特典',
       item1: {
@@ -140,10 +140,10 @@ export default {
         description: 'サポーターコミュニティへの参加'
       }
     },
-    
+
     applyButton: 'クラウドファンディングを開始'
   },
-  
+
   orders: {
     title: 'カスタムオーダー一覧',
     detail: {
@@ -234,7 +234,7 @@ export default {
     attachmentNote: 'PDF、Word、Excel、圧縮ファイル(zip/rar/7z)対応',
     fileLimitNote: '最大{maxFiles}個のファイル、1個あたり最大{maxSize}まで'
   },
-  
+
   list: {
     title: 'マイカスタム申請',
     empty: 'カスタム申請はありません',
@@ -251,7 +251,7 @@ export default {
       deadline: '納期順'
     }
   },
-  
+
   status: {
     pending: '審査待ち',
     approved: '承認済み',
@@ -260,14 +260,14 @@ export default {
     completed: '��了',
     cancelled: 'キャンセル'
   },
-  
+
   type: {
     figure: 'フィギュアモデル',
     clothing: '衣装カスタム',
     accessory: 'アクセサリーカスタム',
     other: 'その他カスタム'
   },
-  
+
   error: {
     invalidTargetAmount: '有効な目標金額を入力してください',
     minTargetAmount: '目標金額は1000以上である必要があります',
@@ -290,4 +290,4 @@ export default {
       imageTooltip: 'jpg/png/gif/webp形式対応、1ファイルあたり最大2MB'
     }
   }
-} 
+}

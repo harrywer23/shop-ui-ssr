@@ -82,7 +82,7 @@ export default {
   personal: {
     title: 'Personal Customization',
     subtitle: 'One-on-one exclusive service for unique creations',
-    startingPrice: 'Starting from: ¥3,000',
+    startingPrice: 'Starting from: ¥999',
     deposit: 'Deposit: 30%-50%',
 
     scenarios: {
@@ -186,7 +186,7 @@ export default {
   crowdfunding: {
     title: 'Crowdfunding Customization',
     subtitle: 'Unite together to make dreams come true',
-    estimatedPrice: 'Estimated Price: ¥299-999',
+    estimatedPrice: 'Estimated Price: ¥19-999',
     minQuantity: 'Minimum Quantity: 100 pieces',
 
     scenarios: {
