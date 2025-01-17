@@ -996,7 +996,7 @@ onMounted(async () => {
 
 // 计算 Meta 标签内容
 const metaTitle = computed(() => {
-  return getCurrentLanguageName(productInfo?.value?.translations, productInfo?.value?.prodName) +`- ${t('common.title')}`
+  return getCurrentLanguageName(productInfo?.value?.translations, productInfo?.value?.prodName) +`- ${t('common.title')} -collectible figure`
 })
 
 const metaDescription = computed(() => {
