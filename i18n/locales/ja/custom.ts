@@ -5,7 +5,7 @@ export default {
   personal: {
     title: 'パーソナルカスタム',
     subtitle: '1対1の専属サービスで独自の作品を制作',
-    startingPrice: '開始価格：¥999',
+    startingPrice: '開始価格：¥99',
     deposit: '契約金：30%-50%',
 
     scenarios: {
@@ -77,7 +77,7 @@ export default {
     title: 'クラウドファンディング制作',
     subtitle: '皆の力を集めて、夢を実現',
     estimatedPrice: '予想価格：¥19-999',
-    minQuantity: '最小製作数：100個',
+    minQuantity: '最小製作数：10個',
 
     scenarios: {
       title: '適用シーン',

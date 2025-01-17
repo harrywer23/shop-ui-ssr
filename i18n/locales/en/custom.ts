@@ -82,7 +82,7 @@ export default {
   personal: {
     title: 'Personal Customization',
     subtitle: 'One-on-one exclusive service for unique creations',
-    startingPrice: 'Starting from: ¥999',
+    startingPrice: 'Starting from: ¥99',
     deposit: 'Deposit: 30%-50%',
 
     scenarios: {

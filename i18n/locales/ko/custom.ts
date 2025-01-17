@@ -5,7 +5,7 @@ export default {
   personal: {
     title: '개인 맞춤 제작',
     subtitle: '1대1 전용 서비스로 독특한 작품 제작',
-    startingPrice: '시작가: ¥999',
+    startingPrice: '시작가: ¥99',
     deposit: '계약금: 30%-50%',
 
     scenarios: {
@@ -77,7 +77,7 @@ export default {
     title: '크라우드펀딩 제작',
     subtitle: '함께하는 힘으로 꿈을 실현',
     estimatedPrice: '예상 가격: ¥19-999',
-    minQuantity: '최소 제작 수량: 100개',
+    minQuantity: '최소 제작 수량: 10 개',
 
     scenarios: {
       title: '적용 시나리오',

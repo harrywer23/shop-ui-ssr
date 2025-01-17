@@ -5,7 +5,7 @@ export default {
   personal: {
     title: '個人專屬定制',
     subtitle: '一對一專屬服務，打造獨一無二的作品',
-    startingPrice: '起價：¥3,000',
+    startingPrice: '起價：¥99',
     deposit: '定金比例：30%-50%',
 
     scenarios: {
@@ -76,8 +76,8 @@ export default {
   crowdfunding: {
     title: '眾人請願定制',
     subtitle: '集眾人之力，共同實現夢想',
-    estimatedPrice: '預估價：¥299-999',
-    minQuantity: '最低眾籌數量：100份',
+    estimatedPrice: '預估價：¥19-999',
+    minQuantity: '最低眾籌數量：10 份',
 
     scenarios: {
       title: '適用場景',
