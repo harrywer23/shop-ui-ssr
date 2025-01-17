@@ -98,7 +98,7 @@
                           </q-item-section>
                         </q-item>
                       </div>
-                      
+
                       <!-- 空运选项 -->
                       <div class="col-12 col-md-6">
                         <q-item>
@@ -118,7 +118,7 @@
                     </div>
 
                     <q-separator class="q-my-md" />
-                    
+
                     <!-- 添加税费说明 -->
                     <div class="tax-info">
                       <div class="row items-center q-gutter-sm">
@@ -492,7 +492,6 @@ import { useQuasar } from 'quasar'
 import { ProductType } from '~/utils/constants'
 import type { ProductDetail, Sku } from '~/types/product'
 import { formatDateTime, getCurrentLanguageName, getImageUrl, getLanguageName } from "~/utils/tools";
-import { useI18n } from "vue-i18n";
 import { useDebounceFn } from '@vueuse/core'
 import { useCartStore } from '~/stores/cart'
 const { locale, t } = useI18n()
@@ -997,7 +996,7 @@ onMounted(async () => {
 
 // 计算 Meta 标签内容
 const metaTitle = computed(() => {
-  return `${productInfo.value?.prodName} - ${t('common.title')}`
+  return getCurrentLanguageName(productInfo?.value?.translations, productInfo?.value?.prodName) +`- ${t('common.title')}`
 })
 
 const metaDescription = computed(() => {
@@ -1406,7 +1405,7 @@ const cartStore = useCartStore()
       border: 1px solid #e0e0e0;
       border-radius: 4px;
     }
-    
+
     .q-item {
       padding: 12px;
     }
